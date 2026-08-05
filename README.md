@@ -1,91 +1,115 @@
 #  La Promesse Non Tenue
-### *Quel est le coût réel d'une date de livraison non respectée ?*
+### *Où naissent les retards de livraison, combien ils exposent, et comment les anticiper*
 
-Projet data de bout en bout : du cadrage du besoin jusqu'aux recommandations stratégiques chiffrées, en passant par l'analyse, la visualisation et la prédiction.
+Projet data de bout en bout : du cadrage du besoin jusqu'aux recommandations chiffrées, en passant par la qualification, l'analyse, la visualisation et la prédiction.
 
 ---
 
 ##  Pourquoi ce projet ? (La valeur business)
 
-Dans toute entreprise, un délai est une **promesse** faite au client. 
-Quand elle est rompue, une chaîne de conséquences s'enclenche : **insatisfaction → perte de confiance → dégradation de la relation commerciale**.
+Sur une marketplace, la date de livraison annoncée est une **promesse commerciale**. La plateforme la formule, mais ne la maîtrise qu'en partie : l'exécution dépend du vendeur, de la distance et du transporteur.
 
-**Le problème** : Tout le monde sait que ça arrive. Peu savent **combien ça coûte**.
+Quand la promesse est rompue, trois questions restent sans réponse :
 
-**La solution proposée** : Un outil d'aide à la décision qui :
--  **Chiffre** l'impact financier des retards.
--  **Prédit** les risques de rupture avant la livraison.
--  **Prescrit** une liste d'actions priorisées (vendeurs, régions, produits) pour maximiser le ROI de chaque jour gagné.
+- **Où le retard est-il né ?** Chez le vendeur qui a tardé à expédier, ou dans l'acheminement ?
+- **Quel volume d'activité est concerné ?**
+- **Aurait-on pu le voir venir ?**
+
+Ce projet répond aux trois, et débouche sur un outil d'aide à la décision qui **diagnostique**, **chiffre** et **anticipe**.
 
 ---
 
-##  Problématique centrale (Le "So What ?")
+##  Problématique
 
-> *"Dans quelle mesure un retard de livraison dégrade-t-il la satisfaction et la valeur client, et comment anticiper ces ruptures de promesse pour optimiser la performance logistique et commerciale ?"*
+> **Où naissent les ruptures de délai sur une marketplace, quel volume d'activité exposent-elles, et peut-on les anticiper au moment de la commande ?**
 
-**Sous-questions stratégiques :**
-1. **Seuil de tolérance** : À partir de combien de jours de retard la satisfaction client bascule-t-elle ?
-2. **Coût du retard** : Quelle est la perte de valeur imputable à un client insatisfait par un retard ?
-3. **Cartographie du risque** : Quels vendeurs, régions et catégories de produits concentrent les retards les plus coûteux ?
-4. **Anticipation** : Peut-on prédire, au moment de la commande, un risque de non-respect du délai promis ?
-5. **Levier d'action** : Quel est le gain estimé si l'on réduit les délais de X jours ?
+**Sous-questions :**
 
-> *Périmètre à confirmer après la phase de qualification des données.*
+| # | Question | Enjeu |
+|---|---|---|
+| 1 | À partir de combien de jours de retard la satisfaction bascule-t-elle ? | Seuil de tolérance |
+| 2 | Le retard naît-il de la préparation vendeur ou de l'acheminement ? | Attribuer la cause |
+| 3 | Quel chiffre d'affaires est exposé, et comment se concentre-t-il ? | Mesurer l'enjeu |
+| 4 | Un vendeur qui livre mal voit-il son activité reculer ? | Mécanisme de destruction de valeur |
+| 5 | Peut-on prédire le risque de retard dès la commande ? | Anticipation |
+| 6 | Quel gain attendre d'une réduction des délais ? | Justifier l'investissement |
+
+---
+
+##  Ce que la qualification a changé
+
+La problématique initiale portait sur l'impact des retards sur la **fidélité client**. La phase de qualification l'a invalidée avant toute analyse :
+
+| Hypothèse testée | Résultat | Décision |
+|---|---|---|
+| Les clients repassent commande | ❌ **3,12 %** de réachat | Analyse du comportement post-retard abandonnée |
+| Les dates de livraison sont exploitables | ✅ **99,99 %** | Périmètre confirmé |
+| Les avis clients sont disponibles | ✅ **99,33 %** | Lien retard-satisfaction mesurable |
+| Le retard est imputable à un vendeur | ✅ **98,7 %** mono-vendeur | Analyse au grain vendeur possible |
+
+**Le pivot :** faute de trajectoire client observable, le chiffrage ne porte plus sur une *perte future estimée* mais sur une **exposition présente mesurée** — le chiffre d'affaires réellement concerné par une promesse rompue. Le mécanisme de destruction de valeur est reporté au niveau du vendeur, qui dispose lui d'un historique exploitable.
+
+> *Aucun résultat de ce projet ne repose sur une donnée simulée ou une hypothèse non sourcée. Les limites sont documentées plutôt que contournées.*
 
 ---
 
 ##  Données utilisées
 
-**Source** : Brazilian E-Commerce Public Dataset by Olist (Kaggle)
-- **Volume** : 9 tables relationnelles, ~100 000 commandes réelles.
-- **Champs clés** : Date de commande, date de livraison estimée, date de livraison réelle, note de satisfaction, montant de la commande, région, vendeur.
+**Brazilian E-Commerce Public Dataset by Olist** (Kaggle)
 
-> *Les fichiers bruts ne sont pas versionnés (`.gitignore`). Seuls les scripts de nettoyage et les données agrégées sont poussés.*
+- 9 tables relationnelles, ~100 000 commandes réelles (2016-2018)
+- **Périmètre d'analyse : 96 470 commandes livrées**, 3 095 vendeurs, 27 états
+- Champs clés : dates d'achat, d'approbation, de remise au transporteur, de livraison, et **date de livraison estimée**
+
+Les quatre dates réelles permettent de décomposer le parcours en trois segments — validation, **préparation vendeur**, **acheminement** — et donc d'identifier où naît le retard.
+
+> *Les fichiers bruts ne sont pas versionnés (`.gitignore`). Seuls les scripts, notebooks et données agrégées sont poussés.*
 
 ---
 
-##  Démarche méthodologique (Le pipeline Consulting)
+##  Démarche méthodologique
 
-Chaque étape de ce projet répond à une phase de la méthode CRISP-DM, adaptée au conseil :
-
-| Dossier | Étape | Objectif métier | Livrable |
+| Dossier | Étape | Objectif | Livrable |
 | :--- | :--- | :--- | :--- |
-| `01_cadrage_besoin` | Cadrage & Règles de gestion | Définir ce qu'est un "retard" et une "promesse" (SLA). | Note de cadrage, hypothèses documentées |
-| `02_qualification_donnees` | Qualification | Audit de la qualité (dates manquantes, valeurs aberrantes). | Dictionnaire des données et rapport de fiabilité |
-| `03_preparation_donnees` | Préparation | Nettoyage et calcul des écarts (Jours de retard). | Table analytique (SQL / Python) prête à l'emploi |
-| `04_analyse_prediction` | Analyse & Modélisation | Analyse des impacts + Score de risque (ML). | Notebooks Python |
-| `05_dashboard` | Restitution | Visualisation interactive des pertes et des risques. | Rapport Power BI (pages "Constats" et "Scénarios") |
-| `06_conclusions_recommandations` | Synthèse | Propositions chiffrées et priorisées (Matrice ROI). | Executive Summary (PDF 5 slides) |
+| `01_cadrage_besoin` | Cadrage & règles de gestion | Définir la promesse, le retard, le périmètre | Note de cadrage (v1 et v2) |
+| `02_qualification_donnees` | Qualification | Vérifier que la donnée permet de répondre | Contrôles d'hypothèses, dictionnaire, rapport qualité |
+| `03_preparation_donnees` | Préparation | Jointures, nettoyage, calcul des écarts | Table analytique (SQL / Python) |
+| `04_analyse_prediction` | Analyse & modélisation | Seuils, concentration, score de risque | Notebooks Python |
+| `05_dashboard` | Restitution | Diagnostic visuel et simulation | Rapport Power BI |
+| `06_conclusions_recommandations` | Synthèse | Décisions chiffrées et priorisées | Executive summary (5 slides) |
 
 ---
 
-##  Ma valeur ajoutée (Ce qui rend ce projet unique)
+##  Ma valeur ajoutée
 
-- **Approche AMOA au centre** : Pas de code avant d'avoir défini les règles de gestion métier. Le projet est structuré comme une vraie mission de conseil.
-- **Du constat à la prédiction** : Ne pas se contenter de décrire la performance passée, mais anticiper les risques futurs.
-- **Un chiffrage financier** : Un décideur ne signe pas sur un graphique, il signe sur un retour sur investissement (ROI).
+- **Approche AMOA au centre.** Pas de code avant d'avoir défini les règles de gestion métier. Chaque indicateur est relié à un besoin identifié.
+- **Une qualification qui sert à quelque chose.** Les hypothèses ont été testées *avant* l'analyse, et l'une d'elles a modifié le périmètre. La démarche est tracée, pas reconstruite après coup.
+- **Un diagnostic, pas un constat.** Séparer le retard vendeur du retard transporteur, c'est produire deux leviers d'action distincts au lieu d'une alerte générale.
+- **Du passé à l'anticipation.** Le modèle prédictif estime le risque au moment de la commande, quand il est encore possible d'agir.
 
 ---
 
-##  Stack technique utilisée
+##  Stack technique
 
 - **Langages** : Python (Pandas, Scikit-learn, Matplotlib) · SQL
 - **Visualisation** : Power BI (DAX, Power Query)
-- **Gestion de projet** : Git / GitHub · Travail itératif par livrables incrémentaux
-- **Modélisation** : Algorithmes de classification pour la prédiction du risque
+- **Versioning** : Git / GitHub · Travail itératif par livrables incrémentaux
 
 ---
 
-##  Statut d'avancement (Work In Progress)
+##  Statut d'avancement
 
-*Démarrage du projet : Août 2026*
+*Démarrage : août 2026*
 
-- [ ] Cadrage du besoin et définition des métriques
-- [ ] Qualification des données (taux de remplissage, fiabilité)
-- [ ] Préparation de la table analytique (calcul des retards)
-- [ ] Analyse exploratoire et modélisation prédictive
-- [ ] Conception du Dashboard Power BI
-- [ ] Rédaction des recommandations finales
+- [x] Cadrage du besoin — note de cadrage v1
+- [x] Qualification des données — hypothèses H1 à H6 testées
+- [x] Révision du périmètre — note de cadrage v2
+- [ ] Définition des métriques et règles de gestion
+- [ ] Préparation de la table analytique
+- [ ] Analyse exploratoire et recherche des seuils
+- [ ] Modélisation prédictive
+- [ ] Dashboard Power BI
+- [ ] Recommandations finales
 
 ---
 
