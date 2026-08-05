@@ -8,6 +8,7 @@ contexte, problématique, périmètre, règles de gestion et métriques.
 | Fichier | Description |
 |---|---|
 | `note_de_cadrage.md` | Note de cadrage — version 2.0, révisée après qualification |
+| `regles_et_metriques.md` | 11 règles de gestion et 17 métriques |
 
 ## Principe
 
