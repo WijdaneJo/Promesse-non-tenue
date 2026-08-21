@@ -33,7 +33,7 @@ WITH base AS (
         -- ── Identifiants ────────────────────────────────────
         io.order_id,
         io.customer_id,
-
+		c.customer_state,
         -- ── Dates du parcours ───────────────────────────────
         -- Les 5 sont conservées : mart doit être AUTOSUFFISANT.
         -- Elles permettent de recalculer n'importe quoi sans
@@ -112,6 +112,7 @@ WITH base AS (
         idi.distance_km
 
     FROM intermediate.orders              AS io
+	LEFT JOIN staging.customers           AS c   ON io.customer_id = c.customer_id  
     LEFT JOIN intermediate.items_order    AS ii  ON io.order_id = ii.order_id
     LEFT JOIN intermediate.order_payments AS ip  ON io.order_id = ip.order_id
     LEFT JOIN intermediate.order_reviews  AS ir  ON io.order_id = ir.order_id
@@ -161,6 +162,8 @@ ORDER BY COUNT(*) DESC;
 
 
 SELECT * FROM mart.orders LIMIT 5;
+
+
 
 
 
