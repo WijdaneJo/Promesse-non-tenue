@@ -346,6 +346,11 @@ Deux profils d'états, deux leviers différents :
 | Promesse large, retard élevé | AL, MA, RR | L'ajustement a été fait et ne suffit pas | **Opérationnel** |
 | Promesse serrée, retard élevé | **RJ** | Calibré comme un état facile alors qu'il ne l'est pas | **Recalibrage** |
 
+> 🔁 **Précisé par O2.** La cause du retard de RJ est l'**acheminement** : 8 jours
+> en régime normal, contre 7 pour PR et MG, pourtant plus éloignés. Le levier
+> principal est donc la chaîne de transport ; le recalibrage de la promesse n'est
+> qu'une mesure d'attente. Voir `03_O2_constats.md`, constat 3.
+
 ---
 
 # 6. Deux évolutions structurelles
@@ -411,6 +416,13 @@ simuler mais une décision observable, dont on peut mesurer le résultat.
 > resserrer »*, on peut écrire : *« le resserrement a été engagé, il a été
 > absorbé par l'amélioration de l'acheminement, voici jusqu'où il peut aller »*.
 
+> 🔁 **Révisé par O6.** Ce constat vaut **jusqu'au printemps 2018**. À l'été, le
+> resserrement n'est plus absorbé : de juin à août, le taux de retard passe de
+> 1,2 % à 6,2 %, et de 0,7 % à 9,0 % vers São Paulo. Depuis 2017, la promesse a
+> perdu environ 9 jours (23 → 14) quand l'exécution n'en gagnait qu'environ 3
+> (acheminement 7 → 5, préparation 2 → 1). La limite du resserrement est donc
+> atteinte, et même dépassée en août. Voir `08_O6_constats.md`.
+
 ---
 
 # Synthèse — ce que O1 a établi
@@ -426,7 +438,7 @@ simuler mais une décision observable, dont on peut mesurer le résultat.
 | 7 | L'ampleur est faible partout (5 à 10 j) — sauf à RJ, 58 % de retards graves |
 | 8 | La distance explique la promesse, pas le retard : RJ et AL sortent du modèle |
 | 9 | La performance s'est améliorée après la crise : acheminement à 5 jours |
-| 10 | Olist a déjà resserré sa promesse de 40 % (23 → 14 jours) — constat validé |
+| 10 | Olist a déjà resserré sa promesse de 40 % (23 → 14 jours) — absorbé jusqu'au printemps 2018, **plus à l'été** *(révisé par O6)* |
 
 ## Le cas Rio de Janeiro
 

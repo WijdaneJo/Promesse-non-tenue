@@ -95,7 +95,9 @@ Sources : `SQL/O6_requetes.sql` (Q1 à Q3) · `PYTHON/O6_modele_predictif.ipynb`
 
 **Ce qu'il signifie.** Le retard dépend fortement de la marge que la promesse laisse au transport. Le modèle, entraîné sur une période de promesses longues, sous-estime ce risque.
 
-**Ce qu'il implique.** Un retard n'est pas seulement une livraison lente : c'est un **écart entre la promesse et la réalité**. Olist dispose de deux leviers, accélérer le transport **ou** promettre de façon réaliste. Ce résultat nuance O7 : la marge de sécurité est un gisement, mais la réduire a un coût en retards.
+**Ce qu'il implique.** Un retard n'est pas seulement une livraison lente : c'est un **écart entre la promesse et la réalité**. Olist dispose de deux leviers, accélérer le transport **ou** promettre de façon réaliste.
+
+Ce résultat **confirme O8 par l'observation** : retrancher des jours à la promesse coûte des retards. Et il **corrige O1 (constat 10)**, qui jugeait le resserrement « absorbé par l'amélioration de l'acheminement » : c'était vrai jusqu'au printemps, plus à l'été. Entre 2017 et août 2018, la promesse a perdu environ 9 jours (23 → 14) quand l'exécution n'en gagnait qu'environ 3 (acheminement 7 → 5, préparation 2 → 1). La marge s'est réduite d'environ 6 jours, et les retards sont repartis.
 
 ---
 
