@@ -9,6 +9,13 @@
 -- Règles     : RG-08 (seuil), RG-09 (mono-vendeur), RG-10 (fenêtres)
 -- Constats   : 06_O5_constats.md
 --
+-- GRAIN : UNE LIGNE PAR COMMANDE. staging.order_items est au
+-- grain ARTICLE ; la CTE order_seller en extrait un couple
+-- (commande, vendeur) unique. Sans elle, une commande de 3
+-- articles compterait 3 fois dans les effectifs, les taux et le
+-- seuil de 10 commandes (8 359 commandes mono-vendeur ont
+-- plusieurs articles).
+--
 -- POURQUOI CET OBJECTIF EXISTE : le projet a perdu son objectif
 -- initial en qualification. Avec 3,12 % de réachat (H1), on ne
 -- peut pas mesurer si un client déçu revient. O5 est le
@@ -84,7 +91,14 @@ WHERE nb_sellers = 1;
 --
 -- ⚠ order_p1 et order_p2 sont des ENTIERS : sans le * 100.0,
 -- la division entière donnerait 0 partout.
-WITH calcul AS (
+WITH order_seller AS (
+    -- Une ligne par commande mono-vendeur (voir en-tête)
+    SELECT DISTINCT oi.order_id, oi.seller_id
+    FROM staging.order_items AS oi
+    JOIN mart.orders AS m ON m.order_id = oi.order_id
+    WHERE m.nb_sellers = 1
+),
+calcul AS (
     SELECT
         seller_id,
         COUNT(*) FILTER (WHERE purchase_year = 2017
@@ -95,8 +109,8 @@ WITH calcul AS (
                            AND purchase_month BETWEEN 2 AND 8) AS order_phase2,
         AVG(is_late::INT) FILTER (WHERE purchase_year = 2018
                            AND purchase_month BETWEEN 2 AND 8) AS rate_late_p2
-    FROM mart.orders AS mo
-    LEFT JOIN staging.order_items AS soi ON soi.order_id = mo.order_id
+    FROM order_seller AS soi
+    JOIN mart.orders AS mo ON mo.order_id = soi.order_id
     WHERE nb_sellers = 1
     GROUP BY seller_id
     HAVING COUNT(*) FILTER (WHERE purchase_year = 2017
@@ -114,26 +128,26 @@ SELECT
 FROM calcul
 ORDER BY evolution_pct;
 
--- RÉSULTAT — 253 VENDEURS survivent au filtre
+-- RÉSULTAT — 241 VENDEURS survivent au filtre
 --
--- Sur 1 323 vendeurs retenus par RG-08 sur l'ensemble de la
+-- Sur 1 217 vendeurs retenus par RG-08 sur l'ensemble de la
 -- période, exiger 10 commandes DANS CHACUNE des deux fenêtres
--- en élimine 81 %. Ces 253 sont les vendeurs ÉTABLIS ET
+-- en élimine 80 %. Ces 241 sont les vendeurs ÉTABLIS ET
 -- DURABLES — c'est le biais de survie annoncé par RG-10,
 -- mesuré en Q6.
 --
 -- LES PLUS GROS RECULS
---   cca3071e…   427 →  49   −88,52 %   retard P1 : 3,51 %
---   6cd68b3e…    71 →  11   −84,51 %   retard P1 : 0,00 %  ←
---   44073f8b…    70 →  11   −84,29 %   retard P1 : 0,00 %  ←
+--   cca3071e…   363 →  45   −87,60 %   retard P1 : 3,58 %
+--   6cd68b3e…    67 →  11   −83,58 %   retard P1 : 0,00 %  ←
+--   44073f8b…    66 →  11   −83,33 %   retard P1 : 0,00 %  ←
 --
 -- LES PLUS FORTES CROISSANCES
---   ea8482cd…    12 → 643  +5 258 %    retard P1 : 0,00 %
---   955fee92…    33 → 992  +2 906 %    retard P1 : 0,00 %
---   1025f0e2…    53 → 886  +1 572 %    retard P1 : 1,89 %
+--   ea8482cd…    12 → 618  +5 050 %    retard P1 : 0,00 %
+--   955fee92…    27 → 845  +3 030 %    retard P1 : 0,00 %
+--   1025f0e2…    30 → 602  +1 907 %    retard P1 : 3,33 %
 --
 -- LES TAUX DE RETARD SONT FAIBLES DES DEUX CÔTÉS. Des vendeurs
--- à 0 % de retard perdent 85 % de leur activité ; d'autres à
+-- à 0 % de retard perdent 84 % de leur activité ; d'autres à
 -- 0 % en gagnent 5 000 %.
 --
 -- ⚠ LIRE UN TABLEAU À L'ŒIL N'EST PAS UNE PREUVE. Quantifié
@@ -149,7 +163,14 @@ ORDER BY evolution_pct;
 -- LE SEUIL EST +114 %, PAS 0 %. Le marché ayant doublé, un
 -- vendeur qui croît de 50 % perd des parts. Définir « recul »
 -- par une croissance négative serait faux.
-WITH calcul AS (
+WITH order_seller AS (
+    -- Une ligne par commande mono-vendeur (voir en-tête)
+    SELECT DISTINCT oi.order_id, oi.seller_id
+    FROM staging.order_items AS oi
+    JOIN mart.orders AS m ON m.order_id = oi.order_id
+    WHERE m.nb_sellers = 1
+),
+calcul AS (
     SELECT
         seller_id,
         COUNT(*) FILTER (WHERE purchase_year = 2017
@@ -158,8 +179,8 @@ WITH calcul AS (
                            AND purchase_month BETWEEN 2 AND 8) AS retard_p1,
         COUNT(*) FILTER (WHERE purchase_year = 2018
                            AND purchase_month BETWEEN 2 AND 8) AS order_p2
-    FROM mart.orders AS mo
-    LEFT JOIN staging.order_items AS soi ON soi.order_id = mo.order_id
+    FROM order_seller AS soi
+    JOIN mart.orders AS mo ON mo.order_id = soi.order_id
     WHERE nb_sellers = 1
     GROUP BY seller_id
     HAVING COUNT(*) FILTER (WHERE purchase_year = 2017
@@ -190,17 +211,16 @@ GROUP BY groupe;
 -- RÉSULTAT
 --
 --   Groupe                 Vendeurs  Retard P1  Évolution
---   Sous-performe            190       3,06 %    −11,05 %
---   Surperforme               63       3,36 %   +419,46 %
+--   Sous-performe            181       3,11 %    −13,17 %
+--   Surperforme               60       2,99 %   +413,78 %
 --
 -- LES DEUX GROUPES ONT UN TAUX DE RETARD IDENTIQUE.
--- 0,3 point d'écart — du bruit. Et dans le sens INVERSE de
--- l'attendu.
+-- 0,12 point d'écart — du bruit, sans portée.
 --
 -- → LE RETARD N'A AUCUN EFFET MESURABLE SUR LA TRAJECTOIRE
 --   D'UN VENDEUR.
 --
--- À NOTER : 190 vendeurs sur 253, soit 75 %, PERDENT DES PARTS
+-- À NOTER : 181 vendeurs sur 241, soit 75 %, PERDENT DES PARTS
 -- DE MARCHÉ. Dans une plateforme qui double, les trois quarts
 -- des vendeurs établis reculent relativement.
 --
@@ -221,7 +241,14 @@ GROUP BY groupe;
 --
 -- DÉFINITION : « disparu » = ZÉRO commande en P2. Un vendeur
 -- passé sous 10 commandes n'a pas disparu, il s'est contracté.
-WITH cte AS (
+WITH order_seller AS (
+    -- Une ligne par commande mono-vendeur (voir en-tête)
+    SELECT DISTINCT oi.order_id, oi.seller_id
+    FROM staging.order_items AS oi
+    JOIN mart.orders AS m ON m.order_id = oi.order_id
+    WHERE m.nb_sellers = 1
+),
+cte AS (
     SELECT
         seller_id,
         COUNT(*) FILTER (WHERE purchase_year = 2017
@@ -230,8 +257,8 @@ WITH cte AS (
                            AND purchase_month BETWEEN 2 AND 8) AS retard_p1,
         COUNT(*) FILTER (WHERE purchase_year = 2018
                            AND purchase_month BETWEEN 2 AND 8) AS order_p2
-    FROM mart.orders AS mo
-    LEFT JOIN staging.order_items AS soi ON soi.order_id = mo.order_id
+    FROM order_seller AS soi
+    JOIN mart.orders AS mo ON mo.order_id = soi.order_id
     WHERE nb_sellers = 1
     GROUP BY seller_id
     HAVING COUNT(*) FILTER (WHERE purchase_year = 2017
@@ -250,15 +277,15 @@ GROUP BY etat;
 -- RÉSULTAT
 --
 --   Groupe        Vendeurs   Retard P1
---   Disparus          96       5,40 %   ←
---   Survivants       331       3,52 %
+--   Disparus          81       4,76 %   ←
+--   Survivants       316       3,38 %
 --
--- LES DISPARUS AVAIENT 53 % DE RETARD EN PLUS.
--- L'écart est NET — contrairement aux 0,3 point de Q5.
+-- LES DISPARUS AVAIENT 41 % DE RETARD EN PLUS.
+-- L'écart est NET — contrairement aux 0,12 point de Q5.
 --
 -- → LA SANCTION EXISTE, MAIS ELLE EST BINAIRE :
---     Parmi les survivants    → aucun effet (3,06 % vs 3,36 %)
---     Survivants vs disparus  → écart net (3,52 % vs 5,40 %)
+--     Parmi les survivants    → aucun effet (3,11 % vs 2,99 %)
+--     Survivants vs disparus  → écart net (3,38 % vs 4,76 %)
 --
 --   Un vendeur qui livre mal NE RECULE PAS PROGRESSIVEMENT.
 --   IL DISPARAÎT.
@@ -285,20 +312,25 @@ GROUP BY etat;
 --
 -- QUESTION : ces vendeurs disparaissent-ils davantage ?
 --
--- Le CASE WHEN ... THEN 1 ELSE 0 remplace is_late::INT — il
--- n'existe pas de colonne booléenne pour le dépassement, il
--- faut la construire.
-WITH activite AS (
+-- is_limit_exceeded est désormais une colonne de mart.orders
+-- (date limite la plus tôt de la commande, MIN).
+WITH order_seller AS (
+    -- Une ligne par commande mono-vendeur (voir en-tête)
+    SELECT DISTINCT oi.order_id, oi.seller_id
+    FROM staging.order_items AS oi
+    JOIN mart.orders AS m ON m.order_id = oi.order_id
+    WHERE m.nb_sellers = 1
+),
+activite AS (
     SELECT
         soi.seller_id,
         COUNT(*) FILTER (WHERE mo.purchase_year = 2018
                            AND mo.purchase_month BETWEEN 2 AND 8) AS order_p2,
-        AVG(CASE WHEN mo.order_delivered_carrier_date > soi.shipping_limit_date
-                 THEN 1 ELSE 0 END)
+        AVG(mo.is_limit_exceeded::INT)
             FILTER (WHERE mo.purchase_year = 2017
                       AND mo.purchase_month BETWEEN 2 AND 8) AS taux_depassement_p1
-    FROM mart.orders AS mo
-    JOIN staging.order_items AS soi ON soi.order_id = mo.order_id
+    FROM order_seller AS soi
+    JOIN mart.orders AS mo ON mo.order_id = soi.order_id
     WHERE mo.nb_sellers = 1
       AND mo.order_delivered_carrier_date IS NOT NULL
     GROUP BY soi.seller_id
@@ -321,14 +353,15 @@ GROUP BY profil;
 -- RÉSULTAT
 --
 --   Profil                Vendeurs  Disparus  Taux disparition  Dépassement moyen
---   Dépassement ≤ 20 %      360        76         21,11 %            3,87 %
---   Dépassement > 20 %       67        20         29,85 %           37,89 %  ←
+--   Dépassement ≤ 20 %      340        65         19,12 %            4,13 %
+--   Dépassement > 20 %       57        16         28,07 %           36,93 %  ←
 --
 -- LES VENDEURS QUI NE TIENNENT PAS LEUR ENGAGEMENT
--- CONTRACTUEL DISPARAISSENT 41 % PLUS SOUVENT.
+-- CONTRACTUEL DISPARAISSENT 47 % PLUS SOUVENT.
+-- Prudence : petits effectifs (57 vendeurs, 16 disparus).
 --
--- ET LES DEUX GROUPES NE SE RESSEMBLENT PAS : 37,89 % de
--- dépassement moyen contre 3,87 %. Ce sont deux comportements
+-- ET LES DEUX GROUPES NE SE RESSEMBLENT PAS : 36,93 % de
+-- dépassement moyen contre 4,13 %. Ce sont deux comportements
 -- distincts, pas deux nuances d'un même profil.
 --
 -- → LE DÉPASSEMENT DE LA DATE LIMITE EST UN SIGNAL D'ALERTE
@@ -352,21 +385,26 @@ GROUP BY profil;
 --
 -- ⚠ SEUIL ABAISSÉ À 5 COMMANDES par demi-période — sinon trop
 -- peu de vendeurs survivraient au découpage.
-WITH activite AS (
+WITH order_seller AS (
+    -- Une ligne par commande mono-vendeur (voir en-tête)
+    SELECT DISTINCT oi.order_id, oi.seller_id
+    FROM staging.order_items AS oi
+    JOIN mart.orders AS m ON m.order_id = oi.order_id
+    WHERE m.nb_sellers = 1
+),
+activite AS (
     SELECT
         soi.seller_id,
         COUNT(*) FILTER (WHERE mo.purchase_year = 2018
                            AND mo.purchase_month BETWEEN 2 AND 8) AS order_p2,
-        AVG(CASE WHEN mo.order_delivered_carrier_date > soi.shipping_limit_date
-                 THEN 1 ELSE 0 END)
+        AVG(mo.is_limit_exceeded::INT)
             FILTER (WHERE mo.purchase_year = 2017
                       AND mo.purchase_month BETWEEN 2 AND 4) AS depassement_debut,
-        AVG(CASE WHEN mo.order_delivered_carrier_date > soi.shipping_limit_date
-                 THEN 1 ELSE 0 END)
+        AVG(mo.is_limit_exceeded::INT)
             FILTER (WHERE mo.purchase_year = 2017
                       AND mo.purchase_month BETWEEN 6 AND 8) AS depassement_fin
-    FROM mart.orders AS mo
-    JOIN staging.order_items AS soi ON soi.order_id = mo.order_id
+    FROM order_seller AS soi
+    JOIN mart.orders AS mo ON mo.order_id = soi.order_id
     WHERE mo.nb_sellers = 1
       AND mo.order_delivered_carrier_date IS NOT NULL
     GROUP BY soi.seller_id
@@ -384,31 +422,23 @@ SELECT
 FROM activite
 GROUP BY etat;
 
--- RÉSULTAT — CONTRE-INTUITIF
+-- RÉSULTAT
 --
 --   Groupe      Vendeurs  Fév-avr  Juin-août  Évolution
---   Disparus       32      21,84 %   11,92 %   −9,92 pts  ←
---   Survivants    197       7,14 %    7,22 %   +0,09 pt
+--   Disparus       27      15,53 %   12,79 %   −2,74 pts  ←
+--   Survivants    183       7,29 %    7,08 %   −0,20 pt
 --
--- LES DISPARUS S'AMÉLIORENT AVANT DE PARTIR. Leur taux de
--- dépassement baisse de moitié, alors que les survivants
--- restent stables.
+-- AUCUNE DÉGRADATION N'ANNONCE LE DÉPART. Les deux groupes
+-- restent à peu près stables : −2,74 points sur 27 vendeurs ne
+-- permettent pas de conclure à une tendance.
 --
--- CE N'EST PAS UNE DÉGRADATION PROGRESSIVE — C'EST L'INVERSE.
---
--- TROIS LECTURES POSSIBLES
---   A. Ils tentent de se redresser et échouent quand même
---   B. Ils réduisent leur volume et gèrent mieux leurs
---      dernières commandes
---   C. EFFET DE SÉLECTION — seuls 32 disparus sur 96 passent le
---      filtre des 5 commandes par demi-période. Ceux partis
---      brutalement, sans commandes en fin de P1, sont exclus.
---
--- C EST PROBABLEMENT DOMINANT : on passe de 96 disparus à 32.
---
--- CE QU'ON RETIENT MALGRÉ TOUT — LE NIVEAU EST LE VRAI SIGNAL :
--- 21,84 % contre 7,14 % dès février-avril 2017. TROIS FOIS PLUS,
+-- LE NIVEAU, EN REVANCHE, SÉPARE NETTEMENT LES GROUPES :
+-- 15,53 % contre 7,29 % dès février-avril 2017. DEUX FOIS PLUS,
 -- six mois avant le départ.
+--
+-- Prudence : seuls 27 disparus sur 81 passent le filtre des 5
+-- commandes par demi-période. Ceux partis brutalement, sans
+-- commandes en fin de P1, sont exclus de ce test.
 --
 -- → LA RECOMMANDATION CHANGE DE FORME :
 --   ce n'est pas « surveillez la PENTE », c'est
@@ -422,20 +452,20 @@ GROUP BY etat;
 -- ============================================================
 --  1. LE MARCHÉ A DOUBLÉ (+114 %) entre les deux fenêtres —
 --     tout vendeur sous ce seuil perd des parts
---  2. 253 VENDEURS seulement sont présents dans les deux
---     périodes avec au moins 10 commandes (sur 1 323)
---  3. PARMI EUX, LE RETARD N'A AUCUN EFFET : 3,06 % chez ceux
---     qui reculent, 3,36 % chez ceux qui progressent
+--  2. 241 VENDEURS seulement sont présents dans les deux
+--     périodes avec au moins 10 commandes (sur 1 217)
+--  3. PARMI EUX, LE RETARD N'A AUCUN EFFET : 3,11 % chez ceux
+--     qui reculent, 2,99 % chez ceux qui progressent
 --  4. 75 % DES VENDEURS ÉTABLIS PERDENT DES PARTS DE MARCHÉ
---  5. MAIS LES DISPARUS AVAIENT 5,40 % DE RETARD contre 3,52 %
---     pour les survivants — 53 % de plus
+--  5. MAIS LES DISPARUS AVAIENT 4,76 % DE RETARD contre 3,38 %
+--     pour les survivants — 41 % de plus
 --  6. LA SANCTION EST BINAIRE : un vendeur qui livre mal ne
 --     recule pas, IL DISPARAÎT
 --  7. LES VENDEURS DÉPASSANT LEUR DATE LIMITE D'EXPÉDITION
---     DISPARAISSENT 41 % PLUS SOUVENT (29,85 % contre 21,11 %)
+--     DISPARAISSENT 47 % PLUS SOUVENT (28,07 % contre 19,12 %)
 --  8. LE SIGNAL EST DANS LE NIVEAU, PAS DANS LA PENTE :
---     21,84 % de dépassement six mois avant le départ, contre
---     7,14 % pour les survivants
+--     15,53 % de dépassement six mois avant le départ, contre
+--     7,29 % pour les survivants
 --
 -- CONSÉQUENCE POUR LA RECOMMANDATION
 -- Le marché sanctionne, mais tardivement et brutalement —

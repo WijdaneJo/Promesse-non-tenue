@@ -2,14 +2,21 @@
 -- ÉTAPE 6 — COUCHE MART : mart.sellers
 -- ============================================================
 -- Table analytique au grain VENDEUR.
--- Une ligne = un vendeur retenu (1 323), avec son profil de
+-- Une ligne = un vendeur retenu (1 217), avec son profil de
 -- performance de livraison.
 --
 -- Usage : O5 (lien entre performance de livraison et activité)
 -- et classement des vendeurs pour la direction des
 -- partenariats.
 --
--- PRÉREQUIS : 01_mart_orders.sql.
+-- PRÉREQUIS : 02_mart_orders.sql.
+--
+-- GRAIN : UNE LIGNE PAR COMMANDE avant agrégation.
+-- staging.order_items est au grain ARTICLE ; la CTE order_seller
+-- en extrait un couple (commande, vendeur) unique. Sans elle, une
+-- commande de 3 articles compterait 3 fois dans nb_orders et les
+-- taux, et son payment_total serait additionné 3 fois dans
+-- total_revenue.
 --
 -- DEUX FILTRES, DEUX RÈGLES DISTINCTES :
 --
@@ -23,10 +30,10 @@
 --     Le WHERE ne peut pas faire ce travail : au moment où il
 --     s'applique, le comptage par vendeur n'existe pas encore.
 --
--- IMPACT DU SEUIL — mesuré avant de le fixer :
---   1 323 vendeurs retenus sur 2 948   (44,9 %)
---   101 382 commandes sur 107 087      (94,7 %)
---   → on écarte 55 % des vendeurs mais seulement 5,3 % de
+-- IMPACT DU SEUIL — mesuré avant de le fixer (contrôle 4) :
+--   1 217 vendeurs retenus sur 2 948   (41,3 %)
+--   89 250 commandes sur 95 191        (93,8 %)
+--   → on écarte 59 % des vendeurs mais seulement 6,2 % de
 --     l'activité. Le bruit statistique part, le phénomène reste.
 --
 -- late_rate : AVG(is_late::INT). En PostgreSQL, true → 1 et
@@ -42,6 +49,13 @@
 DROP TABLE IF EXISTS mart.sellers;
 
 CREATE TABLE mart.sellers AS
+    WITH order_seller AS (
+        -- Une ligne par commande mono-vendeur (voir en-tête)
+        SELECT DISTINCT oi.order_id, oi.seller_id
+        FROM staging.order_items AS oi
+        JOIN mart.orders AS m ON m.order_id = oi.order_id
+        WHERE m.nb_sellers = 1
+    )
     SELECT
         si.seller_id,
         ss.seller_state,
@@ -58,19 +72,42 @@ CREATE TABLE mart.sellers AS
         -- Satisfaction reçue
         AVG(mo.avg_score)         AS avg_score
 
-    FROM mart.orders AS mo
-    LEFT JOIN staging.order_items AS si ON mo.order_id = si.order_id
+    FROM order_seller AS si
+    JOIN mart.orders              AS mo ON mo.order_id = si.order_id
     LEFT JOIN staging.sellers     AS ss ON si.seller_id = ss.seller_id
-    WHERE mo.nb_sellers = 1
     GROUP BY si.seller_id, ss.seller_state
     HAVING COUNT(*) >= 10;
 
 
 -- ── Contrôles ───────────────────────────────────────────────
-SELECT COUNT(*) FROM mart.sellers;   -- attendu : 1 323
+-- 1. Nombre de vendeurs retenus (attendu : 1 217)
+SELECT COUNT(*) FROM mart.sellers;
 
+-- 2. Unicité (attendu : 0 ligne)
 SELECT seller_id FROM mart.sellers
-GROUP BY seller_id HAVING COUNT(*) > 1;   -- attendu : 0 ligne
+GROUP BY seller_id HAVING COUNT(*) > 1;
 
+-- 3. Cohérence du CA : ne peut pas dépasser le CA mono-vendeur
+SELECT
+    (SELECT SUM(total_revenue) FROM mart.sellers)                AS ca_vendeurs_retenus,
+    (SELECT SUM(payment_total) FROM mart.orders
+      WHERE nb_sellers = 1)                                      AS ca_mono_vendeur;
+-- Résultat : 13 716 463 R$ sur 15 092 034 R$ (90,9 %)
+
+-- 4. Impact du seuil RG-08 (pour l'en-tête)
+WITH par_vendeur AS (
+    SELECT oi.seller_id, COUNT(DISTINCT oi.order_id) AS nb
+    FROM staging.order_items AS oi
+    JOIN mart.orders AS mo ON mo.order_id = oi.order_id
+    WHERE mo.nb_sellers = 1
+    GROUP BY oi.seller_id
+)
+SELECT
+    COUNT(*) FILTER (WHERE nb >= 10)  AS vendeurs_retenus,
+    COUNT(*)                          AS vendeurs_total,
+    SUM(nb)  FILTER (WHERE nb >= 10)  AS commandes_retenues,
+    SUM(nb)                           AS commandes_total
+FROM par_vendeur;
+
+-- 5. Les 10 vendeurs les plus en difficulté sur la livraison
 SELECT * FROM mart.sellers ORDER BY late_rate DESC LIMIT 10;
--- Les 10 vendeurs les plus en difficulté sur la livraison.

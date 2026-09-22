@@ -36,15 +36,15 @@ correction la plus importante de cet objectif.
 
 ---
 
-# 2. Seuls 253 vendeurs sont analysables
+# 2. Seuls 241 vendeurs sont analysables
 
 Trois règles se cumulent : RG-09 (mono-vendeur), RG-08 (10 commandes **dans
 chaque** fenêtre), RG-10 (présent dans les deux).
 
-**Résultat : 253 vendeurs**, sur 1 323 retenus par RG-08 sur l'ensemble de la
-période. **81 % sont éliminés.**
+**Résultat : 241 vendeurs**, sur 1 217 retenus par RG-08 sur l'ensemble de la
+période. **80 % sont éliminés.**
 
-Ces 253 sont les vendeurs **établis et durables**. C'est exactement le biais de
+Ces 241 sont les vendeurs **établis et durables**. C'est exactement le biais de
 survie annoncé par RG-10 — il est mesuré au constat 4, et il changera la
 conclusion.
 
@@ -56,29 +56,29 @@ conclusion.
 
 | Groupe | Vendeurs | Retard P1 moyen | Évolution moyenne |
 |---|---|---|---|
-| **Sous-performe le marché** | 190 | **3,06 %** | −11,05 % |
-| **Surperforme le marché** | 63 | **3,36 %** | +419,46 % |
+| **Sous-performe le marché** | 181 | **3,11 %** | −13,17 % |
+| **Surperforme le marché** | 60 | **2,99 %** | +413,78 % |
 
 *Le seuil est +114 %, pas 0 %.*
 
 ## Ce que cela signifie
 
-**Les deux groupes ont un taux de retard identique.** 0,3 point d'écart — du
-bruit. Et dans le sens **inverse** de l'attendu.
+**Les deux groupes ont un taux de retard identique.** 0,12 point d'écart — du
+bruit, sans portée.
 
 Quelques cas individuels le confirment :
 
 | Vendeur | Évolution | Retard P1 |
 |---|---|---|
-| 6cd68b3e… | **−84,5 %** | **0,00 %** |
-| ea8482cd… | **+5 258 %** | **0,00 %** |
+| 6cd68b3e… | **−83,6 %** | **0,00 %** |
+| ea8482cd… | **+5 050 %** | **0,00 %** |
 
-Des vendeurs à zéro retard perdent 85 % de leur activité ; d'autres à zéro
+Des vendeurs à zéro retard perdent 84 % de leur activité ; d'autres à zéro
 retard en gagnent 5 000 %.
 
 ## Une observation de contexte
 
-**190 vendeurs sur 253, soit 75 %, perdent des parts de marché.** Dans une
+**181 vendeurs sur 241, soit 75 %, perdent des parts de marché.** Dans une
 plateforme qui double, les trois quarts des vendeurs établis reculent
 relativement.
 
@@ -86,7 +86,7 @@ relativement.
 
 > Le marché ne sanctionne pas les vendeurs défaillants.
 
-⚠️ **Corrigée par le constat suivant.**
+**Corrigée par le constat suivant.**
 
 ---
 
@@ -104,16 +104,16 @@ Le constat 3 ne porte que sur les vendeurs présents dans les deux périodes.
 
 | Groupe | Vendeurs | Retard P1 |
 |---|---|---|
-| **Disparus** | 96 | **5,40 %** |
-| Survivants | 331 | **3,52 %** |
+| **Disparus** | 81 | **4,76 %** |
+| Survivants | 316 | **3,38 %** |
 
-**Les disparus avaient 53 % de retard en plus.**
+**Les disparus avaient 41 % de retard en plus.**
 
 ## Ce que cela signifie
 
 ```
-Parmi les survivants        → le retard n'a AUCUN effet   (3,06 % vs 3,36 %)
-Survivants vs disparus      → l'écart est NET             (3,52 % vs 5,40 %)
+Parmi les survivants        → le retard n'a AUCUN effet   (3,11 % vs 2,99 %)
+Survivants vs disparus      → l'écart est NET             (3,38 % vs 4,76 %)
 ```
 
 > **Un vendeur qui livre mal ne recule pas progressivement. Il disparaît.**
@@ -126,7 +126,7 @@ vendeur est déjà perdu pour la plateforme.
 > **Olist ne peut pas compter sur cette autorégulation.** Elle doit intervenir
 > **en amont**, avant que le vendeur ne quitte la plateforme.
 
-> ⚠️ **Nuance.** 96 vendeurs sur 427 ont disparu, soit **22 %** — ce n'est pas
+> **Nuance.** 81 vendeurs sur 397 ont disparu, soit **20 %** — ce n'est pas
 > marginal. Mais « disparu du dataset » ne signifie pas forcément « a cessé son
 > activité » : le dataset s'arrête en août 2018.
 
@@ -149,17 +149,20 @@ vendeur. Trois avantages sur le taux de retard :
 
 | Profil | Vendeurs | Disparus | Taux de disparition | Dépassement moyen |
 |---|---|---|---|---|
-| Dépassement ≤ 20 % | 360 | 76 | **21,11 %** | 3,87 % |
-| **Dépassement > 20 %** | 67 | 20 | **29,85 %** | **37,89 %** |
+| Dépassement ≤ 20 % | 340 | 65 | **19,12 %** | 4,13 % |
+| **Dépassement > 20 %** | 57 | 16 | **28,07 %** | **36,93 %** |
 
 ## Ce que cela signifie
 
 **Les vendeurs qui ne tiennent pas leur engagement contractuel disparaissent
-41 % plus souvent.**
+47 % plus souvent.**
 
-Et les deux groupes ne se ressemblent pas : **37,89 % contre 3,87 %** de
+Et les deux groupes ne se ressemblent pas : **36,93 % contre 4,13 %** de
 dépassement moyen. Ce sont deux comportements distincts, pas deux nuances d'un
 même profil.
+
+> **Prudence.** Le groupe à risque compte 57 vendeurs, dont 16 disparus.
+> L'écart est net, mais il repose sur de petits effectifs.
 
 ## Ce que cela implique
 
@@ -179,34 +182,29 @@ fenêtre d'intervention. S'il est stable, le départ n'est précédé d'aucun si
 
 P1 est découpée en deux moitiés : février-avril et juin-août 2017.
 
-## Le fait — contre-intuitif
+## Le fait
 
 | Groupe | Vendeurs | Fév-avr | Juin-août | Évolution |
 |---|---|---|---|---|
-| **Disparus** | 32 | **21,84 %** | **11,92 %** | **−9,92 pts** |
-| Survivants | 197 | 7,14 % | 7,22 % | +0,09 pt |
+| **Disparus** | 27 | **15,53 %** | **12,79 %** | −2,74 pts |
+| Survivants | 183 | 7,29 % | 7,08 % | −0,20 pt |
 
-**Les disparus s'améliorent avant de partir.** Leur taux baisse de moitié, alors
-que les survivants restent stables.
+## Ce que cela signifie
 
-## Trois lectures possibles
+**Aucune dégradation n'annonce le départ.** Les deux groupes restent à peu près
+stables : une variation de 2,74 points sur 27 vendeurs ne permet pas de conclure
+à une tendance.
 
-| Hypothèse | Ce qu'elle supposerait |
-|---|---|
-| A — Tentative de redressement | Ils essaient et échouent quand même |
-| B — Effet de volume | Ils réduisent leur activité et gèrent mieux leurs dernières commandes |
-| **C — Effet de sélection** | **Seuls 32 disparus sur 96 passent le filtre** des 5 commandes par demi-période |
+**Le niveau, en revanche, sépare nettement les deux groupes** : 15,53 % de
+dépassement chez les futurs disparus contre 7,29 % chez les survivants, soit
+**deux fois plus, six mois avant le départ.**
 
-**C est probablement dominant.** Ceux qui sont partis brutalement, sans commandes
-en fin de P1, sont exclus de ce test.
-
-## Ce qu'on retient malgré tout
-
-**Le niveau de départ est le vrai signal** : 21,84 % contre 7,14 %. **Trois fois
-plus, six mois avant le départ.**
-
-> Un vendeur qui dépasse sa date limite trois fois plus que la moyenne est déjà
+> Un vendeur qui dépasse sa date limite deux fois plus que la moyenne est déjà
 > en danger — sans qu'il soit besoin d'attendre une dégradation.
+
+> **Prudence.** Seuls 27 disparus sur 81 passent le filtre des 5 commandes par
+> demi-période. Ceux qui sont partis brutalement, sans commandes en fin de P1,
+> sont exclus de ce test.
 
 ## Ce que cela implique
 
@@ -240,13 +238,13 @@ fausse.**
 | # | Constat |
 |---|---|
 | 1 | **Le marché a doublé** (+114 %) — tout vendeur sous ce seuil perd des parts |
-| 2 | **253 vendeurs seulement** sont présents dans les deux périodes |
-| 3 | **Parmi eux, le retard n'a aucun effet** : 3,06 % contre 3,36 % |
+| 2 | **241 vendeurs seulement** sont présents dans les deux périodes |
+| 3 | **Parmi eux, le retard n'a aucun effet** : 3,11 % contre 2,99 % |
 | 4 | **75 % des vendeurs établis** perdent des parts de marché |
-| 5 | **Les disparus avaient 5,40 % de retard** contre 3,52 % — 53 % de plus |
+| 5 | **Les disparus avaient 4,76 % de retard** contre 3,38 % — 41 % de plus |
 | 6 | **La sanction est binaire** : un vendeur qui livre mal ne recule pas, il disparaît |
-| 7 | **Les vendeurs dépassant leur date limite disparaissent 41 % plus souvent** |
-| 8 | **Le signal est dans le niveau** : 21,84 % six mois avant le départ, contre 7,14 % |
+| 7 | **Les vendeurs dépassant leur date limite disparaissent 47 % plus souvent** |
+| 8 | **Le signal est dans le niveau** : 15,53 % de dépassement six mois avant le départ, contre 7,29 % |
 
 ---
 
@@ -263,7 +261,7 @@ déjà perdu. L'autorégulation ne suffit pas.
 |---|---|
 | Disponible | Dès l'expédition |
 | Imputable | Au vendeur, sans ambiguïté |
-| Prédictif | +41 % de risque de départ au-delà de 20 % |
+| Prédictif | +47 % de risque de départ au-delà de 20 % |
 | Seuil d'alerte | **20 % de dépassement** |
 
 ---
@@ -285,11 +283,11 @@ seuil.
 
 # Questions ouvertes
 
-- [ ] **Les 96 vendeurs disparus ont-ils cessé leur activité ou simplement
+- [ ] **Les vendeurs disparus ont-ils cessé leur activité ou simplement
       réduit ?** Le dataset s'arrête en août 2018 — impossible de trancher
 - [ ] Le seuil de 20 % est-il optimal ? Un test à 15 % ou 25 % affinerait
       l'alerte
-- [ ] Le constat 6 est fragilisé par l'effet de sélection (32 disparus sur 96).
+- [ ] Le constat 6 est fragilisé par l'effet de sélection (27 disparus sur 81).
       Un découpage différent de P1 donnerait-il un résultat plus robuste ?
 
 > **Hors périmètre assumé** : expliquer ce qui détermine la trajectoire d'un

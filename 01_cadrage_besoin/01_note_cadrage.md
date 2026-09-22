@@ -1,7 +1,7 @@
 # Note de cadrage — La Promesse Non Tenue
 
-**Version 3.1 — révisée après préparation des données**
-*Remplace la version 2.0 (post-qualification) et la version 1.0 (avant accès aux données).*
+**Version 3.2 — déclencheur ancré dans les données**
+*Remplace les versions 3.1 (post-préparation), 2.0 (post-qualification) et 1.0 (avant accès aux données).*
 
 ---
 
@@ -44,10 +44,20 @@ non-respect du délai.
 
 ### Le déclencheur de la mission
 
-La direction constate une dégradation des notes de satisfaction et une pression
-concurrentielle croissante, sans disposer d'éléments pour répondre à trois
-questions : où le problème se situe, quel volume d'activité il concerne, et sur
-quels leviers agir en priorité.
+**En mars 2018, le taux de retard d'Olist passe de moins de 5 % à 18,96 %, et la
+note de satisfaction tombe à 3,81, son plus bas niveau.** Le même décrochage
+s'était produit au Black Friday de novembre 2017.
+
+**Le paradoxe :** Olist promet large (91,88 % des commandes arrivent en avance)
+et rompt pourtant sa promesse une fois sur quinze.
+
+La direction ne sait pas **où naissent ces ruptures, quel volume d'activité
+elles exposent, sur quels leviers agir, ni si elle peut les anticiper.**
+
+> **Cadre du projet.** Projet personnel réalisé sur le jeu de données public
+> Olist (Kaggle, commandes 2016-2018, anonymisées à la source). La « direction »
+> est un commanditaire fictif, utilisé pour cadrer la démarche comme une mission
+> réelle ; **tous les chiffres cités sont issus des données.**
 
 ---
 
@@ -432,3 +442,4 @@ La mission est considérée comme réussie si :
 | 2.0 | | Révision post-qualification : problématique recentrée après invalidation de H1 (réachat 3,12 %) ; ajout de la décomposition du délai (O2) et de l'analyse au grain vendeur (O5) ; ajout de la section d'analyse de sensibilité |
 | 3.0 | | Révision post-préparation : périmètre définitif arrêté à 96 447 commandes après application de RG-03 ; correction du volume RG-04 (674 et non 1 350) ; réintégration de la table de géolocalisation et calcul de la distance ; ajout de la section 4.4 (corrections et anomalies) ; ajout de la section 8 (premiers résultats) ; ajout de deux limites assumées (expéditions indistinguables, jours calendaires) |
 | 3.1 | | Intégration de **SQ7** et de l'objectif **O8** (calibrage des délais annoncés), ouverts par H12 et confirmés par la préparation. Ajout de H11 et H12 au tableau 4.3. Ajout de la direction marketing aux parties prenantes. Ajout d'une limite assumée sur le coût commercial non mesurable. Critères de succès portés à 7. |
+| 3.2 | | Réécriture du **déclencheur de la mission** : la « dégradation des notes » et la « pression concurrentielle », non vérifiées, sont remplacées par un constat mesuré (note moyenne mensuelle : 3,81 en mars 2018 contre ~4,2 en 2017, en miroir des pics de retard). Ajout d'un encadré précisant le cadre du projet (commanditaire fictif, chiffres réels). |

@@ -28,7 +28,20 @@
 DROP TABLE IF EXISTS mart.orders;
 
 CREATE TABLE mart.orders AS
-WITH base AS (
+WITH limits AS (
+    -- ── Date limite d'expédition (découverte 4, V11) ────────
+    -- Fixée par Olist pour CHAQUE ARTICLE : une commande peut
+    -- en avoir plusieurs (336 commandes ont des dates
+    -- différentes). On garde la PLUS TÔT (MIN) : si un seul
+    -- article dépasse sa date, le vendeur n'a pas tenu son
+    -- engagement. Choix conservateur, cohérent avec RG-06.
+    SELECT
+        order_id,
+        MIN(shipping_limit_date) AS shipping_limit_date
+    FROM staging.order_items
+    GROUP BY order_id
+),
+base AS (
     SELECT
         -- ── Identifiants ────────────────────────────────────
         io.order_id,
@@ -44,6 +57,7 @@ WITH base AS (
         io.order_delivered_carrier_date,
         io.order_delivered_customer_date,
         io.order_estimated_delivery_date,
+        lim.shipping_limit_date,
 
         -- ── Écart à la promesse ─────────────────────────────
         -- Sens : RÉELLE − ESTIMÉE. Positif = retard.
@@ -117,6 +131,7 @@ WITH base AS (
     LEFT JOIN intermediate.order_payments AS ip  ON io.order_id = ip.order_id
     LEFT JOIN intermediate.order_reviews  AS ir  ON io.order_id = ir.order_id
     LEFT JOIN intermediate.distances      AS idi ON io.order_id = idi.order_id
+    LEFT JOIN limits                      AS lim ON io.order_id = lim.order_id
 )
 SELECT
     base.*,
@@ -126,6 +141,13 @@ SELECT
     -- Seuil > 0 et non >= 0 : livré le jour exact de la
     -- promesse, l'engagement est TENU.
     (gap > 0) AS is_late,
+
+    -- ── Dépassement de la date limite d'expédition (V11) ────
+    -- Vrai si le vendeur a remis le colis au transporteur
+    -- APRÈS la date limite. Timestamps complets, pas ::DATE :
+    -- la date limite porte une heure précise.
+    -- NULL si la date de remise au transporteur manque (1 cas).
+    (order_delivered_carrier_date > shipping_limit_date) AS is_limit_exceeded,
 
     -- ── Tranches de gravité (M-14) ──────────────────────────
     -- Bornes issues de la DISTRIBUTION OBSERVÉE, pas de
@@ -161,15 +183,13 @@ ORDER BY COUNT(*) DESC;
 --           Late 1 637 | Too late 880 | Very late 345
 
 
+-- Dépassement : volume et taux de retard associé
+SELECT
+    is_limit_exceeded,
+    COUNT(*)                                  AS nb_commandes,
+    ROUND(AVG(is_late::INT) * 100, 2)         AS taux_retard_pct
+FROM mart.orders
+GROUP BY is_limit_exceeded;
+-- Attendu : ~×4 entre TRUE et FALSE (résultat O2) | 1 NULL
+
 SELECT * FROM mart.orders LIMIT 5;
-
-
-
-
-
-
-
-
-
-	
-
