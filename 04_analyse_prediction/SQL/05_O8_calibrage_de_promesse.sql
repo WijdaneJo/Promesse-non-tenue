@@ -121,35 +121,28 @@ ORDER BY purchase_year, purchase_month;
 -- n'a changé. Il peut cacher deux mouvements qui se compensent.
 -- Toujours regarder les composantes, pas seulement le résultat.
 
--- ════════════════════════════════════════════════════════════
--- 🔁 RÉVISÉ PAR O6 — CETTE LECTURE NE TIENT PLUS À L'ÉTÉ 2018
--- ════════════════════════════════════════════════════════════
+-- ============================================================
+-- RÉVISÉ PAR O6 ET PAR Q1 TER : CETTE LECTURE NE TIENT PAS À
+-- L'ÉCHELLE DU MOIS
+-- ============================================================
 -- Deux erreurs dans l'interprétation ci-dessus :
 --
--- 1. LE CALCUL « 2018 : 14 − 1 = 13 » EST FAUX. L'exécution n'est
---    pas de 1 jour. Mesurée en O1, elle est d'environ 6 jours en
---    2018 (validation 0 + préparation 1 + acheminement 5).
+-- 1. LE CALCUL « 2018 : 14 - 1 = 13 » EST FAUX. En août 2018, le
+--    délai réel médian est de 7 jours (Q1 ter). Le bon calcul est
+--    14 - 7 = 7 jours de marge, et Q1 ter mesure exactement 7.
 --
--- 2. LA MÉDIANE ANNUELLE MASQUE L'ÉTÉ. Les −13 jours de 2018
---    mélangent janvier-juillet (promesses de 20 à 28 jours) et
---    août (14 jours). Un chiffre annuel ne peut pas décrire une
---    politique qui change en cours d'année.
+-- 2. LA MÉDIANE ANNUELLE MASQUE L'ÉTÉ. Les 13 jours de 2018
+--    mélangent janvier-juin (promesses de 22 à 28 jours) et août
+--    (14 jours). Une politique qui change en cours d'année ne se
+--    lit pas dans un chiffre annuel.
 --
--- CE QUE MONTRE O6 : entre 2017 et août 2018, la promesse perd
--- environ 9 jours (23 → 14) quand l'exécution n'en gagne
--- qu'environ 3 (préparation 2 → 1, acheminement 7 → 5). La marge
--- se réduit d'environ 6 jours, et les retards repartent :
---   juin 2018 → 1,2 %   août 2018 → 6,2 %
---   vers SP   → 0,7 %   puis 9,0 %
---
--- → LE COUSSIN DE SÉCURITÉ A ÉTÉ ENTAMÉ À L'ÉTÉ 2018.
---   Le principe ci-dessus reste juste — un écart stable peut
---   cacher deux mouvements — mais il s'applique ici à l'échelle
---   ANNUELLE. Au mois près, les deux mouvements ne se compensent
---   plus. Contrôle : Q1 ter.
+-- Le principe ci-dessus reste juste (un écart stable peut cacher
+-- deux mouvements), mais il vaut à l'échelle de l'année. Au mois
+-- près, les deux mouvements ne se compensent plus : le coussin de
+-- sécurité a été entamé à l'été 2018. Voir Q1 ter.
 
 
--- ── Q1 ter. La marge mois par mois en 2018 ─────────────────
+-- Q1 ter. La marge mois par mois en 2018
 -- Vérifie la révision : la marge médiane des commandes en avance
 -- doit se réduire à l'été, en miroir de la hausse du retard.
 SELECT
@@ -169,7 +162,29 @@ WHERE purchase_year = 2018
 GROUP BY purchase_month
 ORDER BY purchase_month;
 
--- RÉSULTAT : à exécuter et à recopier ici.
+-- RÉSULTAT
+--
+--   Mois  Commandes  Retard   Promesse  Délai réel  Marge
+--     1     7 069    5,70 %    26 j       12 j      -14 j
+--     2     6 555   14,13 %    25 j       14 j      -12 j
+--     3     7 003   18,96 %    22 j       13 j       -9 j
+--     4     6 798    4,50 %    24 j        9 j      -14 j
+--     5     6 749    6,56 %    22 j        9 j      -13 j
+--     6     6 096    1,16 %    28 j        8 j      -20 j
+--     7     6 156    3,38 %    20 j        7 j      -11 j
+--     8     6 351    6,19 %    14 j        7 j       -7 j
+--
+-- LA RÉVISION EST CONFIRMÉE. La marge passe de 20 jours en juin à
+-- 7 jours en août, et le taux de retard de 1,16 % à 6,19 %.
+--
+-- UN CONSTAT DE PLUS : MARS ET AOÛT ONT DEUX CAUSES OPPOSÉES.
+--   Mars : délai réel de 13 jours, le plus lent de l'année.
+--          L'exécution a craqué (incident d'acheminement, O1).
+--   Août : délai réel de 7 jours, le plus rapide de l'année.
+--          Le retard vient de la promesse seule.
+-- La marge d'août (7 j) est plus faible qu'en mars (9 j), pour un
+-- retard trois fois moindre : une exécution régulière tient une
+-- marge courte, une exécution qui dérape déborde une marge longue.
 
 
 -- ============================================================
@@ -344,10 +359,12 @@ FROM mart.orders;
 --  1. LA MARGE MÉDIANE ANNUELLE EST DE 13 JOURS en 2017 et
 --     en 2018 — un chiffre annuel qui masque l'été (cf. 2)
 --  2. Sur l'année, le raccourcissement de la promesse a été
---     compensé par l'amélioration de l'exécution. MAIS PAS À
---     L'ÉTÉ 2018 (révisé par O6) : la promesse perd ~9 jours,
---     l'exécution n'en gagne que ~3, et le retard passe de
---     1,2 % (juin) à 6,2 % (août). Le coussin a été entamé
+--     compensé par l'amélioration de l'exécution. Mais pas à
+--     l'été 2018 (Q1 ter) : la marge passe de 20 jours en juin
+--     à 7 jours en août, et le retard de 1,16 % à 6,19 %.
+--     Le coussin a été entamé
+--  2 bis. Mars et août 2018 ont deux causes opposées :
+--     l'exécution en mars, la promesse en août
 --  3. LA MARGE EST UNIFORME PAR ÉTAT (−12 à −15 j) — un
 --     resserrement différencié n'a pas de sens
 --  4. LE COÛT D'UN RESSERREMENT EST NON LINÉAIRE :

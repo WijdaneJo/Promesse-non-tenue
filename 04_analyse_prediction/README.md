@@ -23,7 +23,7 @@
 | [**O5**](RESULTATS/06_O5_constats.md) Vendeurs | Le marché sanctionne-t-il les vendeurs défaillants ? | Oui, mais de façon binaire : ils disparaissent | Disparus : 4,76 % de retard contre 3,38 % · +47 % de départs au-delà de 20 % de dépassement |
 | **O6** Prédiction ([constats](RESULTATS/08_O6_constats.md) · [méthode](RESULTATS/O6_fiche_methode.md)) | Peut-on anticiper le retard à la commande ? | En partie : le modèle bat une règle simple, mais devient obsolète quand la promesse change | 50,8 % de détection contre 28,1 % · 82 % de fausses alertes au mieux |
 | [**O7**](RESULTATS/07_O7_constats.md) Scénarios | Que rapporte un transport plus rapide ? | Le gain est quasi linéaire et chiffrable | 1er jour gagné = 825 commandes et 134 882 R$ · ~90 000 R$ par jour en moyenne sur 7 jours |
-| **O8** Calibrage *(constats à rédiger)* | Que coûte une promesse plus courte ? | Retrancher un jour coûte plus que gagner un jour ne rapporte | +1 292 commandes en retard par jour retranché |
+| [**O8**](RESULTATS/05_O8_constats.md) Calibrage | Que coûte une promesse plus courte ? | Retrancher un jour coûte plus que gagner un jour ne rapporte, et la marge est déjà tombée à 7 jours en août 2018 | +1 292 commandes en retard au premier jour retranché · marge de 20 j en juin, 7 j en août |
 
 ---
 
