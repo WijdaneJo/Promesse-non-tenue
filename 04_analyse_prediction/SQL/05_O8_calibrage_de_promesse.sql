@@ -121,6 +121,56 @@ ORDER BY purchase_year, purchase_month;
 -- n'a changé. Il peut cacher deux mouvements qui se compensent.
 -- Toujours regarder les composantes, pas seulement le résultat.
 
+-- ════════════════════════════════════════════════════════════
+-- 🔁 RÉVISÉ PAR O6 — CETTE LECTURE NE TIENT PLUS À L'ÉTÉ 2018
+-- ════════════════════════════════════════════════════════════
+-- Deux erreurs dans l'interprétation ci-dessus :
+--
+-- 1. LE CALCUL « 2018 : 14 − 1 = 13 » EST FAUX. L'exécution n'est
+--    pas de 1 jour. Mesurée en O1, elle est d'environ 6 jours en
+--    2018 (validation 0 + préparation 1 + acheminement 5).
+--
+-- 2. LA MÉDIANE ANNUELLE MASQUE L'ÉTÉ. Les −13 jours de 2018
+--    mélangent janvier-juillet (promesses de 20 à 28 jours) et
+--    août (14 jours). Un chiffre annuel ne peut pas décrire une
+--    politique qui change en cours d'année.
+--
+-- CE QUE MONTRE O6 : entre 2017 et août 2018, la promesse perd
+-- environ 9 jours (23 → 14) quand l'exécution n'en gagne
+-- qu'environ 3 (préparation 2 → 1, acheminement 7 → 5). La marge
+-- se réduit d'environ 6 jours, et les retards repartent :
+--   juin 2018 → 1,2 %   août 2018 → 6,2 %
+--   vers SP   → 0,7 %   puis 9,0 %
+--
+-- → LE COUSSIN DE SÉCURITÉ A ÉTÉ ENTAMÉ À L'ÉTÉ 2018.
+--   Le principe ci-dessus reste juste — un écart stable peut
+--   cacher deux mouvements — mais il s'applique ici à l'échelle
+--   ANNUELLE. Au mois près, les deux mouvements ne se compensent
+--   plus. Contrôle : Q1 ter.
+
+
+-- ── Q1 ter. La marge mois par mois en 2018 ─────────────────
+-- Vérifie la révision : la marge médiane des commandes en avance
+-- doit se réduire à l'été, en miroir de la hausse du retard.
+SELECT
+    purchase_month,
+    COUNT(*)                                              AS nb_commandes,
+    ROUND(100.0 * AVG((gap > 0)::INT), 2)                 AS taux_retard_pct,
+    PERCENTILE_CONT(0.5) WITHIN GROUP (
+        ORDER BY order_estimated_delivery_date::DATE
+                 - order_purchase_timestamp::DATE)        AS med_promesse,
+    PERCENTILE_CONT(0.5) WITHIN GROUP (
+        ORDER BY order_delivered_customer_date::DATE
+                 - order_purchase_timestamp::DATE)        AS med_delai_reel,
+    PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY gap)
+        FILTER (WHERE gap < 0)                            AS marge_mediane
+FROM mart.orders
+WHERE purchase_year = 2018
+GROUP BY purchase_month
+ORDER BY purchase_month;
+
+-- RÉSULTAT : à exécuter et à recopier ici.
+
 
 -- ============================================================
 -- Q2 — LA MARGE EST-ELLE UNIFORME PAR ÉTAT ? (M-16)
@@ -291,10 +341,13 @@ FROM mart.orders;
 -- ============================================================
 -- SYNTHÈSE O8
 -- ============================================================
---  1. LA MARGE EST DE 13 JOURS, identique en 2017 et 2018
---  2. Le raccourcissement de la promesse (23 → 14 j en août
---     2018) a été EXACTEMENT COMPENSÉ par l'amélioration de
---     l'acheminement. La marge n'a PAS été entamée
+--  1. LA MARGE MÉDIANE ANNUELLE EST DE 13 JOURS en 2017 et
+--     en 2018 — un chiffre annuel qui masque l'été (cf. 2)
+--  2. Sur l'année, le raccourcissement de la promesse a été
+--     compensé par l'amélioration de l'exécution. MAIS PAS À
+--     L'ÉTÉ 2018 (révisé par O6) : la promesse perd ~9 jours,
+--     l'exécution n'en gagne que ~3, et le retard passe de
+--     1,2 % (juin) à 6,2 % (août). Le coussin a été entamé
 --  3. LA MARGE EST UNIFORME PAR ÉTAT (−12 à −15 j) — un
 --     resserrement différencié n'a pas de sens
 --  4. LE COÛT D'UN RESSERREMENT EST NON LINÉAIRE :

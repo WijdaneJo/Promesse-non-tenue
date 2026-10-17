@@ -166,10 +166,11 @@ Ce fichier répond à la question : *« pourquoi as-tu fait ce choix ? »*
 
 | | Retenu | Total | Part |
 |---|---|---|---|
-| Vendeurs | 1 323 | 2 948 | 44,9 % |
-| Commandes | 101 382 | 107 087 | **94,7 %** |
+| Vendeurs | 1 217 | 2 948 | 41,3 % |
+| Commandes | 89 250 | 95 191 | **93,8 %** |
 
-On écarte 55 % des vendeurs mais seulement **5,3 % de l'activité**. Le bruit statistique part, le phénomène reste.
+On écarte 59 % des vendeurs mais seulement **6,2 % de l'activité**.
+*Mesuré sur le périmètre final, mono-vendeur (RG-09). Un premier comptage à 1 323 portait sur toutes les commandes, tous statuts confondus.* Le bruit statistique part, le phénomène reste.
 **Point technique.** Le `WHERE` ne peut pas faire ce travail : au moment où il s'applique, le comptage par vendeur n'existe pas encore. C'est la raison d'être de `HAVING`.
 
 ---

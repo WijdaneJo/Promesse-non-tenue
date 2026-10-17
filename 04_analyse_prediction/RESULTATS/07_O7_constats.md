@@ -30,8 +30,10 @@
 
 ## Ce que cela signifie
 
-**Chaque jour gagné récupère 450 à 500 commandes.** Pas de seuil d'efficacité,
-pas de palier — le gain est proportionnel à l'effort.
+**Le premier jour récupère 825 commandes ; chaque jour suivant, 450 à 550.**
+Le premier jour est plus rentable car il ramène à l'heure les commandes à
+exactement un jour de retard, les plus nombreuses. Ensuite, pas de seuil
+d'efficacité ni de palier : le gain est proportionnel à l'effort.
 
 ## Le contraste avec O8
 
@@ -254,7 +256,10 @@ décision**.
 ## Ce que cela signifie
 
 **Le premier jour rapporte 60 % de plus que les suivants** — il récupère les
-commandes à exactement 1 jour de retard, les plus nombreuses.
+commandes à exactement 1 jour de retard, les plus nombreuses. Deux chiffres
+justes, à ne pas confondre : **134 882 R$** pour le premier jour, **~89 660 R$**
+en moyenne sur 7 jours (627 619 ÷ 7), soit **~82 000 R$** pour chacun des jours
+suivants (492 737 ÷ 6).
 
 **Ensuite le rendement se stabilise** autour de 80 000 à 87 000 R$ par jour. Pas
 de décroissance marquée, ce qui est encourageant pour un investissement
@@ -284,7 +289,7 @@ progressif.
 
 | # | Constat |
 |---|---|
-| 1 | **Le rendement est linéaire** : 450 à 500 commandes par jour gagné |
+| 1 | **Le rendement est quasi linéaire** : 825 commandes le 1er jour, puis 450 à 550 par jour gagné |
 | 2 | **7 jours récupèrent 3 672 commandes** (56 %) et **627 619 R$** (54,5 %) |
 | 3 | **Le CA progresse moins vite que le volume** |
 | 4 | **3 984 clients mécontents** concernés ; 7 jours en éviteraient **1 777** |

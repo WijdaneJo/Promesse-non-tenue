@@ -180,7 +180,7 @@ ce segment est neutralisé.
 - **Grain principal : la commande.** C'est l'unité à laquelle la promesse est
   formulée et à laquelle la satisfaction est mesurée. Table `mart.orders`,
   96 447 lignes.
-- **Grain secondaire : le vendeur.** Table `mart.sellers`, **1 323 vendeurs**
+- **Grain secondaire : le vendeur.** Table `mart.sellers`, **1 217 vendeurs**
   après application de RG-08 (seuil de 10 commandes) et RG-09 (mono-vendeur).
   Contrairement aux clients, les vendeurs disposent d'un historique permettant
   d'observer une trajectoire dans le temps.
@@ -270,7 +270,7 @@ périmètre mais doivent être connus.
 | RG-04 — expédition avant validation | 1 350 | **674** | Le chiffre v2 portait sur les 99 441 commandes **tous statuts**. Sur le seul périmètre livré, elles sont 674 |
 | Commandes sans date transporteur | 2 | **1** | L'une des deux a été écartée par RG-03 |
 | Commandes sans avis (RG-07) | ≈ 640 | **646** | Chiffre exact |
-| Vendeurs retenus (RG-08) | 1 271 | **1 323** | Après application conjointe de RG-09 |
+| Vendeurs retenus (RG-08) | 1 271 | **1 217** | Mesuré sur le périmètre final (commandes livrées et mono-vendeur, RG-09). Un premier comptage à 1 323 portait sur toutes les commandes, tous statuts confondus |
 
 **Ce qui se confirme exactement**
 

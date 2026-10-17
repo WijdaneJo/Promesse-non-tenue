@@ -352,7 +352,7 @@ Plusieurs ont dû être corrigés — non par erreur de méthode, mais parce qu'
 | Commandes sans date transporteur | 2 | **1** | L'une des deux écartée par RG-03 |
 | Commandes sans avis | ≈ 640 | **646** | Chiffre exact |
 | Commandes multi-avis | 547 | **547** | Confirmé |
-| Vendeurs retenus (RG-08) | 1 271 | **1 323** | Après application conjointe de RG-09 |
+| Vendeurs retenus (RG-08) | 1 271 | **1 217** | Mesuré sur le périmètre final (commandes livrées et mono-vendeur, RG-09) |
 | Concordance des montants (H9) | 99,75 % | **99,69 %** | Écart maximal : **0,02 R$** — arrondis |
 
 ### Ce qui se confirme exactement

@@ -19,8 +19,10 @@
 --   7. SQL/04_mart/03_mart_sellers.sql
 --   8. SQL/99_controles/02_recette.sql
 --
--- RÉSULTAT DU TEST : chiffres identiques (96 447 / 1 323 /
--- 6,77 %). Pipeline reproductible ✅
+-- RÉSULTAT DU TEST : chiffres identiques (96 447 / 6,77 %).
+-- Pipeline reproductible ✅
+-- ⚠ Le test affichait 1 323 vendeurs, avant l'ajout de RG-09 dans
+--   mart.sellers. Valeur actuelle : 1 217 (à reconfirmer au prochain rejeu).
 -- ============================================================
 DROP SCHEMA raw CASCADE;
 DROP SCHEMA staging CASCADE;

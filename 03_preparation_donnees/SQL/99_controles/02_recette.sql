@@ -27,7 +27,9 @@
 -- OBTENU : 96 447 ✅
 SELECT COUNT(*) AS commandes FROM mart.orders;
 
--- OBTENU : 1 323 ✅ (seuil RG-08 de 10 commandes)
+-- ATTENDU : 1 217 (seuil RG-08 de 10 commandes, appliqué après RG-09)
+-- ⚠ La première exécution affichait 1 323 : elle précédait l'ajout de
+--   RG-09 dans mart.sellers. À relancer pour confirmer 1 217.
 SELECT COUNT(*) AS vendeurs FROM mart.sellers;
 
 
