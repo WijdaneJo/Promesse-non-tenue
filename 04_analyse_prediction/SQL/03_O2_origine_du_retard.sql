@@ -1,415 +1,555 @@
-# O2 — Constats : où naît le retard
-
-> Ce document traduit les résultats de `03_O2_origine_du_retard.sql` en
-> **énoncés utilisables**.
->
-> **Structure de chaque constat** : le fait → ce qu'il signifie → ce qu'il implique.
-
-**Périmètre.** 689 commandes ont un `gap_preparation` à `NULL` (RG-04 et dates
-manquantes). Le dénominateur de ce segment est de **95 758**.
-
----
-
-# 1. Le retard naît de l'acheminement
-
-## Le fait
-
-| Segment | Ensemble | À l'heure | En retard |
-|---|---|---|---|
-| Validation | 0 j | 0 j | 0 j |
-| Préparation | 2 j | 2 j | **3 j** |
-| **Acheminement** | 7 j | 7 j | **26 j** |
-| *Volume* | 96 447 | 89 913 | 6 534 |
-
-## Ce que cela signifie
-
-**Sur les 20 jours d'écart entre une commande à l'heure et une commande en
-retard, 19 viennent du transport.** Soit 95 %.
-
-La préparation vendeur ne gagne qu'**un seul jour**. Le vendeur n'est pas le
-moteur du retard.
-
-La validation est instantanée dans les deux cas : le paiement n'est jamais en
-cause.
-
-> **Ce résultat confirme O1.** L'incident de février-mars 2018 avait déjà pointé
-> l'acheminement (7 → 11 jours). On voit ici que ce n'était pas un cas
-> particulier : c'est le **mécanisme structurel du retard**, en dehors de toute
-> crise.
-
-## Ce que cela implique
-
-**Le levier est le transport.** Une action sur l'accompagnement des vendeurs
-produirait un effet marginal — au mieux un jour sur vingt.
-
----
-
-# 2. Le mécanisme est national
-
-## Le fait
-
-Acheminement médian par état, à l'heure et en retard :
-
-| État | Distance | À l'heure | En retard | Facteur | Préparation |
-|---|---|---|---|---|---|
-| SP | 166 km | **4 j** | 15 j | ×3,8 | 2 → 4 |
-| **RJ** | 396 km | **8 j** | **30 j** | ×3,8 | 2 → 3 |
-| PR | 427 km | 7 j | 24 j | ×3,4 | 2 → 3 |
-| MG | 491 km | 7 j | 22 j | ×3,1 | 2 → 3 |
-| SC | 529 km | 9 j | 27 j | ×3,0 | 2 → 3 |
-| RS | 856 km | 9 j | 32 j | ×3,6 | 2 → 3 |
-| **AL** | 1 915 km | **16 j** | 36 j | ×2,3 | 2 → 2 |
-| **CE** | 2 292 km | **14 j** | 35 j | ×2,5 | 2 → 3 |
-
-## Ce que cela signifie
-
-**La préparation est stable partout** : 2 jours à l'heure, 3 en retard, dans les
-huit états. Elle n'explique **aucun** écart géographique.
-
-**Le levier est donc unique et national : le transport.**
-
-## Ce que cela implique
-
-Pas besoin de politique différenciée sur les vendeurs par région. La
-recommandation portera sur la chaîne d'acheminement.
-
----
-
-# 3. Rio de Janeiro : la question d'O1 est résolue
-
-## Le fait
-
-**RJ met 8 jours à livrer en régime normal.** MG (491 km) et PR (427 km) — tous
-deux **plus éloignés** — en mettent 7. São Paulo en met 4.
-
-Et quand ça dérape, RJ monte à **30 jours** — le pire des grands états.
-
-## Ce que cela signifie
-
-O1 avait établi que RJ dysfonctionne sans que la distance ni la promesse
-l'expliquent. **La réponse est là** : Rio est le seul état où la distance ne
-prédit pas le délai.
-
-> **Son acheminement est structurellement plus lent, même quand tout va bien.**
-
-Ce n'est ni un problème de calibrage de la promesse, ni un effet de la
-géographie — c'est la **performance du transport sur cette zone**.
-
-## Trois vérifications convergentes
-
-| Angle | Résultat |
-|---|---|
-| Durée d'acheminement | 8 j en normal, contre 7 pour des états plus éloignés |
-| Vendeurs installés à RJ *(Q7)* | **0** vendeur en difficulté sur 68 |
-| Part des retards imputable à la préparation *(Q7 bis)* | **14,62 %**, sous la moyenne nationale |
-
-**Le problème de RJ est exclusivement dans le transport**, en entrée comme en
-sortie. C'est établi de trois façons indépendantes.
-
-## Ce que cela implique
-
-RJ appelle une action sur ses **partenaires logistiques**, pas sur ses délais
-annoncés ni sur ses vendeurs.
-
-Une commande sur laquelle Olist promet 25 jours en consomme déjà 8 en transport,
-contre 4 à São Paulo — **avant même le moindre incident**.
-
----
-
-# 4. AL et CE : un profil différent
-
-## Le fait
-
-| État | Acheminement à l'heure | Taux de retard | Retard médian |
-|---|---|---|---|
-| AL | **16 j** | 21,41 % | 7 j |
-| CE | **14 j** | 13,76 % | 10 j |
-| SP | 4 j | 4,50 % | 5 j |
-
-## Ce que cela signifie
-
-AL et CE sont **quatre fois plus lents que São Paulo en régime normal**. Leur
-promesse de 32 jours est déjà tendue : le moindre écart fait basculer.
-
-Cela explique le paradoxe d'O1 — AL a le pire taux du pays (21,41 %) mais des
-retards courts (7 jours médians). **Il rate souvent, de peu.**
-
-## Ce que cela implique
-
-**Deux problèmes distincts, deux traitements :**
-
-| Profil | États | Diagnostic |
-|---|---|---|
-| Lents en **permanence** | AL, CE | La base est mauvaise, pas la variabilité |
-| Lent **et instable** | RJ | La base est mauvaise *et* dérape |
-
-Pour AL et CE, améliorer la régularité ne suffirait pas : c'est le niveau de
-service normal qu'il faut relever.
-
----
-
-# 5. L'attribution commande par commande
-
-## Le fait
-
-Pour chaque commande en retard, le segment dont la durée s'écarte le plus de sa
-normale :
-
-| Segment responsable | Commandes | Part |
-|---|---|---|
-| **Acheminement** | 5 465 | **83,6 %** |
-| **Préparation** | 1 054 | **16,1 %** |
-| Indéterminé | 15 | 0,2 % |
-
-## Ce que cela signifie
-
-**Un écart avec le constat 1 mérite d'être noté.** Les médianes donnaient 95 %
-pour le transport ; le décompte par commande donne 84 %.
-
-Une médiane écrase les cas individuels. **1 054 commandes ont bien un problème
-vendeur**, même si globalement le transport domine.
-
-## Ce que cela implique
-
-**Le levier principal reste le transport** — cinq fois plus de commandes.
-
-**Mais un second chantier existe**, relevant d'une direction différente : la
-direction des partenariats vendeurs.
-
----
-
-# 6. Le piège du volume, encore
-
-## Le fait
-
-Le classement brut des vendeurs par nombre de retards de préparation place en
-tête :
-
-| Vendeur | Commandes | Retards prépa | Taux |
-|---|---|---|---|
-| 7c67e144… | 963 | 26 | **2,70 %** |
-| 1025f0e2… | 879 | 26 | **2,96 %** |
-| 6560211a… | 1 788 | 5 | **0,28 %** |
-
-**Ils apparaissent en tête parce qu'ils vendent beaucoup, pas parce qu'ils sont
-mauvais.** C'est le même piège que São Paulo en O1.
-
-**Une exception** : `06a2c3af`, premier du classement avec 31 retards de
-préparation sur 388 commandes, n'est pas qu'un effet de volume. Son taux de
-préparation atteint 7,99 % et son taux global 19,07 %. **Volume et taux sont
-élevés : il est à surveiller.**
-
-## Les vrais cas problématiques
-
-| Vendeur | Commandes | Retards prépa | **Taux prépa** | Taux global |
-|---|---|---|---|---|
-| b1b39487… | 14 | 9 | **64,29 %** | 64,29 % |
-| **54965bbe…** | **72** | **22** | **30,56 %** | 30,56 % |
-| b19f3ca2… | 18 | 5 | **27,78 %** | 33,33 % |
-| 835f0f78… | 40 | 9 | **22,50 %** | 27,50 % |
-| ad781527… | 33 | 7 | **21,21 %** | 36,36 % |
-| beadbee3… | 63 | 12 | **19,05 %** | 23,81 % |
-
-**`54965bbe` est le cas le plus sérieux** : 72 commandes — volume suffisant pour
-être fiable — et 30,56 % de retard imputable à sa propre expédition, soit la
-totalité de ses retards.
-
-**`b1b39487` affiche 64 %, mais sur 14 commandes seulement.** Il passe le seuil
-RG-08 de justesse : deux commandes de moins et le taux bougerait de 15 points.
-
-> **Une distinction essentielle.** Pour ces vendeurs, le taux de préparation
-> représente **l'essentiel** de leur taux global — le premier affiche 64,29 %
-> dans les deux colonnes.
->
-> À l'inverse, `da8622b1` a 6,68 % de retard global mais 0,71 % imputable à la
-> préparation. **Ses retards viennent du transport, pas de lui.**
->
-> À vérifier avant toute mise en cause d'un partenaire.
-
----
-
-# 7. Santa Catarina : un artefact démasqué
-
-## Le premier signal
-
-Répartition des vendeurs en difficulté (taux de retard > 20 %) par état :
-
-| État | Vendeurs | En difficulté | Part |
-|---|---|---|---|
-| **SC** | 54 | 7 | **12,96 %** |
-| RS | 40 | 2 | 5,00 % |
-| MG | 110 | 4 | 3,64 % |
-| SP | 751 | 23 | 3,06 % |
-| PR | 133 | 2 | 1,50 % |
-| **RJ** | 68 | **0** | **0,00 %** |
-
-Santa Catarina semble décrocher — quatre fois plus de vendeurs en difficulté que
-São Paulo ou le Minas Gerais.
-
-## La vérification
-
-> **`late_rate` est le taux global du vendeur** : il inclut les retards dus au
-> transport. Un vendeur de SC expédiant vers des zones lentes aurait un taux
-> élevé **sans être responsable**.
-
-Recalcul sur la part des retards **réellement imputable à la préparation** :
-
-| État vendeur | Retards | Part préparation | vs national (16,1 %) |
-|---|---|---|---|
-| **MA** | 74 | **41,89 %** | ×2,6 |
-| **RS** | 61 | **31,15 %** | ×1,9 |
-| PR | 400 | 21,25 % | ×1,3 |
-| MG | 370 | 18,65 % | — |
-| **SC** | 175 | **16,57 %** | **= moyenne** |
-| SP | 5 005 | 15,26 % | — |
-| RJ | 301 | 14,62 % | ↓ |
-
-**SC était bien un artefact.** 16,57 %, soit exactement la moyenne nationale.
-Ses vendeurs ne sont pas en cause : ils expédient vers des zones difficiles.
-
-## Ce que cela signifie
-
-**Deux états ressortent réellement** : MA (41,89 %) et RS (31,15 %). Au
-Maranhão, quatre retards sur dix viennent de la préparation vendeur, contre un
-et demi sur dix en moyenne.
-
-> **Précaution.** MA a 74 retards et RS 61 — le seuil de 50 retenu est bas.
-> Ces taux sont **indicatifs, pas solides**. SP, avec 5 005 retards, est le seul
-> chiffre pleinement fiable.
-
-## Ce que cela implique
-
-**Un indicateur mal choisi conduit à accuser à tort.** Sans cette vérification,
-la recommandation aurait ciblé Santa Catarina — alors que le problème y est le
-transport, pas les vendeurs.
-
-C'est le même raisonnement que pour `da8622b1` : toujours isoler ce qui est
-imputable au vendeur avant de le mettre en cause.
-
----
-
-# 8. L'engagement contractuel : un indicateur plus fort
-
-## Pourquoi cet indicateur
-
-`shipping_limit_date` est la **date limite d'expédition** imposée au vendeur par
-Olist. Colonne disponible depuis le début du projet, jamais exploitée.
-
-> **C'est un engagement contractuel, pas une statistique.** Un dépassement est
-> **opposable** au partenaire — contrairement à un taux de retard, qui peut venir
-> du transport et qu'il pourrait contester.
-
-## Le fait
-
-**9,30 % des articles sont expédiés après la date limite** — 10 240 sur 110 138.
-Un sur onze.
-
-## L'engagement est-il bien calibré ?
-
-| | Commandes | Taux de retard |
-|---|---|---|
-| Date limite respectée | 87 739 | **5,38 %** |
-| **Date limite dépassée** | 8 707 | **20,83 %** |
-
-**Un dépassement multiplie le risque de retard par près de 4.**
-
-## Ce que cela signifie
-
-**L'indicateur est valide.** Respecter la date limite suffit largement à tenir la
-promesse — Olist ne l'a pas fixée trop serrée.
-
-C'est un levier **actionnable** et **opposable**.
-
-## Deux profils de vendeurs
-
-**A — Dépassent sans conséquence** : la marge absorbe
-
-| Vendeur | Commandes | Dépassement | Retard |
-|---|---|---|---|
-| 48efc9d9… | 33 | **84,85 %** | **0,00 %** |
-| a7f13822… | 73 | 60,27 % | 4,11 % |
-| 1da366ca… | 41 | 51,22 % | 7,32 % |
-
-**Le premier dépasse sa date limite huit fois sur dix et n'a aucun retard.** La
-marge d'Olist — 14 jours médians (O1) — est si large qu'un vendeur peut expédier
-en retard et le colis arriver quand même à temps.
-
-**B — Dépassent ET génèrent du retard** : cible prioritaire
-
-| Vendeur | Commandes | Dépassement | Retard |
-|---|---|---|---|
-| **835f0f78…** | 40 | **77,50 %** | **27,50 %** |
-| **a49928bc…** | 93 | **56,99 %** | **22,58 %** |
-| **ad781527…** | 33 | **54,55 %** | **36,36 %** |
-| **54965bbe…** | 72 | **54,17 %** | **30,56 %** |
-| 88460e8e… | 227 | 51,10 % | 18,50 % |
-
-`88460e8e` pèse le plus lourd : 227 commandes, dont une sur deux expédiée hors
-délai. Il figure aussi parmi les vendeurs à retards de préparation (21 retards).
-
-> **Ce sont les mêmes que la liste du constat 6.** Deux méthodes indépendantes —
-> analyse des segments et respect de l'engagement — **convergent** sur les mêmes
-> vendeurs.
-
-## Ce que cela implique
-
-**Deux populations, deux traitements :**
-
-| Profil | Action |
-|---|---|
-| Dépassent sans conséquence | Rappel des engagements. Pas d'urgence — la marge absorbe |
-| Dépassent **et** génèrent du retard | **Cible prioritaire.** Liste courte, action immédiate |
-
-**Le chiffre à retenir pour la recommandation** : *respecter la date limite
-d'expédition divise le taux de retard par 4.*
-
----
-
-# Synthèse — ce que O2 a établi
-
-| # | Constat |
-|---|---|
-| 1 | **Le retard naît de l'acheminement** : 7 → 26 jours, soit 95 % de l'écart |
-| 2 | La préparation ne gagne qu'un jour — le vendeur n'est pas le moteur |
-| 3 | La structure est **identique dans tous les états** : levier unique et national |
-| 4 | **RJ résolu** — acheminement structurellement lent, établi de trois façons |
-| 5 | **AL et CE** relèvent d'un autre profil : lents en permanence, pas instables |
-| 6 | Attribution par commande : **84 % acheminement, 16 % préparation** |
-| 7 | **SC était un artefact** ; MA et RS ressortent réellement, sous réserve d'effectifs |
-| 8 | **Le respect de la date limite divise le taux de retard par 4** |
-| 9 | Quatre vendeurs cumulent dépassement contractuel et retard client |
-
----
-
-# Ce que O2 apporte aux autres objectifs
-
-**Pour O5 (trajectoire vendeur)** — la liste des vendeurs à problème
-d'expédition est établie et **doublement validée**. Reste à savoir si leur
-activité en souffre.
-
-**Pour O6 (prédiction)** — l'acheminement étant le facteur dominant, les
-variables liées au transport (distance, état de destination) devraient être les
-plus prédictives. Le dépassement de `shipping_limit_date` pourrait aussi être un
-signal fort, mais il n'est **pas connu au moment de la commande** — donc
-inutilisable comme variable prédictive.
-
-**Pour O7 (scénarios)** — un scénario d'amélioration doit porter sur
-l'acheminement. Agir sur la préparation ne ferait gagner qu'un jour. En
-revanche, faire respecter la date limite d'expédition à tous les vendeurs
-ramènerait 8 707 commandes d'un risque de 20,83 % à 5,38 %.
-
-**Pour la restitution** — deux directions concernées, deux niveaux de priorité :
-la logistique (5 465 commandes) et les partenariats vendeurs (1 054 commandes,
-dont quatre cas prioritaires nommés).
-
----
-
-# Questions ouvertes
-
-- [ ] **Pourquoi l'acheminement est-il structurellement lent à RJ ?** La donnée
-      ne contient pas l'identité du transporteur. Question à poser au métier
-- [ ] MA et RS ressortent sur la préparation, mais avec des effectifs faibles
-      (74 et 61 retards). À reconfirmer sur une période plus longue
-- [ ] Les vendeurs du profil A — qui dépassent sans conséquence — profitent-ils
-      délibérément de la marge ? Si Olist resserre ses délais (O8), ils
-      basculeraient en retard
+-- ============================================================
+-- O2 — OÙ NAÎT LE RETARD
+-- ============================================================
+-- Objectif : décomposer le délai en trois segments et
+-- identifier celui où naît le retard.
+--
+-- Source     : mart.orders (96 447 commandes du périmètre)
+-- Métriques  : M-03 (durée par segment), M-04 (par état),
+--              M-05 (répartition par segment d'origine)
+-- Constats   : 03_O2_constats.md
+--
+-- ENJEU : deux causes possibles appellent deux directions
+-- différentes. Si le retard vient de la préparation, c'est la
+-- direction des partenariats vendeurs qui agit. S'il vient de
+-- l'acheminement, c'est la logistique.
+--
+--   Segment       Bornes                        Responsable
+--   Validation    achat → approbation           Paiement
+--   Préparation   approbation → transporteur    LE VENDEUR
+--   Acheminement  transporteur → livraison      LE TRANSPORTEUR
+--
+-- PÉRIMÈTRE RÉDUIT SUR LA PRÉPARATION : 689 commandes ont un
+-- gap_preparation à NULL (RG-04 et dates manquantes). Le
+-- dénominateur de ce segment est de 95 758.
+--
+-- NOTE DE MÉTHODE — il n'existe pas de « retard » par segment.
+-- Olist ne promet rien sur chaque étape. On compare donc
+-- chaque segment À SA PROPRE NORMALE, établie en Q1.
+
+
+-- ============================================================
+-- Q1 — LA DURÉE NORMALE DE CHAQUE SEGMENT (M-03)
+-- ============================================================
+-- On établit la référence AVANT de chercher l'anormal.
+SELECT
+    PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY gap_validation)  AS med_validation,
+    PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY gap_preparation) AS med_preparation,
+    PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY gap_shipping)    AS med_shipping
+FROM mart.orders;
+
+-- RÉSULTAT : 0 / 2 / 7 jours
+--
+-- L'ACHEMINEMENT REPRÉSENTE 78 % DU DÉLAI TOTAL (7 sur 9).
+-- C'est le segment le plus long — donc celui qui a le plus de
+-- marge de variation.
+-- La validation est instantanée : le paiement n'est jamais en
+-- cause.
+
+
+-- ============================================================
+-- Q2 — QU'EST-CE QUI CHANGE QUAND UNE COMMANDE EST EN RETARD ?
+-- ============================================================
+-- La question centrale de O2. Un seul GROUP BY sur is_late
+-- suffit à séparer les deux populations — pas besoin de FILTER.
+SELECT
+    is_late,
+    COUNT(*) AS nb,
+    PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY gap_validation)  AS med_validation,
+    PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY gap_preparation) AS med_preparation,
+    PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY gap_shipping)    AS med_shipping
+FROM mart.orders
+GROUP BY is_late;
+
+-- RÉSULTAT
+--
+--            Nb       Valid.  Prépa.  ACHEMINEMENT
+--   À l'heure  89 913    0       2         7
+--   En retard   6 534    0       3        26   ← ×3,7
+--
+-- SUR LES 20 JOURS D'ÉCART ENTRE UNE COMMANDE À L'HEURE ET UNE
+-- COMMANDE EN RETARD, 19 VIENNENT DU TRANSPORT — soit 95 %.
+--
+-- La préparation ne gagne qu'UN SEUL JOUR. Le vendeur n'est
+-- pas le moteur du retard.
+--
+-- CONFIRME O1 : l'incident de février-mars 2018 avait déjà
+-- pointé l'acheminement (7 → 11 jours). Ce résultat montre que
+-- ce n'était pas un cas particulier — c'est le MÉCANISME
+-- STRUCTUREL du retard, hors de toute crise.
+
+
+-- ============================================================
+-- Q3 + Q4 — LA STRUCTURE PAR ÉTAT (M-04)
+-- ============================================================
+-- Q3 : ce mécanisme varie-t-il géographiquement ?
+-- Q4 : POURQUOI RJ DYSFONCTIONNE-T-IL ? — question ouverte
+--      laissée par O1, où ni la distance ni la promesse ne
+--      l'expliquaient.
+--
+-- Six grands états + AL (pire taux) et CE (retards les plus
+-- longs), identifiés en O1.
+-- Croisement avec is_late : c'est la COMPARAISON à l'heure /
+-- en retard qui informe, pas la valeur brute.
+SELECT
+    customer_state,
+    is_late,
+    COUNT(*) AS nb_total,
+    PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY gap_validation)  AS med_validation,
+    PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY gap_preparation) AS med_preparation,
+    PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY gap_shipping)    AS med_shipping
+FROM mart.orders
+WHERE customer_state IN ('SP','RJ','MG','RS','PR','SC','AL','CE')
+GROUP BY customer_state, is_late
+ORDER BY customer_state, is_late;
+
+-- RÉSULTAT — acheminement médian
+--
+--   État  Distance  À l'heure  En retard  Facteur  Prépa.
+--   SP     166 km       4          15      ×3,8     2 → 4
+--   RJ     396 km       8          30      ×3,8     2 → 3
+--   PR     427 km       7          24      ×3,4     2 → 3
+--   MG     491 km       7          22      ×3,1     2 → 3
+--   SC     529 km       9          27      ×3,0     2 → 3
+--   RS     856 km       9          32      ×3,6     2 → 3
+--   AL   1 915 km      16          36      ×2,3     2 → 2
+--   CE   2 292 km      14          35      ×2,5     2 → 3
+--
+-- Q3 — LA PRÉPARATION EST STABLE PARTOUT : 2 jours à l'heure,
+-- 3 en retard, dans les huit états. Le vendeur n'explique
+-- AUCUN écart géographique.
+-- → LE LEVIER EST UNIQUE ET NATIONAL : LE TRANSPORT.
+--
+-- Q4 — RJ : LA QUESTION D'O1 EST RÉSOLUE.
+-- RJ met 8 JOURS à livrer normalement, alors que MG (491 km)
+-- et PR (427 km) — PLUS ÉLOIGNÉS — en mettent 7, et SP 4.
+-- Rio est le seul état où la distance ne prédit pas le délai.
+-- SON ACHEMINEMENT EST STRUCTURELLEMENT PLUS LENT, même quand
+-- tout va bien. Et quand ça dérape : 30 jours, le pire des
+-- grands états.
+-- Ce n'est ni la distance, ni la promesse — c'est la
+-- PERFORMANCE DU TRANSPORT sur cette zone.
+--
+-- AL ET CE RELÈVENT D'UN AUTRE PROFIL : 16 et 14 jours
+-- d'acheminement en régime NORMAL, contre 4 à SP. Quatre fois
+-- plus lents en permanence. Leur promesse de 32 jours est déjà
+-- tendue — le moindre écart fait basculer, d'où le taux record
+-- d'AL (21,41 %) avec des retards courts (7 jours médians).
+--
+-- DEUX PROBLÈMES DISTINCTS :
+--   AL, CE → lents en PERMANENCE
+--   RJ     → lent ET INSTABLE
+
+
+-- ============================================================
+-- Q5 — QUEL SEGMENT EST RESPONSABLE, COMMANDE PAR COMMANDE ?
+-- ============================================================
+-- M-05, métrique de conclusion de O2. Q2 donne la tendance
+-- globale ; Q5 attribue une responsabilité à CHAQUE commande
+-- en retard.
+--
+-- MÉTHODE : pour chaque commande, on mesure l'écart de chaque
+-- segment à sa normale (Q1 : préparation 2 j, acheminement
+-- 7 j). Le segment dont l'écart est le plus grand est déclaré
+-- responsable.
+--
+-- ⚠ PIÈGE DES NULL — quand gap_preparation est NULL, la
+-- comparaison renvoie NULL (ni vrai ni faux) et la commande
+-- tomberait dans le ELSE, comptée à tort comme « Préparation ».
+-- Le premier WHEN les isole. Il doit être placé EN PREMIER :
+-- un CASE s'arrête à la première condition vraie.
+WITH ecarts AS (
+    SELECT
+        order_id,
+        gap_preparation - 2 AS ecart_prep,
+        gap_shipping    - 7 AS ecart_ship
+    FROM mart.orders
+    WHERE is_late
+)
+SELECT
+    CASE
+        WHEN ecart_prep IS NULL          THEN 'Indetermine'
+        WHEN ecart_ship >= ecart_prep    THEN 'Shipping'
+        ELSE 'Preparation'
+    END       AS segment_responsable,
+    COUNT(*)  AS nb_orders
+FROM ecarts
+GROUP BY segment_responsable
+ORDER BY nb_orders DESC;
+
+-- RÉSULTAT
+--
+--   Acheminement   5 465   83,6 %
+--   Préparation    1 054   16,1 %
+--   Indéterminé       15    0,2 %
+--
+-- ÉCART AVEC Q2 À NOTER : les médianes donnaient 95 % pour le
+-- transport, le décompte par commande donne 84 %. Une médiane
+-- écrase les cas individuels — 1 054 COMMANDES ONT BIEN UN
+-- PROBLÈME VENDEUR, même si globalement le transport domine.
+--
+-- Le levier principal reste le transport (5 fois plus de
+-- commandes), mais un SECOND CHANTIER existe, relevant d'une
+-- direction différente (partenariats vendeurs).
+
+
+-- ============================================================
+-- Q6 — LES 1 054 RETARDS DE PRÉPARATION SONT-ILS CONCENTRÉS ?
+-- ============================================================
+-- Si concentrés sur quelques vendeurs → action ciblée.
+-- Si dispersés → problème structurel du processus d'expédition.
+--
+-- DEUX CTE ENCHAÎNÉES, séparées par une virgule : la seconde
+-- utilise la première.
+--
+-- COUNT(DISTINCT order_id) : une commande multi-articles serait
+-- sinon comptée plusieurs fois.
+--
+-- JOIN et non LEFT JOIN vers mart.sellers : les vendeurs sous
+-- le seuil RG-08 (moins de 10 commandes) disparaissent
+-- volontairement — un taux sur 4 commandes ne veut rien dire.
+--
+-- ⚠ LE VOLUME SEUL INDUIT EN ERREUR. Un vendeur avec 31
+-- retards sur 2 000 commandes n'a pas le même profil qu'un
+-- vendeur avec 9 retards sur 14. C'est le TAUX qui informe —
+-- même piège que São Paulo en O1.
+WITH ecarts AS (
+    SELECT
+        order_id,
+        gap_preparation - 2 AS ecart_prep,
+        gap_shipping    - 7 AS ecart_ship
+    FROM mart.orders
+    WHERE is_late
+),
+retards_prepa AS (
+    SELECT
+        oi.seller_id,
+        COUNT(DISTINCT e.order_id) AS retards_prepa
+    FROM ecarts AS e
+    JOIN staging.order_items AS oi ON oi.order_id = e.order_id
+    WHERE ecart_prep > ecart_ship
+    GROUP BY oi.seller_id
+)
+SELECT
+    rp.seller_id,
+    s.nb_orders                                      AS total_commandes,
+    rp.retards_prepa,
+    ROUND(rp.retards_prepa * 100.0 / s.nb_orders, 2) AS taux_retard_prepa,
+    ROUND(s.late_rate * 100, 2)                      AS taux_retard_global
+FROM retards_prepa AS rp
+JOIN mart.sellers AS s ON rp.seller_id = s.seller_id
+WHERE rp.retards_prepa >= 5
+ORDER BY rp.retards_prepa DESC;
+
+-- RÉSULTAT — LE VOLUME TROMPE
+--
+--   Vendeur      Cmdes  Retards  Taux prépa  Taux global
+--   7c67e144…    1 342     26      1,94 %       8,94 %
+--   1025f0e2…    1 372     26      1,90 %       6,92 %
+--   6560211a…    1 960      5      0,26 %       5,15 %
+--
+-- Ces vendeurs sont en tête du classement par VOLUME parce
+-- qu'ils vendent beaucoup, pas parce qu'ils sont mauvais.
+--
+-- LES VRAIS CAS PROBLÉMATIQUES
+--
+--   Vendeur      Cmdes  Retards  TAUX PRÉPA  Taux global
+--   b1b39487…       14      9     64,29 %     64,29 %  ⚠
+--   b19f3ca2…       18      5     27,78 %     33,33 %  ⚠
+--   54965bbe…       80     22     27,50 %     32,50 %  ←
+--   ad781527…       33      7     21,21 %     36,36 %
+--   835f0f78…       45      9     20,00 %     28,89 %
+--   beadbee3…       67     12     17,91 %     22,39 %
+--
+-- 54965bbe EST LE CAS LE PLUS SÉRIEUX : 80 commandes, volume
+-- suffisant pour être fiable, et 27,5 % de retard imputable à
+-- sa propre expédition.
+--
+-- b1b39487 affiche 64 % — mais sur 14 COMMANDES SEULEMENT.
+-- Il passe le seuil RG-08 (10) de justesse : deux commandes de
+-- moins et le taux bougerait de 15 points. À SURVEILLER, pas à
+-- traiter en priorité.
+--
+-- OBSERVATION — pour ces vendeurs, le taux de préparation
+-- représente L'ESSENTIEL de leur taux global. Le premier :
+-- 64,29 % dans les deux colonnes — 100 % de ses retards
+-- viennent de lui.
+-- À l'inverse, da8622b1 a 6,48 % de retard global mais 0,60 %
+-- imputable à la préparation : SES RETARDS VIENNENT DU
+-- TRANSPORT, PAS DE LUI. La distinction est essentielle avant
+-- toute mise en cause d'un partenaire.
+
+
+-- ============================================================
+-- Q7 — LES VENDEURS EN DIFFICULTÉ SONT-ILS CONCENTRÉS
+--      GÉOGRAPHIQUEMENT ?
+-- ============================================================
+-- Si oui, ce serait un signal régional plutôt qu'individuel.
+--
+-- COMPARAISON INDISPENSABLE : un état peut avoir beaucoup de
+-- vendeurs à problème simplement parce qu'il a beaucoup de
+-- vendeurs. C'est la PART qui informe, pas le nombre.
+--
+-- Seuil de 20 % : celui identifié en Q6 comme réellement
+-- problématique.
+-- HAVING COUNT(*) >= 10 : écarte les états à trop peu de
+-- vendeurs — même logique que RG-08.
+SELECT
+    seller_state,
+    COUNT(*)                                        AS nb_vendeurs,
+    COUNT(*) FILTER (WHERE late_rate > 0.20)        AS vendeurs_en_difficulte,
+    ROUND(COUNT(*) FILTER (WHERE late_rate > 0.20)
+          * 100.0 / COUNT(*), 2)                    AS part_en_difficulte_pct,
+    ROUND(AVG(late_rate) * 100, 2)                  AS taux_retard_moyen,
+    SUM(nb_orders)                                  AS volume_total
+FROM mart.sellers
+GROUP BY seller_state
+HAVING COUNT(*) >= 10
+ORDER BY part_en_difficulte_pct DESC;
+
+-- RÉSULTAT
+--
+--   État  Vendeurs  En difficulté  Part      Taux moyen
+--   SC       65          9        13,85 %      7,40 %  ←
+--   RS       44          3         6,82 %      4,29 %
+--   SP      818         37         4,52 %      7,29 %
+--   MG      115          5         4,35 %      5,65 %
+--   PR      146          3         2,05 %      4,67 %
+--   RJ       72          0         0,00 %      6,31 %  ←
+--   GO       15          0         0,00 %      2,71 %
+--   DF       17          0         0,00 %      5,19 %
+--
+-- SANTA CATARINA DÉCROCHE : trois fois plus de vendeurs en
+-- difficulté que la moyenne.
+--
+-- ET SURPRISE — RJ N'A AUCUN VENDEUR EN DIFFICULTÉ. Rio est le
+-- pire état de DESTINATION mais ses vendeurs vont bien.
+-- CONFIRMATION SUPPLÉMENTAIRE : le problème de RJ n'est pas
+-- côté vendeur, c'est le transport vers Rio.
+--
+-- ⚠ MAIS ATTENTION — late_rate est le taux GLOBAL du vendeur :
+-- il inclut les retards dus au transport. Un vendeur de SC
+-- expédiant vers des zones lentes aurait un taux élevé sans
+-- être responsable. SC pourrait donc être un ARTEFACT.
+-- Vérifié en Q7 bis.
+
+
+-- ── Q7 bis. SC : vrai problème ou artefact du transport ? ───
+-- On reprend l'attribution de Q5 et on la ramène au grain
+-- ÉTAT DU VENDEUR. Ici on mesure la part des retards
+-- IMPUTABLE À LA PRÉPARATION, pas le taux global.
+--
+-- SELECT DISTINCT sur order_id : une commande multi-articles
+-- du même vendeur ne doit être comptée qu'une fois.
+WITH ecarts AS (
+    SELECT
+        order_id,
+        gap_preparation - 2 AS ecart_prep,
+        gap_shipping    - 7 AS ecart_ship
+    FROM mart.orders
+    WHERE is_late
+),
+attribution AS (
+    SELECT DISTINCT
+        e.order_id,
+        s.seller_state,
+        (e.ecart_prep > e.ecart_ship) AS prepa_responsable
+    FROM ecarts AS e
+    JOIN staging.order_items AS oi ON oi.order_id  = e.order_id
+    JOIN staging.sellers     AS s  ON s.seller_id  = oi.seller_id
+    WHERE e.ecart_prep IS NOT NULL
+)
+SELECT
+    seller_state,
+    COUNT(*)                                       AS retards_total,
+    COUNT(*) FILTER (WHERE prepa_responsable)      AS retards_prepa,
+    ROUND(COUNT(*) FILTER (WHERE prepa_responsable)
+          * 100.0 / COUNT(*), 2)                   AS part_prepa_pct
+FROM attribution
+GROUP BY seller_state
+HAVING COUNT(*) >= 50
+ORDER BY part_prepa_pct DESC;
+
+-- RÉSULTAT — référence nationale : 16,1 % (cf. Q5)
+--
+--   État  Retards  Dont prépa  Part
+--   MA       74        31     41,89 %  ← ×2,6
+--   RS       61        19     31,15 %  ← ×1,9
+--   PR      400        85     21,25 %
+--   MG      370        69     18,65 %
+--   SC      175        29     16,57 %  ← = moyenne nationale
+--   SP    5 005       764     15,26 %
+--   RJ      301        44     14,62 %  ← sous la moyenne
+--
+-- SC ÉTAIT BIEN UN ARTEFACT : 16,57 %, soit exactement la
+-- moyenne nationale. Ses vendeurs ne sont pas en cause — ils
+-- expédient vers des zones difficiles.
+--
+-- DEUX ÉTATS RESSORTENT VRAIMENT : MA (41,89 %) et RS
+-- (31,15 %). Au Maranhão, 4 retards sur 10 viennent de la
+-- préparation vendeur contre 1,5 sur 10 en moyenne.
+--
+-- ⚠ PRÉCAUTION : MA a 74 retards et RS 61. Le seuil de 50 est
+-- bas — ces taux sont INDICATIFS, pas solides. SP, avec
+-- 5 005 retards, est le seul chiffre pleinement fiable.
+--
+-- RJ CONFIRME ENCORE : 14,62 %, sous la moyenne nationale.
+-- Les vendeurs basés à Rio préparent bien. Le problème de RJ
+-- est EXCLUSIVEMENT dans le transport — établi désormais de
+-- trois façons différentes.
+
+
+-- ============================================================
+-- Q8 — L'ENGAGEMENT CONTRACTUEL D'EXPÉDITION EST-IL TENU ?
+-- ============================================================
+-- shipping_limit_date est la DATE LIMITE D'EXPÉDITION imposée
+-- au vendeur par Olist.
+--
+-- POURQUOI CET INDICATEUR EST MEILLEUR QU'UN TAUX DE RETARD :
+-- c'est un ENGAGEMENT CONTRACTUEL. Un dépassement est
+-- OPPOSABLE au partenaire, contrairement à un taux de retard
+-- qui peut venir du transport et qu'il pourrait contester.
+--
+-- Colonne disponible dans staging.order_items depuis le début
+-- du projet, jamais exploitée jusqu'ici.
+--
+-- Le grain est l'ARTICLE : une commande à plusieurs articles a
+-- plusieurs dates limites.
+SELECT
+    COUNT(*)                                    AS nb_articles,
+    COUNT(*) FILTER (
+        WHERE o.order_delivered_carrier_date > oi.shipping_limit_date
+    )                                           AS depassements,
+    ROUND(COUNT(*) FILTER (
+        WHERE o.order_delivered_carrier_date > oi.shipping_limit_date
+    ) * 100.0 / COUNT(*), 2)                    AS taux_depassement_pct
+FROM mart.orders AS o
+JOIN staging.order_items AS oi ON oi.order_id = o.order_id
+WHERE o.order_delivered_carrier_date IS NOT NULL;
+
+-- RÉSULTAT : 110 138 articles · 10 240 dépassements · 9,30 %
+--
+-- UN ARTICLE SUR ONZE EST EXPÉDIÉ APRÈS LA DATE LIMITE.
+-- Chiffre solide — aucun problème d'effectif.
+
+
+-- ── Q8.a Un dépassement se traduit-il par un retard ? ───────
+-- Si oui, l'engagement est bien calibré : le respecter suffit
+-- à tenir la promesse.
+-- Sinon, il est trop serré et son non-respect est sans
+-- conséquence — donc peu utile comme levier.
+--
+-- BOOL_OR : renvoie true si AU MOINS UNE ligne du groupe
+-- satisfait la condition. Une commande est considérée en
+-- dépassement dès qu'un de ses articles l'est.
+WITH depassement AS (
+    SELECT
+        o.order_id,
+        o.is_late,
+        BOOL_OR(o.order_delivered_carrier_date > oi.shipping_limit_date)
+            AS a_depasse
+    FROM mart.orders AS o
+    JOIN staging.order_items AS oi ON oi.order_id = o.order_id
+    WHERE o.order_delivered_carrier_date IS NOT NULL
+    GROUP BY o.order_id, o.is_late
+)
+SELECT
+    a_depasse,
+    COUNT(*)                          AS nb_commandes,
+    COUNT(*) FILTER (WHERE is_late)   AS nb_en_retard,
+    ROUND(AVG(is_late::INT) * 100, 2) AS taux_retard_pct
+FROM depassement
+GROUP BY a_depasse;
+
+-- RÉSULTAT
+--
+--   Date limite respectée   87 739 commandes   → 5,38 % de retard
+--   Date limite dépassée     8 707 commandes   → 20,83 % de retard
+--
+-- UN DÉPASSEMENT MULTIPLIE LE RISQUE DE RETARD PAR PRÈS DE 4.
+--
+-- L'INDICATEUR EST DONC VALIDE : respecter la date limite
+-- suffit largement à tenir la promesse. Olist ne l'a pas fixée
+-- trop serrée.
+-- C'est un levier actionnable ET opposable au vendeur.
+
+
+-- ── Q8.b Quels vendeurs ne tiennent pas leur engagement ? ───
+-- Recoupement avec la liste de Q6 : les vendeurs identifiés
+-- par l'analyse des segments sont-ils les mêmes que ceux qui
+-- dépassent leur date limite contractuelle ?
+SELECT
+    oi.seller_id,
+    s.nb_orders                                 AS total_commandes,
+    COUNT(*)                                    AS nb_articles,
+    COUNT(*) FILTER (
+        WHERE o.order_delivered_carrier_date > oi.shipping_limit_date
+    )                                           AS depassements,
+    ROUND(COUNT(*) FILTER (
+        WHERE o.order_delivered_carrier_date > oi.shipping_limit_date
+    ) * 100.0 / COUNT(*), 2)                    AS taux_depassement_pct,
+    ROUND(s.late_rate * 100, 2)                 AS taux_retard_global
+FROM mart.orders AS o
+JOIN staging.order_items AS oi ON oi.order_id  = o.order_id
+JOIN mart.sellers        AS s  ON s.seller_id  = oi.seller_id
+WHERE o.order_delivered_carrier_date IS NOT NULL
+GROUP BY oi.seller_id, s.nb_orders, s.late_rate
+HAVING COUNT(*) >= 30
+ORDER BY taux_depassement_pct DESC
+LIMIT 20;
+
+-- RÉSULTAT — DEUX PROFILS OPPOSÉS
+--
+-- A) DÉPASSENT SANS CONSÉQUENCE — la marge absorbe
+--
+--   Vendeur      Cmdes  Dépassement  Retard
+--   48efc9d9…      34     82,35 %     0,00 %   ⚠
+--   a7f13822…      84     59,52 %     3,57 %
+--   1da366ca…      47     55,32 %     6,38 %
+--   f4aba7c0…     114     45,22 %     6,14 %
+--
+-- LE PREMIER DÉPASSE SA DATE LIMITE 8 FOIS SUR 10 ET N'A AUCUN
+-- RETARD. La marge d'Olist (14 jours médians, cf. O1) est si
+-- large qu'un vendeur peut expédier en retard et le colis
+-- arriver quand même à temps.
+--
+-- B) DÉPASSENT ET GÉNÈRENT DU RETARD — cible prioritaire
+--
+--   Vendeur      Cmdes  Dépassement  Retard
+--   835f0f78…      45     72,92 %    28,89 %  ←
+--   a49928bc…     101     55,77 %    21,78 %  ←
+--   54965bbe…      80     54,32 %    32,50 %  ←
+--   ad781527…      33     47,37 %    36,36 %  ←
+--   bbad7e51…      80     46,43 %    23,75 %
+--
+-- CE SONT LES MÊMES QUE LA LISTE DE Q6. Les deux méthodes —
+-- analyse des segments et respect de l'engagement — CONVERGENT.
+-- Ces vendeurs ont un vrai problème d'expédition, et il se
+-- traduit en retards clients.
+
+
+-- ============================================================
+-- SYNTHÈSE O2
+-- ============================================================
+--  1. Durée normale : 0 / 2 / 7 jours. L'acheminement
+--     représente 78 % du délai total
+--  2. LE RETARD NAÎT DE L'ACHEMINEMENT : 7 → 26 jours, soit
+--     95 % de l'écart. La préparation ne gagne qu'un jour
+--  3. La structure est IDENTIQUE DANS TOUS LES ÉTATS — le
+--     levier est unique et national
+--  4. RJ RÉSOLU : son acheminement est structurellement lent
+--     (8 j contre 7 pour des états plus éloignés). Établi de
+--     trois façons : durée, vendeurs sortants, vendeurs locaux
+--  5. AL et CE relèvent d'un autre profil : lents en
+--     PERMANENCE (16 et 14 j), pas instables
+--  6. Attribution par commande : 84 % acheminement,
+--     16 % préparation
+--  7. SC était un ARTEFACT — ses vendeurs expédient vers des
+--     zones lentes. MA (41,89 %) et RS (31,15 %) ressortent
+--     réellement, sous réserve d'effectifs limités
+--  8. LE RESPECT DE LA DATE LIMITE DIVISE LE TAUX DE RETARD
+--     PAR 4 (5,38 % contre 20,83 %) — levier actionnable et
+--     opposable
+--  9. Quatre vendeurs cumulent dépassement contractuel ET
+--     retard client : liste courte, cible prioritaire
+-- ============================================================
