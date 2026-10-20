@@ -52,7 +52,7 @@ La page « Les leviers » contient un simulateur : deux curseurs chiffrent en
 direct l'effet d'un resserrement de la promesse et celui d'une accélération du
 transport.
 
-![Page Les leviers](05_dashboard/captures/04_leviers.png)
+![Page Les leviers](05_dashboard/captures/04_les_leviers.png)
 
 Toutes les pages : [`05_dashboard/olist_dashboard.pdf`](05_dashboard/olist_dashboard.pdf) ·
 captures dans [`05_dashboard/captures`](05_dashboard/captures).
