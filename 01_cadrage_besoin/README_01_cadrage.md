@@ -1,4 +1,4 @@
-# 01 — Cadrage du besoin
+# 01. Cadrage du besoin
 
 Définition du problème métier avant toute manipulation de données :
 contexte, problématique, périmètre, règles de gestion et métriques.
@@ -7,8 +7,8 @@ contexte, problématique, périmètre, règles de gestion et métriques.
 
 | Fichier | Description |
 |---|---|
-| `1.note_cadrage.md` | Note de cadrage — **version 3.1**, révisée après préparation |
-| `02.regles_et_metriques.md` | **11 règles de gestion et 19 métriques** — version 2.2 |
+| `1.note_cadrage.md` | Note de cadrage : **version 3.1**, révisée après préparation |
+| `02.regles_et_metriques.md` | **11 règles de gestion et 19 métriques** : version 2.2 |
 
 ## Principe
 
@@ -18,10 +18,10 @@ tracé dans la note elle-même.
 
 | Version | Ce qui l'a déclenchée | Ce qui a changé |
 |---|---|---|
-| **1.0** | — | Hypothèses posées avant accès aux données |
+| **1.0** | - | Hypothèses posées avant accès aux données |
 | **2.0** | Qualification | Problématique recentrée après invalidation de H1 (réachat 3,12 %) ; ajout de O2 et O5 |
 | **3.0** | Préparation | Périmètre définitif à 96 447 ; correction de RG-04 (674 et non 1 350) ; réintégration de la géolocalisation |
-| **3.1** | Relecture du notebook | Intégration de **SQ7** et de l'objectif **O8** — le calibrage des délais annoncés |
+| **3.1** | Relecture du notebook | Intégration de **SQ7** et de l'objectif **O8** : le calibrage des délais annoncés |
 
 ## Deux révisions structurantes
 

@@ -1,4 +1,4 @@
-# Modélisation — La Promesse Non Tenue
+# Modélisation : La Promesse Non Tenue
 
 Trois vues complémentaires du même système :
 
@@ -7,11 +7,11 @@ Trois vues complémentaires du même système :
 - le **BPMN** décrit *comment ça se déroule* (le parcours d'une commande, et où naissent les retards).
 
 > Les diagrammes sont écrits en Mermaid : GitHub les affiche directement.
-> ⚠️ Noms de colonnes à vérifier sur les tables `staging` avant publication.
+> Noms de colonnes à vérifier sur les tables `staging` avant publication.
 
 ---
 
-## 1. MCD — Modèle Conceptuel de Données
+## 1. MCD : Modèle Conceptuel de Données
 
 Périmètre : commandes livrées (RG-01).
 
@@ -67,24 +67,24 @@ Chaque cardinalité s'appuie sur un fait vérifié dans les données.
 
 | Association | Cardinalités | Fait observé |
 |---|---|---|
-| CLIENT – passer – COMMANDE | 1,n / 1,1 | Une personne peut commander plusieurs fois ; une commande n'a qu'un client |
-| COMMANDE – contenir – LIGNE | 1,n / 1,1 | Toute commande livrée contient au moins un article |
-| LIGNE – concerner – PRODUIT | 1,1 / 1,n | Un produit peut être vendu plusieurs fois |
-| LIGNE – vendre – VENDEUR | 1,1 / 1,n | Une commande peut mêler plusieurs vendeurs (`nb_sellers`, RG-09) |
-| PRODUIT – appartenir – CATÉGORIE | 0,1 / 0,n | 1 392 commandes portent un produit sans catégorie |
-| COMMANDE – régler – PAIEMENT | 0,n / 1,1 | Paiement fractionnable ; 1 commande n'a aucune ligne de paiement |
-| COMMANDE – recevoir – AVIS | 0,n / 1,n | 646 commandes sans avis, 547 avec plusieurs ; un même `review_id` peut couvrir plusieurs commandes *(à vérifier)* |
-| CLIENT / VENDEUR – localiser – ZONE_GÉO | 0,1 / 0,n | Certains codes postaux sont absents de `geolocation` → 476 distances incalculables |
+| CLIENT - passer - COMMANDE | 1,n / 1,1 | Une personne peut commander plusieurs fois ; une commande n'a qu'un client |
+| COMMANDE - contenir - LIGNE | 1,n / 1,1 | Toute commande livrée contient au moins un article |
+| LIGNE - concerner - PRODUIT | 1,1 / 1,n | Un produit peut être vendu plusieurs fois |
+| LIGNE - vendre - VENDEUR | 1,1 / 1,n | Une commande peut mêler plusieurs vendeurs (`nb_sellers`, RG-09) |
+| PRODUIT - appartenir - CATÉGORIE | 0,1 / 0,n | 1 392 commandes portent un produit sans catégorie |
+| COMMANDE - régler - PAIEMENT | 0,n / 1,1 | Paiement fractionnable ; 1 commande n'a aucune ligne de paiement |
+| COMMANDE - recevoir - AVIS | 0,n / 1,n | 646 commandes sans avis, 547 avec plusieurs ; un même `review_id` peut couvrir plusieurs commandes *(à vérifier)* |
+| CLIENT / VENDEUR - localiser - ZONE_GÉO | 0,1 / 0,n | Certains codes postaux sont absents de `geolocation` -> 476 distances incalculables |
 
 ### Deux choix de modélisation
 
-**LIGNE_COMMANDE est une entité, pas une association.** Une association ternaire COMMANDE–PRODUIT–VENDEUR serait identifiée par le trio (commande, produit, vendeur). Or un même produit d'un même vendeur peut apparaître sur plusieurs lignes d'une commande : c'est ainsi que le dataset représente la quantité. Il faut donc un identifiant propre, le numéro de ligne. C'est aussi pourquoi `nb_items` se calcule avec `COUNT(*)` et non `SUM(order_item_id)`.
+**LIGNE_COMMANDE est une entité, pas une association.** Une association ternaire COMMANDE-PRODUIT-VENDEUR serait identifiée par le trio (commande, produit, vendeur). Or un même produit d'un même vendeur peut apparaître sur plusieurs lignes d'une commande : c'est ainsi que le dataset représente la quantité. Il faut donc un identifiant propre, le numéro de ligne. C'est aussi pourquoi `nb_items` se calcule avec `COUNT(*)` et non `SUM(order_item_id)`.
 
 **CLIENT est identifié par `customer_unique_id`.** Dans les données, `customer_id` change à chaque commande : c'est un identifiant technique, pas une personne. Le MCD modélise la réalité métier (une personne passe plusieurs commandes) ; le MLD, lui, garde la structure physique du dataset.
 
 ---
 
-## 2. MLD — Modèle Logique de Données
+## 2. MLD : Modèle Logique de Données
 
 ### Notation relationnelle
 
@@ -185,14 +185,14 @@ erDiagram
 ### Passage du MCD au MLD
 
 - Chaque **entité** devient une table ; son identifiant devient la clé primaire.
-- Une association **1,n – 1,1** disparaît : la clé du côté « n » migre en clé étrangère du côté « 1,1 » (ex. `order_id` dans `order_items`).
-- **Écart assumé avec le MCD** : la table `customers` est au grain `customer_id` (une ligne par commande), d'où la relation 1–1 avec `orders`. Pour suivre un client dans le temps, il faut passer par `customer_unique_id`.
+- Une association **1,n - 1,1** disparaît : la clé du côté « n » migre en clé étrangère du côté « 1,1 » (ex. `order_id` dans `order_items`).
+- **Écart assumé avec le MCD** : la table `customers` est au grain `customer_id` (une ligne par commande), d'où la relation 1-1 avec `orders`. Pour suivre un client dans le temps, il faut passer par `customer_unique_id`.
 - **Les clés étrangères vers `geolocation_pref` ne sont pas contraintes** : des codes postaux clients et vendeurs n'y figurent pas. D'où les jointures en `LEFT JOIN` dans tout le pipeline.
 - `geolocation_pref` est une table construite (couche `intermediate`) : la table brute `geolocation` contient plusieurs coordonnées par préfixe, agrégées ici en moyenne.
 
 ---
 
-## 3. BPMN — Processus actuel (AS-IS)
+## 3. BPMN : Processus actuel (AS-IS)
 
 Le parcours d'une commande, avec les durées observées par segment (O2).
 
@@ -229,7 +229,7 @@ flowchart LR
     N1["Validation<br/>à l'heure 0 j / en retard 0 j"]:::note
     N2["Préparation<br/>à l'heure 2 j / en retard 3 j"]:::note
     N3["Acheminement<br/>à l'heure 7 j / en retard 26 j<br/>≈ 95 % de l'écart"]:::retard
-    N4["Insatisfaction<br/>12,34 % → 19,76 %<br/>de 0 à 1 jour de retard"]:::note
+    N4["Insatisfaction<br/>12,34 % à 19,76 %<br/>de 0 à 1 jour de retard"]:::note
 
     B1 -.- N1
     C1 -.- N2
@@ -244,7 +244,7 @@ flowchart LR
 
 ---
 
-## 4. BPMN — Processus cible proposé (TO-BE)
+## 4. BPMN : Processus cible proposé (TO-BE)
 
 Deux points de détection : à la **commande** (modèle O6) et à l'**expédition** (date limite dépassée).
 

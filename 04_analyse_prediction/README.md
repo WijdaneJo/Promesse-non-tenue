@@ -1,4 +1,4 @@
-# 04 — Analyse et prédiction
+# 04. Analyse et prédiction
 
 > **Où naissent les ruptures de délai sur une marketplace, quel volume d'activité exposent-elles, et peut-on les anticiper au moment de la commande ?**
 
@@ -17,10 +17,10 @@
 | Objectif | Question | Constat principal | Chiffres clés |
 |---|---|---|---|
 | [**O1**](RESULTATS/01_O1_constats.md) Mesure | Où et quand le retard apparaît-il ? | Le retard est géographique et dépend autant de la promesse que de l'exécution | De 2,76 % à 21,41 % selon l'état · RJ 12,11 %, 1 495 retards · incident mars 2018 : 18,96 % |
-| [**O2**](RESULTATS/03_O2_constats.md) Origine | Quel maillon du parcours est responsable ? | Le retard naît de l'acheminement, pas du vendeur | Acheminement 7 → 26 j (95 % de l'écart) · 84 % des retards imputables au transport |
+| [**O2**](RESULTATS/03_O2_constats.md) Origine | Quel maillon du parcours est responsable ? | Le retard naît de l'acheminement, pas du vendeur | Acheminement 7 à 26 j (95 % de l'écart) · 84 % des retards imputables au transport |
 | [**O3**](RESULTATS/02_O3_constats.md) Tolérance | À partir de quand le client décroche-t-il ? | Aucune tolérance ; bascule à 3 jours ; l'avance n'apporte rien | Insatisfaction ×4,3 dès 1-7 j de retard · 50,4 % à 3 j |
 | [**O4**](RESULTATS/04_O4_constats.md) Exposition | Combien d'argent est concerné ? | L'enjeu est géographique, ni vendeur ni catégorie | 1 150 866 R$ exposés (7,47 %) · 721 160 R$ avec client mécontent · SP + RJ = 48 % |
-| [**O5**](RESULTATS/06_O5_constats.md) Vendeurs | Le marché sanctionne-t-il les vendeurs défaillants ? | Oui, mais de façon binaire : ils disparaissent | Disparus : 4,76 % de retard contre 3,38 % · +47 % de départs au-delà de 20 % de dépassement |
+| [**O5**](RESULTATS/06_O5_constats.md) Vendeurs | Le marché sanctionne-t-il les vendeurs défaillants ? | Oui, mais de façon binaire : ils disparaissent | Disparus : 4,76 % de retard contre 3,38 % · 28 % de départs contre 19 % au-delà de 20 % de dépassement (écart indicatif) |
 | **O6** Prédiction ([constats](RESULTATS/08_O6_constats.md) · [méthode](RESULTATS/O6_fiche_methode.md)) | Peut-on anticiper le retard à la commande ? | En partie : le modèle bat une règle simple, mais devient obsolète quand la promesse change | 50,8 % de détection contre 28,1 % · 82 % de fausses alertes au mieux |
 | [**O7**](RESULTATS/07_O7_constats.md) Scénarios | Que rapporte un transport plus rapide ? | Le gain est quasi linéaire et chiffrable | 1er jour gagné = 825 commandes et 134 882 R$ · ~90 000 R$ par jour en moyenne sur 7 jours |
 | [**O8**](RESULTATS/05_O8_constats.md) Calibrage | Que coûte une promesse plus courte ? | Retrancher un jour coûte plus que gagner un jour ne rapporte, et la marge est déjà tombée à 7 jours en août 2018 | +1 292 commandes en retard au premier jour retranché · marge de 20 j en juin, 7 j en août |
@@ -29,7 +29,7 @@
 
 ## Six découvertes
 
-**1. La moyenne nationale ne décrit personne.** Le taux de retard varie d'un facteur 8 selon l'état. São Paulo, 42 % du volume, affiche 4,50 % et fabrique la moyenne ; Rio de Janeiro, proche et pourtant trois fois plus en retard que PR et MG, est le point noir historique du réseau. *(O1)*
+**1. La moyenne nationale ne décrit personne.** Le taux de retard varie de 1 à 4 entre les états de plus de 500 commandes. São Paulo, 42 % du volume, affiche 4,50 % et fabrique la moyenne ; Rio de Janeiro, proche et pourtant trois fois plus en retard que PR et MG, est le point noir historique du réseau. *(O1)*
 
 **2. Le transport est le levier, le vendeur est secondaire.** 19 des 20 jours d'écart entre une commande à l'heure et une commande en retard viennent de l'acheminement. Le problème de RJ est établi de trois façons comme un problème de transport. *(O2)*
 
@@ -62,13 +62,13 @@
 
 ```
 04_analyse_prediction/
-├── SQL/          Requêtes commentées, résultats en commentaire
-├── PYTHON/       O6_modele_predictif.ipynb (modèle prédictif)
-└── RESULTATS/    Un fichier de constats par objectif
+|-- SQL/          Requêtes commentées, résultats en commentaire
+|-- PYTHON/       O6_modele_predictif.ipynb (modèle prédictif)
+`-- RESULTATS/    Un fichier de constats par objectif
                   + O6_fiche_methode.md, O6_nuage_seuil.png, O6_seuils.csv
 ```
 
-Chaque fichier de constats suit la même structure : **le fait → ce qu'il signifie → ce qu'il implique**, avec une synthèse et les questions ouvertes.
+Chaque fichier de constats suit la même structure : **le fait, ce qu'il signifie, ce qu'il implique**, avec une synthèse et les questions ouvertes.
 
 ---
 

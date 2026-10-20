@@ -1,5 +1,5 @@
 -- ============================================================
--- ÉTAPE 3 — COUCHE STAGING
+-- ÉTAPE 3 : COUCHE STAGING
 -- ============================================================
 -- Rôle : copie TYPÉE et CORRIGÉE de raw.
 -- Ce qui change  : les types, quelques nettoyages ciblés,
@@ -10,12 +10,12 @@
 --
 -- Convention : les identifiants et les codes postaux restent
 -- en TEXT. Un code postal converti en INT perdrait son zéro
--- initial ('09790' → 9790) et casserait la jointure vers
--- geolocation — or São Paulo, première région du dataset,
+-- initial ('09790' -> 9790) et casserait la jointure vers
+-- geolocation : or São Paulo, première région du dataset,
 -- est entièrement en 0xxxx.
 
 
--- ── 3.1 orders — table de faits centrale ────────────────────
+-- -- 3.1 orders : table de faits centrale --------------------
 -- 5 dates converties en TIMESTAMP (convertibilité validée en C5).
 CREATE TABLE staging.orders AS
     SELECT
@@ -30,7 +30,7 @@ CREATE TABLE staging.orders AS
     FROM raw.orders;
 
 
--- ── 3.2 order_items ─────────────────────────────────────────
+-- -- 3.2 order_items -----------------------------------------
 -- order_item_id en INT : c'est un numéro d'ordre, un tri texte
 -- donnerait 1, 10, 11, 2, 3…
 CREATE TABLE staging.order_items AS
@@ -45,7 +45,7 @@ CREATE TABLE staging.order_items AS
     FROM raw.order_items;
 
 
--- ── 3.3 order_payments ──────────────────────────────────────
+-- -- 3.3 order_payments --------------------------------------
 CREATE TABLE staging.order_payments AS
     SELECT
         order_id,
@@ -56,7 +56,7 @@ CREATE TABLE staging.order_payments AS
     FROM raw.order_payments;
 
 
--- ── 3.4 order_reviews ───────────────────────────────────────
+-- -- 3.4 order_reviews ---------------------------------------
 -- Colonnes écartées : review_comment_title et
 -- review_comment_message (extension NLP, hors v1).
 CREATE TABLE staging.order_reviews AS
@@ -69,13 +69,13 @@ CREATE TABLE staging.order_reviews AS
     FROM raw.order_reviews;
 
 
--- ── 3.5 products ────────────────────────────────────────────
+-- -- 3.5 products --------------------------------------------
 -- Colonnes écartées : product_name_lenght,
 -- product_description_lenght, product_photos_qty (non retenues
 -- au dictionnaire).
 -- NETTOYAGE : les 4 poids à 0 identifiés au bloc C sont des
 -- valeurs NON RENSEIGNÉES codées en 0, pas des poids réels.
--- NULLIF les convertit en NULL — une absence honnête vaut mieux
+-- NULLIF les convertit en NULL : une absence honnête vaut mieux
 -- qu'une valeur fausse qui biaiserait moyennes et modèle (O6).
 -- Dimensions en INT : vérifié, aucune décimale dans la source.
 CREATE TABLE staging.products AS
@@ -92,7 +92,7 @@ CREATE TABLE staging.products AS
 SELECT COUNT(*) FROM staging.products WHERE product_weight_g IS NULL;
 
 
--- ── 3.6 customers ───────────────────────────────────────────
+-- -- 3.6 customers -------------------------------------------
 -- customer_city écartée : maille d'analyse = l'état (27 modalités).
 -- customer_unique_id conservé : coût nul, permet de tester
 -- l'hypothèse des review_id dupliqués (même client ?).
@@ -105,9 +105,9 @@ CREATE TABLE staging.customers AS
     FROM raw.customers;
 
 
--- ── 3.7 sellers ─────────────────────────────────────────────
+-- -- 3.7 sellers ---------------------------------------------
 -- seller_zip_code_prefix conservé : clé du calcul de distance
--- vendeur → client, variable prédictive du délai (O6).
+-- vendeur -> client, variable prédictive du délai (O6).
 CREATE TABLE staging.sellers AS
     SELECT
         seller_id,
@@ -116,7 +116,7 @@ CREATE TABLE staging.sellers AS
     FROM raw.sellers;
 
 
--- ── 3.8 geolocation ─────────────────────────────────────────
+-- -- 3.8 geolocation -----------------------------------------
 -- ATTENTION : table encore au mauvais grain (~50 points par
 -- code postal). Elle sera agrégée par préfixe en intermediate.
 -- Ne jamais la joindre en l'état.
@@ -128,10 +128,10 @@ CREATE TABLE staging.geolocation AS
     FROM raw.geolocation;
 
 
--- ── 3.9 category_translation ────────────────────────────────
+-- -- 3.9 category_translation --------------------------------
 -- Table de correspondance, aucune conversion nécessaire.
 -- Rappel : 73 catégories dans products, 71 traduites.
--- Une jointure LEFT laissera 2 valeurs vides — conserver le
+-- Une jointure LEFT laissera 2 valeurs vides : conserver le
 -- nom portugais par défaut.
 CREATE TABLE staging.category_translation AS
     SELECT
@@ -140,7 +140,7 @@ CREATE TABLE staging.category_translation AS
     FROM raw.category_name_translation;
 
 
--- ── Contrôle de volumétrie ──────────────────────────────────
+-- -- Contrôle de volumétrie ----------------------------------
 -- Chaque table staging doit avoir EXACTEMENT le même nombre de
 -- lignes que sa source raw. Un écart signale une erreur de CAST
 -- ou un filtre involontaire.

@@ -232,6 +232,6 @@ Tous les chiffres cités sont issus des données.
 
 ## Auteur
 
-**Wijdane El Hariri**
+**EL HARIRI Wijdane**
 Élève ingénieure à l'INPT, filière Innovation et AMOA (Data et IA)
 [LinkedIn](https://www.linkedin.com/in/wijdane-el-hariri-871a81343)

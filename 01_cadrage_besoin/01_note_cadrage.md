@@ -1,6 +1,6 @@
-# Note de cadrage — La Promesse Non Tenue
+# Note de cadrage : La Promesse Non Tenue
 
-**Version 3.2 — déclencheur ancré dans les données**
+**Version 3.2 : déclencheur ancré dans les données**
 *Remplace les versions 3.1 (post-préparation), 2.0 (post-qualification) et 1.0 (avant accès aux données).*
 
 ---
@@ -90,14 +90,14 @@ traiter : **l'origine du retard**, **l'exposition financière**, et
 | SQ6 | Quel gain attendre d'une réduction des délais de X jours ? | Justifier l'investissement |
 | **SQ7** | **Les délais annoncés sont-ils correctement calibrés, et quel serait l'effet d'un resserrement ?** | **Arbitrer entre attractivité commerciale et risque de rupture** |
 
-> **SQ7 — origine et statut.** Cette sous-question n'était pas prévue au
+> **SQ7 : origine et statut.** Cette sous-question n'était pas prévue au
 > cadrage initial. Elle a été **ouverte par la qualification** (H12) et
 > **confirmée par la préparation** : 91,88 % des commandes sont livrées en
 > avance, avec une marge médiane de **13 jours**.
 >
 > Olist ne promet pas serré : elle promet large. Ce constat inverse la lecture
-> du problème. Une promesse aussi prudente a un **coût commercial** — un client
-> peut renoncer à un achat annoncé en trois semaines — et son non-respect n'en
+> du problème. Une promesse aussi prudente a un **coût commercial**, un client
+> peut renoncer à un achat annoncé en trois semaines, et son non-respect n'en
 > est que **plus significatif**.
 
 ---
@@ -148,14 +148,14 @@ gestion. Le décompte final est le suivant :
 ```
 Commandes au statut « delivered »                    96 478
 RG-01 : sans date de livraison réelle                    −8
-                                                   ─────────
+                                                   ---------
                                                      96 470
 RG-03 : chronologie impossible                          −23
-                                                   ─────────
+                                                   ---------
 PÉRIMÈTRE D'ANALYSE                                  96 447
 ```
 
-> **Évolution v2 → v3.** La v2 arrêtait le périmètre à 96 470 commandes.
+> **Évolution v2 -> v3.** La v2 arrêtait le périmètre à 96 470 commandes.
 > L'application de RG-03 (livraison antérieure à la remise au transporteur,
 > physiquement impossible) en retire 23 supplémentaires. **Le périmètre
 > définitif est de 96 447 commandes.**
@@ -166,13 +166,13 @@ Les quatre dates disponibles permettent de segmenter le parcours :
 
 | Segment | Bornes | Ce qu'il mesure |
 |---|---|---|
-| Validation | achat → approbation | Traitement du paiement |
-| **Préparation** | approbation → remise au transporteur | **Réactivité du vendeur** |
-| **Acheminement** | remise au transporteur → livraison client | **Performance logistique** |
+| Validation | achat -> approbation | Traitement du paiement |
+| **Préparation** | approbation -> remise au transporteur | **Réactivité du vendeur** |
+| **Acheminement** | remise au transporteur -> livraison client | **Performance logistique** |
 
 Le segment « préparation » n'est pas calculable sur **689 commandes** (0,71 % du
 périmètre) : 674 relèvent de RG-04, 14 n'ont pas de date d'approbation et 1 n'a
-pas de date de remise au transporteur. Ces commandes restent au périmètre — seul
+pas de date de remise au transporteur. Ces commandes restent au périmètre : seul
 ce segment est neutralisé.
 
 **Granularité d'analyse**
@@ -196,7 +196,7 @@ ce segment est neutralisé.
   *Justification :* le niveau ville représente plusieurs milliers de modalités,
   non exploitable pour une recommandation opérationnelle. L'état constitue une
   maille pilotable, cohérente avec une organisation logistique régionale.
-- La **distance vendeur → client** est retenue comme variable explicative et
+- La **distance vendeur -> client** est retenue comme variable explicative et
   calculée (formule de Haversine). Distribution obtenue : médiane 434 km,
   moyenne 601 km, maximum 8 678 km. Elle n'est pas calculable sur 476 commandes
   (0,49 %), dont un code postal est absent de la table de géolocalisation.
@@ -214,12 +214,12 @@ ce segment est neutralisé.
 | Commandes annulées, indisponibles ou non livrées | Exclues du **calcul du retard** : sans date de livraison réelle, l'écart n'est pas mesurable. Conservées comme population d'analyse distincte (cf. encadré) |
 | Commandes chronologiquement impossibles | 23 commandes livrées avant remise au transporteur (RG-03). Erreur de saisie manifeste |
 | Commandes multi-vendeurs pour l'analyse d'imputation | 1,3 % des commandes ; le retard ne peut être attribué à un vendeur identifié (RG-09) |
-| Vendeurs à faible volume | Seuil de 10 commandes (RG-08). Écarte 55 % des vendeurs mais seulement 5,3 % de l'activité |
+| Vendeurs à faible volume | Seuil de 10 commandes (RG-08). Écarte 59 % des vendeurs mais seulement 6,2 % de l'activité |
 | Analyse du contenu textuel des commentaires | Hors périmètre de la **v1** (traitement du langage naturel, verbatims en portugais), mais identifiée comme **extension prioritaire** : le texte est la seule source permettant de distinguer un mécontentement lié au retard d'un mécontentement lié au produit ou au vendeur. Il qualifie la cause, il ne mesure pas le délai |
 | Comparaison inter-sectorielle ou multi-marketplaces | Aucune donnée externe disponible ; l'étude porte sur un périmètre interne |
 | Coûts logistiques réels et marges | Absents du jeu de données. Le chiffrage portera sur le chiffre d'affaires, non sur la marge |
 
-> **Révision v3 — table de géolocalisation.** La v2 écartait cette table, jugée
+> **Révision v3 : table de géolocalisation.** La v2 écartait cette table, jugée
 > inexploitable en raison de ses doublons, tout en réservant sa réintégration
 > *« si le calcul de distance est retenu comme variable prédictive »*. Elle est
 > **réintégrée** : l'agrégation par préfixe de code postal (moyenne des
@@ -246,15 +246,15 @@ ce segment est neutralisé.
 
 | # | Hypothèse | Résultat | Décision |
 |---|---|---|---|
-| H1 | Volume suffisant de clients multi-commandes | ❌ **3,12 %** (2 997 clients sur 96 096) | Analyse avant/après abandonnée ; chiffrage reporté au niveau vendeur |
-| H2 | Dates estimée et réelle renseignées | ✅ **99,99 %** (8 valeurs manquantes sur 96 478) | Périmètre confirmé |
-| H3 | Note de satisfaction disponible | ✅ **99,33 %** des commandes livrées | Lien retard-satisfaction mesurable sans biais de couverture |
-| H5 | Commandes mono-vendeur majoritaires | ✅ **98,7 %** (97 388 commandes) | Imputation du retard au vendeur possible |
-| H6 | Date d'annulation exploitable | ❌ **Champ inexistant** | Piste du délai de patience abandonnée |
-| H7 | Cohérence chronologique des dates | ⚠️ **1 373 anomalies** (1 350 + 23) | Deux règles de gestion : RG-03 et RG-04 |
-| H9 | Concordance des montants entre sources | ✅ **99,69 %** revalidé sur le périmètre | 299 écarts sur 96 447, maximum 0,02 R$ (arrondis) |
-| H11 | Historique suffisant par vendeur | ⚠️ Distribution très concentrée — médiane de 6 commandes | Seuil de 10 commandes retenu (RG-08) |
-| H12 | Volume de retards suffisant | ✅ **6,77 %** (6 534 commandes) | Projet viable ; **SQ7 ouverte** |
+| H1 | Volume suffisant de clients multi-commandes | **3,12 %** (2 997 clients sur 96 096) | Analyse avant/après abandonnée ; chiffrage reporté au niveau vendeur |
+| H2 | Dates estimée et réelle renseignées | **99,99 %** (8 valeurs manquantes sur 96 478) | Périmètre confirmé |
+| H3 | Note de satisfaction disponible | **99,33 %** des commandes livrées | Lien retard-satisfaction mesurable sans biais de couverture |
+| H5 | Commandes mono-vendeur majoritaires | **98,7 %** (97 388 commandes) | Imputation du retard au vendeur possible |
+| H6 | Date d'annulation exploitable | **Champ inexistant** | Piste du délai de patience abandonnée |
+| H7 | Cohérence chronologique des dates | **1 373 anomalies** (1 350 + 23) | Deux règles de gestion : RG-03 et RG-04 |
+| H9 | Concordance des montants entre sources | **99,69 %** revalidé sur le périmètre | 299 écarts sur 96 447, maximum 0,02 R$ (arrondis) |
+| H11 | Historique suffisant par vendeur | Distribution très concentrée : médiane de 6 commandes | Seuil de 10 commandes retenu (RG-08) |
+| H12 | Volume de retards suffisant | **6,77 %** (6 534 commandes) | Projet viable ; **SQ7 ouverte** |
 
 *Les hypothèses H4, H8 et H10 de la v1 ont été abandonnées avant contrôle.*
 
@@ -267,7 +267,7 @@ périmètre mais doivent être connus.
 | Élément | Annoncé en v2 | Vérifié en v3 | Explication |
 |---|---|---|---|
 | Périmètre d'analyse | 96 470 | **96 447** | Application de RG-03 (−23) |
-| RG-04 — expédition avant validation | 1 350 | **674** | Le chiffre v2 portait sur les 99 441 commandes **tous statuts**. Sur le seul périmètre livré, elles sont 674 |
+| RG-04 : expédition avant validation | 1 350 | **674** | Le chiffre v2 portait sur les 99 441 commandes **tous statuts**. Sur le seul périmètre livré, elles sont 674 |
 | Commandes sans date transporteur | 2 | **1** | L'une des deux a été écartée par RG-03 |
 | Commandes sans avis (RG-07) | ≈ 640 | **646** | Chiffre exact |
 | Vendeurs retenus (RG-08) | 1 271 | **1 217** | Mesuré sur le périmètre final (commandes livrées et mono-vendeur, RG-09). Un premier comptage à 1 323 portait sur toutes les commandes, tous statuts confondus |
@@ -275,29 +275,29 @@ périmètre mais doivent être connus.
 **Ce qui se confirme exactement**
 
 > H12 avait mesuré **6,77 %** de commandes en retard en pandas. La chaîne
-> PostgreSQL complète retrouve **6,77 %** — 6 534 commandes sur 96 447.
+> PostgreSQL complète retrouve **6,77 %** : 6 534 commandes sur 96 447.
 > Deux outils, deux méthodes indépendantes, le même résultat.
 
 **Anomalies non détectées en qualification**
 
-- **789 `review_id` sont dupliqués** — un même identifiant d'avis rattaché à
+- **789 `review_id` sont dupliqués** : un même identifiant d'avis rattaché à
   plusieurs commandes, avec note et dates identiques. Il s'agit vraisemblablement
   d'une enquête unique couvrant deux commandes livrées ensemble. *Sans impact :
   la jointure vers les commandes s'effectue sur `order_id`.*
-- **4 produits ont un poids déclaré à 0 g** — le zéro y code une saisie
+- **4 produits ont un poids déclaré à 0 g** : le zéro y code une saisie
   manquante, non un poids réel. Ces valeurs sont converties en `NULL` : une
   absence honnête vaut mieux qu'une valeur fausse qui biaiserait les moyennes et
   tromperait le modèle prédictif.
-- **14 commandes livrées n'ont pas de date d'approbation** — leur segment
+- **14 commandes livrées n'ont pas de date d'approbation** : leur segment
   « validation » est incalculable.
-- **476 commandes n'ont pas de distance calculable** — code postal absent de la
+- **476 commandes n'ont pas de distance calculable** : code postal absent de la
   table de géolocalisation.
 
 **Points de vigilance confirmés**
 
 - L'identifiant `customer_id` est propre à chaque commande ; seul
   `customer_unique_id` identifie une personne. Le périmètre compte 96 447
-  commandes pour 96 447 `customer_id` — confirmation directe du piège.
+  commandes pour 96 447 `customer_id` : confirmation directe du piège.
 - La concentration de l'activité vendeur, anticipée par H11, est vérifiée : 493
   vendeurs n'ont qu'une seule commande, tandis que le plus actif en compte 1 960.
 
@@ -357,7 +357,7 @@ périmètre mais doivent être connus.
 
 ---
 
-## 7. Analyse de sensibilité — traitement de la valeur client non mesurable
+## 7. Analyse de sensibilité : traitement de la valeur client non mesurable
 
 Le chiffrage de la perte de valeur client étant hors de portée des données, une
 **analyse de sensibilité** est prévue en complément, clairement identifiée comme
@@ -399,10 +399,10 @@ servent d'ancrage à l'analyse et n'en constituent pas les conclusions.
 
 | Indicateur | Valeur |
 |---|---|
-| Taux de commandes en retard (M-00) | **6,77 %** — 6 534 sur 96 447 |
+| Taux de commandes en retard (M-00) | **6,77 %** : 6 534 sur 96 447 |
 | Chiffre d'affaires du périmètre | **15 416 546 R$** |
 | Note moyenne de satisfaction | 4,16 / 5 |
-| Distance médiane vendeur → client | 434 km |
+| Distance médiane vendeur -> client | 434 km |
 | Commandes livrées avec ≥ 4 jours d'avance | **87 %** |
 
 **Deux constats orientent d'emblée l'analyse.**

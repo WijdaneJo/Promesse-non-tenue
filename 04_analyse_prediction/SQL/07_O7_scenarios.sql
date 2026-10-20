@@ -1,5 +1,5 @@
 -- ============================================================
--- O7 — LES SCÉNARIOS D'AMÉLIORATION
+-- O7. LES SCÉNARIOS D'AMÉLIORATION
 -- ============================================================
 -- Objectif : estimer le gain associé à différents scénarios de
 -- réduction des délais RÉELS.
@@ -8,7 +8,7 @@
 -- Métrique   : M-13 (CA récupérable)
 -- Constats   : 07_O7_constats.md
 --
--- LE LIEN AVEC O8 — DEUX LEVIERS OPPOSÉS
+-- LE LIEN AVEC O8 : DEUX LEVIERS OPPOSÉS
 --
 --             O8                        O7
 --   Levier    Raccourcir l'ANNONCÉ      Raccourcir le RÉEL
@@ -20,10 +20,10 @@
 -- taux de retard.
 --
 -- ACQUIS DES OBJECTIFS PRÉCÉDENTS
---   O2 — 95 % du retard vient de l'ACHEMINEMENT
---   O3 — Le seuil critique est à 3 JOURS
---   O4 — CA exposé : 1 150 866 R$
---   O1 — 56 % des retards sont dans la tranche 1-7 jours
+--   O2, 95 % du retard vient de l'ACHEMINEMENT
+--   O3, Le seuil critique est à 3 JOURS
+--   O4, CA exposé : 1 150 866 R$
+--   O1, 56 % des retards sont dans la tranche 1-7 jours
 --
 -- PRINCIPE DE LA SIMULATION : gagner X jours revient à
 -- RETRANCHER X au gap. Les commandes qui passent sous zéro
@@ -31,7 +31,7 @@
 
 
 -- ============================================================
--- Q1 — COMBIEN DE COMMANDES REVIENNENT À L'HEURE ?
+-- Q1. COMBIEN DE COMMANDES REVIENNENT À L'HEURE ?
 -- ============================================================
 -- La première colonne sert de CONTRÔLE : elle doit donner 6 534.
 SELECT
@@ -48,7 +48,7 @@ FROM mart.orders;
 -- RÉSULTAT
 --
 --   Gain   Encore en retard   RÉCUPÉRÉES   Part des retards
---     0        6 534               —              —
+--     0        6 534              ,             ,
 --     1        5 709             825           12,6 %
 --     2        5 164           1 370           21,0 %
 --     3        4 664           1 870           28,6 %
@@ -60,18 +60,18 @@ FROM mart.orders;
 -- LE RENDEMENT EST PRESQUE LINÉAIRE : chaque jour gagné
 -- récupère 450 à 500 commandes.
 --
--- 7 JOURS RÉCUPÈRENT 56 % DES RETARDS — cohérent avec O1, qui
+-- 7 JOURS RÉCUPÈRENT 56 % DES RETARDS : cohérent avec O1, qui
 -- montrait 3 672 commandes dans la tranche 1-7 jours.
 --
 -- LE CONTRASTE AVEC O8 EST FRAPPANT
---   O7 — gagner 1 jour en exécution  →  −825 commandes
---   O8 — retrancher 1 jour à l'annoncé → +1 292 commandes
+--   O7, gagner 1 jour en exécution  ->  −825 commandes
+--   O8, retrancher 1 jour à l'annoncé -> +1 292 commandes
 --
 -- RESSERRER COÛTE PLUS QUE LIVRER PLUS VITE NE RAPPORTE.
 
 
 -- ============================================================
--- Q2 — QUEL CA EST RÉCUPÉRÉ ? (M-13)
+-- Q2. QUEL CA EST RÉCUPÉRÉ ? (M-13)
 -- ============================================================
 -- Le ROUND doit ENVELOPPER le FILTER, pas le précéder :
 -- le FILTER appartient à l'agrégation, le ROUND s'applique au
@@ -90,7 +90,7 @@ FROM mart.orders;
 -- RÉSULTAT
 --
 --   Gain   CA encore exposé   CA RÉCUPÉRÉ   Part
---     0       1 150 866 R$          —         —
+--     0       1 150 866 R$         ,        ,
 --     1       1 015 984          134 882    11,7 %
 --     2         932 499          218 367    19,0 %
 --     3         855 882          294 984    25,6 %
@@ -99,18 +99,18 @@ FROM mart.orders;
 --
 -- COÏNCIDENCE À NOTER : le scénario 2 jours donne 932 499 R$,
 -- exactement le CA exposé au seuil de 3 jours mesuré en O4.
--- Logique — gagner 2 jours ramène sous le seuil critique toutes
+-- Logique : gagner 2 jours ramène sous le seuil critique toutes
 -- les commandes qui étaient à 3 jours.
 --
--- ⚠ LE CA PROGRESSE MOINS VITE QUE LE VOLUME
---   1 jour gagné → 825 commandes (12,6 %) mais 11,7 % du CA
+-- LE CA PROGRESSE MOINS VITE QUE LE VOLUME
+--   1 jour gagné -> 825 commandes (12,6 %) mais 11,7 % du CA
 -- LES COMMANDES RÉCUPÉRÉES EN PREMIER SONT LES MOINS CHÈRES.
 
 
 -- ============================================================
--- Q3 — COMBIEN DE CLIENTS MÉCONTENTS ÉVITE-T-ON ?
+-- Q3. COMBIEN DE CLIENTS MÉCONTENTS ÉVITE-T-ON ?
 -- ============================================================
--- ⚠ CE QU'ON NE PEUT PAS FAIRE : prédire la note qu'un client
+-- CE QU'ON NE PEUT PAS FAIRE : prédire la note qu'un client
 -- aurait donnée si sa commande était arrivée à l'heure. Cela
 -- n'existe pas dans les données.
 --
@@ -140,23 +140,23 @@ FROM mart.orders;
 --     5         1 120             28,1 %
 --     7         1 777             44,6 %
 --
--- ⚠ PLUS FAIBLE QUE SUR LES COMMANDES
---   7 jours gagnés → 56 % des commandes récupérées
---                  → 45 % des mécontents évités
+-- PLUS FAIBLE QUE SUR LES COMMANDES
+--   7 jours gagnés -> 56 % des commandes récupérées
+--                  -> 45 % des mécontents évités
 --
 -- LES COMMANDES RÉCUPÉRÉES EN PREMIER SONT LES MOINS
--- PROBLÉMATIQUES — cohérent avec O3, où l'insatisfaction ne
+-- PROBLÉMATIQUES : cohérent avec O3, où l'insatisfaction ne
 -- dépassait 50 % qu'à partir de 3 jours.
 --
 -- LIMITE : rien ne garantit que ces 3 984 clients auraient été
--- satisfaits à l'heure — leur mécontentement pouvait aussi
+-- satisfaits à l'heure : leur mécontentement pouvait aussi
 -- venir du produit. Mais O3 mesure que le taux d'insatisfaction
 -- passe de 49 % à 11,5 % quand on repasse à l'heure : la
 -- majorité aurait basculé. ESTIMATION HAUTE.
 
 
 -- ============================================================
--- Q4 — OÙ LE GAIN RAPPORTE-T-IL LE PLUS ?
+-- Q4. OÙ LE GAIN RAPPORTE-T-IL LE PLUS ?
 -- ============================================================
 SELECT
     customer_state,
@@ -171,11 +171,11 @@ WHERE customer_state IN ('SP','RJ','MG','RS','PR','SC','BA','ES')
 GROUP BY customer_state
 ORDER BY ca_recupere_7j DESC;
 
--- RÉSULTAT — CONTRE-INTUITIF
+-- RÉSULTAT : CONTRE-INTUITIF
 --
 --   État  CA exposé   Récupéré 7j   PART RÉCUPÉRABLE
 --   SP     303 157      197 056         65,0 %
---   RJ     251 556      105 797         42,1 %   ←
+--   RJ     251 556      105 797         42,1 %   <-
 --   MG      88 243       53 391         60,5 %
 --   BA      73 541       35 560         48,4 %
 --   SC      45 023       29 588         65,7 %
@@ -184,30 +184,30 @@ ORDER BY ca_recupere_7j DESC;
 --   PR      34 203       21 379         62,5 %
 --
 -- UN GAIN DE 7 JOURS RÉCUPÈRE 197 056 R$ À SÃO PAULO CONTRE
--- 105 797 R$ À RIO — presque le double, alors que leur CA
+-- 105 797 R$ À RIO : presque le double, alors que leur CA
 -- exposé est comparable.
 --
 -- POURQUOI RJ RÉSISTE : 42 % seulement de son CA exposé est
 -- récupérable, contre 65 % à SP. C'est exactement ce qu'O1
--- montrait — 58 % DES RETARDS DE RJ DÉPASSENT 8 JOURS.
+-- montrait : 58 % DES RETARDS DE RJ DÉPASSENT 8 JOURS.
 --
--- → DEUX ACTIONS DISTINCTES
+-- -> DEUX ACTIONS DISTINCTES
 --   SP, ES, SC, MG  Gain de quelques jours   60-73 % récupérés
 --   RJ              CORRECTION DE FOND       42 % seulement
 
 
 -- ============================================================
--- Q5 — VISER ZÉRO OU LE SEUIL DE 3 JOURS ?
+-- Q5. VISER ZÉRO OU LE SEUIL DE 3 JOURS ?
 -- ============================================================
 -- O3 a établi que la bascule se fait à 3 jours : au-delà, plus
 -- de la moitié des clients sont mécontents (50,40 %).
 --
 -- Deux objectifs pour un même effort :
---   « à l'heure »     → gap - X <= 0
---   « sous 3 jours »  → gap >= 3 AND gap - X < 3
+--   « à l'heure »     -> gap - X <= 0
+--   « sous 3 jours »  -> gap >= 3 AND gap - X < 3
 --
 -- Le second ne concerne QUE les commandes actuellement
--- au-dessus du seuil — les petits retards en sont exclus.
+-- au-dessus du seuil : les petits retards en sont exclus.
 SELECT
     COUNT(*) FILTER (WHERE gap > 0) AS retard_actuel,
 
@@ -220,7 +220,7 @@ SELECT
     COUNT(*) FILTER (WHERE gap >= 3 AND gap - 5 < 3) AS sous_seuil_5j
 FROM mart.orders;
 
--- RÉSULTAT — INATTENDU
+-- RÉSULTAT : INATTENDU
 --
 --   Gain   Ramenées à l'heure   Passées sous 3 jours
 --     2          1 370                  953
@@ -231,19 +231,19 @@ FROM mart.orders;
 -- « SOUS 3 JOURS ».
 --
 -- POURQUOI : les deux populations diffèrent.
---   « À l'heure »     vise les commandes à 1, 2, 3 jours —
+--   « À l'heure »     vise les commandes à 1, 2, 3 jours :
 --                     nombreuses et proches du but
 --   « Sous 3 jours »  ne concerne que celles DÉJÀ au-dessus de
 --                     3 jours
 --
--- → L'OBJECTIF INTERMÉDIAIRE N'APPORTE RIEN. Plus difficile à
---   atteindre ET moins satisfaisant — une commande à 2 jours de
+-- -> L'OBJECTIF INTERMÉDIAIRE N'APPORTE RIEN. Plus difficile à
+--   atteindre ET moins satisfaisant : une commande à 2 jours de
 --   retard produit encore 34 % d'insatisfaction.
 --   VISER LE RETOUR À L'HEURE.
 
 
 -- ============================================================
--- Q6 — LE GAIN SIMULÉ EST-IL RÉALISTE ?
+-- Q6. LE GAIN SIMULÉ EST-IL RÉALISTE ?
 -- ============================================================
 -- Q1 à Q5 supposent un gain de 1 à 7 jours SANS vérifier qu'il
 -- soit atteignable.
@@ -281,7 +281,7 @@ ORDER BY gain_theorique DESC;
 --   SP         4 j        15 j         11 j
 --
 -- L'ÉCART EST DE 11 À 23 JOURS.
--- → LE SCÉNARIO DE 7 JOURS EST MODESTE : il ne comble qu'un
+-- -> LE SCÉNARIO DE 7 JOURS EST MODESTE : il ne comble qu'un
 --   tiers à deux tiers de l'écart réel.
 --   Les simulations ne sont pas ambitieuses, elles sont
 --   PRUDENTES. Le gisement est plus large que ce qui a été
@@ -289,7 +289,7 @@ ORDER BY gain_theorique DESC;
 
 
 -- ============================================================
--- Q7 — QUI SONT LES COMMANDES IRRÉCUPÉRABLES ?
+-- Q7. QUI SONT LES COMMANDES IRRÉCUPÉRABLES ?
 -- ============================================================
 -- Après 7 jours gagnés, 2 862 commandes restent en retard.
 SELECT
@@ -304,35 +304,35 @@ GROUP BY customer_state, timing
 HAVING COUNT(*) >= 30
 ORDER BY nb_commandes DESC;
 
--- RÉSULTAT — CONCENTRÉ SUR RJ
+-- RÉSULTAT : CONCENTRÉ SUR RJ
 --
 --   État  Tranche      Commandes   CA résiduel   Retard médian
 --   RJ    Late             423        72 292         11 j
 --   SP    Late             345        64 733         10 j
 --   RJ    Too late         313        49 959         21 j
 --   SP    Too late         145        29 028         20 j
---   RJ    Very late        135        23 508         38 j   ←
+--   RJ    Very late        135        23 508         38 j   <-
 --   BA    Late             119        24 655         11 j
 --   MG    Late             108        18 466         11 j
 --   SP    Very late         65        12 340         52 j
 --
 -- RJ CUMULE 871 COMMANDES IRRÉCUPÉRABLES POUR 145 759 R$.
--- Ses Very late ont un retard médian de 38 JOURS — aucun gain
+-- Ses Very late ont un retard médian de 38 JOURS : aucun gain
 -- opérationnel raisonnable ne les rattrapera.
 --
--- → UN GAIN UNIFORME NE RÈGLE PAS RJ. Confirmation de Q4.
+-- -> UN GAIN UNIFORME NE RÈGLE PAS RJ. Confirmation de Q4.
 
 
 -- ============================================================
--- Q8 — COMBIEN RAPPORTE UN JOUR GAGNÉ ?
+-- Q8. COMBIEN RAPPORTE UN JOUR GAGNÉ ?
 -- ============================================================
--- LE PROBLÈME : améliorer l'acheminement COÛTE de l'argent —
+-- LE PROBLÈME : améliorer l'acheminement COÛTE de l'argent :
 -- transporteurs supplémentaires, entrepôts régionaux,
 -- partenaire premium. Aucune donnée de coût logistique
 -- n'existe dans le dataset.
 --
 -- CE QU'ON PEUT FAIRE : calculer le BÉNÉFICE par jour gagné.
--- Il devient alors un SEUIL DE DÉCISION — tout investissement
+-- Il devient alors un SEUIL DE DÉCISION : tout investissement
 -- inférieur à ce montant est rentable sur ce seul critère.
 --
 -- Chaque colonne isole le gain MARGINAL du jour concerné, pas
@@ -350,7 +350,7 @@ FROM mart.orders;
 -- RÉSULTAT
 --
 --   Jour        Gain marginal
---   1er          134 881,50 R$   ← +60 % vs les suivants
+--   1er          134 881,50 R$   <- +60 % vs les suivants
 --   2e            83 485,53
 --   3e            76 616,89
 --   5e            86 625,04
@@ -362,19 +362,19 @@ FROM mart.orders;
 -- plus nombreuses.
 --
 -- ENSUITE LE RENDEMENT SE STABILISE autour de 80 000 à
--- 87 000 R$ par jour. Pas de décroissance marquée —
+-- 87 000 R$ par jour. Pas de décroissance marquée :
 -- encourageant pour un investissement progressif.
 --
--- → LE CRITÈRE DE DÉCISION
+-- -> LE CRITÈRE DE DÉCISION
 --   « Un jour gagné sur l'acheminement rapporte environ
 --     90 000 R$ de CA récupéré. Tout investissement
 --     permettant de gagner un jour pour moins de 90 000 R$
---     est rentable sur ce seul critère — sans compter les
+--     est rentable sur ce seul critère : sans compter les
 --     ~250 clients mécontents évités. »
 --
--- ⚠ DEUX NUANCES À POSER
+-- DEUX NUANCES À POSER
 --   1. Ces 90 000 R$ sont du CA EXPOSÉ RÉCUPÉRÉ, pas du profit
---   2. Le gain est calculé sur la période du dataset — à
+--   2. Le gain est calculé sur la période du dataset : à
 --      rapporter à une base annuelle pour comparer à un
 --      investissement
 
@@ -392,16 +392,16 @@ FROM mart.orders;
 --  5. LE GAIN RAPPORTE PLUS À SÃO PAULO (197 056 R$, 65 %)
 --     QU'À RIO (105 797 R$, 42 %)
 --  6. VISER LE RETOUR À L'HEURE, PAS UN SEUIL INTERMÉDIAIRE
---  7. LE GAIN THÉORIQUE EST DE 11 À 23 JOURS — le scénario de
+--  7. LE GAIN THÉORIQUE EST DE 11 À 23 JOURS : le scénario de
 --     7 jours est PRUDENT
 --  8. 871 COMMANDES IRRÉCUPÉRABLES À RJ, dont 135 à 38 jours
---  9. UN JOUR GAGNÉ RAPPORTE ~90 000 R$ — seuil de décision
+--  9. UN JOUR GAGNÉ RAPPORTE ~90 000 R$ : seuil de décision
 --     pour tout investissement logistique
 --
 -- LA RECOMMANDATION EN DEUX VOLETS
---   Partout sauf RJ  → un gain de quelques jours récupère
+--   Partout sauf RJ  -> un gain de quelques jours récupère
 --                      60-73 % du CA exposé
---   RJ               → correction de fond de l'acheminement
+--   RJ               -> correction de fond de l'acheminement
 --
 -- LE LIEN AVEC O8
 -- Gagner 1 jour en exécution récupère 825 commandes ;

@@ -1,5 +1,5 @@
 -- ============================================================
--- O6 — MODÈLE PRÉDICTIF DU RETARD : PARTIE SQL (Q1 à Q3)
+-- O6. MODÈLE PRÉDICTIF DU RETARD : PARTIE SQL (Q1 à Q3)
 -- ============================================================
 -- Objectif : prédire le risque de non-respect du délai à partir
 -- des SEULES informations disponibles au moment de la commande.
@@ -9,30 +9,30 @@
 --   M-12 = fausses alertes ÷ total des alertes          (fausses alertes)
 --
 -- Ce fichier couvre :
---   Q1 — l'audit des variables (fuites de données)
---   Q2 — la règle de référence à battre
---   Q3 — le découpage entraînement / test
+--   Q1, l'audit des variables (fuites de données)
+--   Q2, la règle de référence à battre
+--   Q3 : le découpage entraînement / test
 -- La modélisation (Q4 à Q8) est dans PYTHON/O6_modele_predictif.ipynb
 --
--- Source : mart.orders — 96 447 commandes, 6 534 retards (6,77 %)
+-- Source : mart.orders, 96 447 commandes, 6 534 retards (6,77 %)
 -- ============================================================
 
 
 -- ============================================================
--- Q1 — QUELLES VARIABLES A-T-ON LE DROIT D'UTILISER ?
+-- Q1. QUELLES VARIABLES A-T-ON LE DROIT D'UTILISER ?
 -- ============================================================
 -- Principe : on se place à l'instant du clic « Acheter ».
 -- Une variable n'est utilisable que si sa valeur est DÉJÀ connue.
 -- Sinon, c'est une FUITE : le modèle paraît excellent à
 -- l'entraînement et devient inutile en production.
 --
--- ✅ Utilisables : customer_state, purchase_year, purchase_month,
+-- Utilisables : customer_state, purchase_year, purchase_month,
 --    purchase_dow, nb_items, nb_sellers, total_price,
 --    total_freight, payment_total, distance_km
 --    + promised_days (à créer, voir ci-dessous)
--- ⚪ Connues mais inutiles : order_id, customer_id
+-- Connues mais inutiles : order_id, customer_id
 --    (identifiants uniques : le modèle ne ferait que les mémoriser)
--- ❌ Fuites : order_approved_at (arrive après le clic, parfois
+-- Fuites : order_approved_at (arrive après le clic, parfois
 --    plusieurs jours après), dates de remise et de livraison,
 --    gap, gap_validation, gap_preparation, gap_shipping, timing,
 --    avg_score, nb_reviews, is_unsatisfied
@@ -48,7 +48,7 @@
 --    vendeur (fonction fenêtre). Non retenu à ce stade.
 
 
--- ── Création de promised_days : le délai promis au client ────
+-- -- Création de promised_days : le délai promis au client ----
 -- ::DATE car une différence de deux DATE donne un ENTIER (jours).
 -- Une différence de deux TIMESTAMP donnerait un INTERVAL.
 -- Cohérent avec gap : la promesse porte sur une date, pas une heure.
@@ -69,7 +69,7 @@ FROM cte;
 -- Les 156 jours restent à examiner (question ouverte).
 
 
--- ── promised_days distingue-t-il les retards ? ───────────────
+-- -- promised_days distingue-t-il les retards ? ---------------
 WITH cte AS (
     SELECT
         is_late,
@@ -89,19 +89,19 @@ GROUP BY is_late;
 -- CONSTAT : seul, le délai promis ne distingue pas les retards.
 -- On le GARDE quand même : combiné à la distance, il peut compter
 -- (une promesse de 24 jours n'a pas le même sens à 200 km et à
--- 2 500 km). → Confirmé en Q7 : c'est la variable n° 1 du modèle.
+-- 2 500 km). -> Confirmé en Q7 : c'est la variable n° 1 du modèle.
 
 
 -- ============================================================
--- Q2 — QUEL SCORE FAUT-IL BATTRE ?
+-- Q2. QUEL SCORE FAUT-IL BATTRE ?
 -- ============================================================
 -- Avant tout modèle, on mesure une règle simple issue d'O1 :
 -- alerter toutes les commandes vers les états à fort taux.
 -- Si le modèle ne fait pas mieux, il ne sert à rien.
--- (Règle naïve n° 0 : « jamais de retard » → M-11 = 0 %.)
+-- (Règle naïve n° 0 : « jamais de retard » -> M-11 = 0 %.)
 
 
--- ── Taux de retard national : le seuil de référence ──────────
+-- -- Taux de retard national : le seuil de référence ----------
 SELECT ROUND(AVG(is_late::INT) * 100, 2) AS taux_retard
 FROM mart.orders;
 -- Résultat : 6.77
@@ -111,8 +111,8 @@ FROM mart.orders;
 -- que des deux états extrêmes (AM 145 commandes, AL 397).
 
 
--- ── Taux de retard par état ─────────────────────────────────
--- AVG(is_late::INT) : true = 1, false = 0 → la moyenne est le taux.
+-- -- Taux de retard par état ---------------------------------
+-- AVG(is_late::INT) : true = 1, false = 0 -> la moyenne est le taux.
 SELECT
     customer_state,
     COUNT(*)                            AS nb_orders,
@@ -125,17 +125,17 @@ ORDER BY late_rate DESC;
 --   CE 1 279 13.76 | RR 41 12.20 | BA 3 256 12.16 | RJ 12 349 12.11
 --   PA 946 11.21 | ES 1 995 10.73 | PB 517 10.44 | TO 274 9.85
 --   MS 701 9.70 | PE 1 593 9.60 | RN 474 9.28 | SC 3 544 8.21
---   ──────────── seuil 6,77 % ────────────
+--   ------------ seuil 6,77 % ------------
 --   GO 1 957 6.54 | RS 5 343 6.08 | MT 886 5.98 | DF 2 080 5.67
 --   MG 11 349 4.57 | SP 40 480 4.50 | PR 4 923 4.04 | AC 80 3.75
 --   AP 67 2.99 | RO 243 2.88 | AM 145 2.76
--- → 16 états en alerte (AL → SC).
+-- -> 16 états en alerte (AL -> SC).
 -- PIÈGE ÉVITÉ : SP a le plus gros VOLUME de retards mais l'un des
 -- meilleurs TAUX. L'alerter reviendrait à signaler 42 % des
 -- commandes, pour la plupart à l'heure.
 
 
--- ── M-11 et M-12 de la règle (seuil 6,77 %, toute la période) ─
+-- -- M-11 et M-12 de la règle (seuil 6,77 %, toute la période) -
 WITH cte AS (
     SELECT
         is_late,
@@ -157,7 +157,7 @@ FROM cte;
 -- Taux de retard dans les alertes : 11,6 % (× 1,7 le hasard).
 
 
--- ── Variante : seuil à 10 % (11 états, AL → PB) ──────────────
+-- -- Variante : seuil à 10 % (11 états, AL -> PB) --------------
 WITH cte AS (
     SELECT
         is_late,
@@ -182,7 +182,7 @@ FROM cte;
 
 
 -- ============================================================
--- Q3 — COMMENT SÉPARER ENTRAÎNEMENT ET TEST ?
+-- Q3. COMMENT SÉPARER ENTRAÎNEMENT ET TEST ?
 -- ============================================================
 -- Choix : découpage DANS LE TEMPS, pas au hasard.
 -- Usage réel : apprendre sur le passé pour prédire le futur.
@@ -190,7 +190,7 @@ FROM cte;
 -- commandes « du futur » : score trop optimiste.
 
 
--- ── Répartition des commandes et du retard par mois ──────────
+-- -- Répartition des commandes et du retard par mois ----------
 SELECT
     purchase_year,
     purchase_month,
@@ -212,7 +212,7 @@ ORDER BY purchase_year, purchase_month;
 -- 2016 pèse trop peu pour gêner : conservé.
 
 
--- ── Taux de retard de la période d'entraînement ──────────────
+-- -- Taux de retard de la période d'entraînement --------------
 -- Inégalité STRICTE : le 1er juin appartient au test.
 SELECT ROUND(AVG(is_late::INT) * 100, 2) AS late_rate
 FROM mart.orders
@@ -220,11 +220,11 @@ WHERE order_purchase_timestamp::DATE < '2018-06-01';
 -- Résultat : 7.53
 -- Entraînement : 77 844 commandes, 7,53 % de retard
 -- Test         : 18 603 commandes, ≈ 3,6 % de retard (672 retards)
--- → Le test est deux fois moins exposé : il mesure la capacité
+-- -> Le test est deux fois moins exposé : il mesure la capacité
 --   du modèle à fonctionner quand le contexte change.
 
 
--- ── Liste d'alerte recalculée sur l'entraînement seulement ───
+-- -- Liste d'alerte recalculée sur l'entraînement seulement ---
 -- Rigueur : la règle ne doit pas être choisie avec les données
 -- de test. Seuil = taux de l'entraînement (7,53 %).
 SELECT
@@ -240,14 +240,14 @@ ORDER BY late_rate DESC;
 --   RR 31 16.13 | RJ 10 223 13.96 | PI 395 13.92 | BA 2 654 13.90
 --   PA 792 13.01 | ES 1 647 12.14 | PB 410 11.95 | RN 390 11.28
 --   TO 221 10.86 | PE 1 283 10.83 | MS 568 9.68 | SC 2 943 9.55
---   ──────────── seuil 7,53 % ────────────
+--   ------------ seuil 7,53 % ------------
 --   GO 1 623 7.33 | MT 742 7.01 | RS 4 438 6.92 | DF 1 625 6.46
 --   MG 9 291 5.36 | PR 3 976 4.60 | SP 31 869 4.44 | AC 70 4.29
 --   AP 57 3.51 | AM 116 3.45 | RO 208 3.37
--- → Les MÊMES 16 états : le choix de la liste était robuste.
+-- -> Les MÊMES 16 états : le choix de la liste était robuste.
 
 
--- ── La règle notée sur la période de test ────────────────────
+-- -- La règle notée sur la période de test --------------------
 -- Même examen que le modèle : juin-août 2018.
 WITH cte AS (
     SELECT
@@ -267,7 +267,7 @@ WHERE order_purchase_timestamp::DATE >= '2018-06-01';
 -- M-11 = 189 ÷ 672            = 28,1 %
 -- M-12 = 4 876 ÷ 5 065        = 96,3 %
 -- Taux de retard dans les alertes : 3,7 %, contre 3,6 % sur tout
--- le test → la règle ne fait quasiment pas mieux que le hasard.
+-- le test -> la règle ne fait quasiment pas mieux que le hasard.
 --
 -- CONSTAT Q3 : la règle qui détectait la moitié des retards sur
 -- l'historique n'en détecte plus que 28 % sur l'été 2018.

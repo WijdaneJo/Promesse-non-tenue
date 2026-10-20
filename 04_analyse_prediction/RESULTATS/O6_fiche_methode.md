@@ -1,4 +1,4 @@
-# O6 — Fiche méthode : comprendre le modèle et ses choix
+# O6. Fiche méthode : comprendre le modèle et ses choix
 
 Cette fiche explique **les notions** utilisées dans l'O6, **les choix** faits à chaque étape et **pourquoi**. Elle sert aussi de préparation d'entretien.
 
@@ -32,7 +32,7 @@ Cette fiche explique **les notions** utilisées dans l'O6, **les choix** faits �
 |---|---|---|
 | `gap`, dates de livraison, avis | Oui : connus après | Exclus |
 | `order_approved_at` | Oui : arrive après le clic, parfois des jours après | Exclu |
-| Date promise | Non : affichée au client avant validation | **Gardée** → `promised_days` |
+| Date promise | Non : affichée au client avant validation | **Gardée** -> `promised_days` |
 | `late_rate` du vendeur (`mart.sellers`) | Oui : contient la commande à prédire et le futur | Exclu (version correcte possible avec une fonction fenêtre) |
 | Moyenne de standardisation calculée sur le test | Oui : information du futur | Calculée sur l'entraînement seulement |
 | Liste d'états choisie avec les taux du test | Oui | Recalculée sur l'entraînement seulement |
@@ -58,7 +58,7 @@ Cette fiche explique **les notions** utilisées dans l'O6, **les choix** faits �
 | Méthode | Principe | Avantage | Défaut |
 |---|---|---|---|
 | **Au hasard** | 20 % des commandes tirées au sort | Simple, tests aux mêmes conditions | Le modèle apprend avec des commandes « du futur » : score optimiste |
-| **Dans le temps** ✅ | Apprendre sur le passé, tester sur le plus récent | Reproduit l'usage réel | Le test peut avoir un contexte différent |
+| **Dans le temps** | Apprendre sur le passé, tester sur le plus récent | Reproduit l'usage réel | Le test peut avoir un contexte différent |
 
 **Choix :** découpage dans le temps, coupure au 1er juin 2018.
 
@@ -109,8 +109,8 @@ Une valeur de 0 est dans la moyenne, une valeur de +2 est nettement au-dessus. L
 
 | Méthode | Sur l'entraînement | Sur le test |
 |---|---|---|
-| `fit_transform` | ✅ Calcule moyenne et écart-type, puis transforme | ❌ |
-| `transform` | | ✅ Réutilise les valeurs de l'entraînement |
+| `fit_transform` | Calcule moyenne et écart-type, puis transforme | Non |
+| `transform` | | Réutilise les valeurs de l'entraînement |
 
 **Bonus :** les poids du modèle deviennent comparables entre eux.
 
@@ -216,11 +216,11 @@ Chaque commande tombe dans une des quatre cases. Exemple à 5 065 alertes sur le
 | **Taux de fausses découvertes** | FP ÷ (VP + FP) | **M-12** | `1 - precision_score` |
 | **Justesse** (*accuracy*) | (VP + VN) ÷ total | Écartée | `accuracy_score` |
 
-⚠️ **Piège de vocabulaire :** M-12 n'est **pas** le « taux de faux positifs » des statisticiens, qui vaut FP ÷ (FP + VN). Ce sont deux formules différentes.
+**Piège de vocabulaire :** M-12 n'est **pas** le « taux de faux positifs » des statisticiens, qui vaut FP ÷ (FP + VN). Ce sont deux formules différentes.
 
-⚠️ **Piège de lecture :** M-11 seul ne veut rien dire. Un modèle qui alerte tout détecte 100 % des retards. Toujours regarder le nombre d'alertes à côté.
+**Piège de lecture :** M-11 seul ne veut rien dire. Un modèle qui alerte tout détecte 100 % des retards. Toujours regarder le nombre d'alertes à côté.
 
-⚠️ **Piège de comparaison :** M-12 dépend du taux de retard de l'échantillon. Plus il y a de retards, moins il y a mécaniquement de fausses alertes. Pour comparer deux tests différents, utiliser le **rapport au hasard** : taux de retard dans les alertes ÷ taux de retard global (on parle de *lift*).
+**Piège de comparaison :** M-12 dépend du taux de retard de l'échantillon. Plus il y a de retards, moins il y a mécaniquement de fausses alertes. Pour comparer deux tests différents, utiliser le **rapport au hasard** : taux de retard dans les alertes ÷ taux de retard global (on parle de *lift*).
 
 ---
 
@@ -228,7 +228,7 @@ Chaque commande tombe dans une des quatre cases. Exemple à 5 065 alertes sur le
 
 ### Le principe
 
-- Un **arbre de décision** pose une suite de questions oui / non (« promesse < 15 jours ? » → « distance > 1 000 km ? »). Au bout du chemin, il donne un niveau de risque.
+- Un **arbre de décision** pose une suite de questions oui / non (« promesse < 15 jours ? » -> « distance > 1 000 km ? »). Au bout du chemin, il donne un niveau de risque.
 - Une **forêt** construit des centaines d'arbres, chacun sur un échantillon un peu différent, et fait la **moyenne** de leurs réponses. C'est plus stable qu'un arbre seul.
 
 ### Les réglages utilisés
@@ -254,13 +254,13 @@ Chaque commande tombe dans une des quatre cases. Exemple à 5 065 alertes sur le
 
 | Règle de lecture | Exemple O6 |
 |---|---|
-| Le signe donne le sens | `promised_days` −0,58 : promesse longue → moins de risque |
+| Le signe donne le sens | `promised_days` −0,58 : promesse longue -> moins de risque |
 | La valeur absolue donne l'importance (variables standardisées) | −0,58 pèse plus que +0,14 |
-| Un poids se lit **à autres variables égales** | Distance +0,35 : à promesse égale, plus loin → plus de risque |
+| Un poids se lit **à autres variables égales** | Distance +0,35 : à promesse égale, plus loin -> plus de risque |
 | Un poids nul = n'apporte rien **de plus** que les autres | Prix 0,01 : son information est déjà portée par la distance, l'état, les frais de port |
 | Les états se lisent par rapport à la modalité supprimée | RJ +0,32 : plus risqué qu'AC, à distance et promesse égales |
 
-⚠️ **Variables redondantes** (prix, paiement, frais de port disent presque la même chose) : le modèle répartit le poids entre elles. Leur poids individuel est alors peu fiable.
+**Variables redondantes** (prix, paiement, frais de port disent presque la même chose) : le modèle répartit le poids entre elles. Leur poids individuel est alors peu fiable.
 
 ---
 
@@ -280,7 +280,7 @@ $$z = \dots + a_1 \times \text{promesse} + a_2 \times \text{distance} + a_3 \tim
 
 **Le plancher à 100 km :** sans lui, une commande à 3 km donnerait 24 ÷ 0,03 = 800 jours par 100 km, une valeur absurde qui écraserait les autres. En dessous de 100 km, le temps de transport est à peu près constant.
 
-**D'où est venue l'idée :** d'une chaîne de constats. O1 (la distance explique la promesse) → Q1 (la promesse seule ne distingue rien) → Q5 (l'anomalie d'août, promesses courtes) → Q8 (SP, promesse divisée par deux). **La variable découle d'une phrase métier : un retard, c'est une promesse trop serrée pour le trajet.**
+**D'où est venue l'idée :** d'une chaîne de constats. O1 (la distance explique la promesse) -> Q1 (la promesse seule ne distingue rien) -> Q5 (l'anomalie d'août, promesses courtes) -> Q8 (SP, promesse divisée par deux). **La variable découle d'une phrase métier : un retard, c'est une promesse trop serrée pour le trajet.**
 
 **Résultat :** +9 points de détection au top 20 %, là où la forêt aléatoire, plus complexe, avait fait moins bien.
 

@@ -1,5 +1,5 @@
 -- ============================================================
--- ÉTAPE 1 — COUCHE RAW
+-- ÉTAPE 1 : COUCHE RAW
 -- ============================================================
 -- Rôle : copie fidèle des 9 CSV Olist.
 -- Toutes les colonnes en TEXT, sans exception : si une valeur
@@ -105,7 +105,7 @@ CREATE TABLE raw.category_name_translation (
 );
 
 
--- ── Volumétrie attendue après chargement ────────────────────
+-- -- Volumétrie attendue après chargement --------------------
 --   customers                   99 441
 --   geolocation              1 000 163
 --   order_items                112 650

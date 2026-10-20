@@ -102,7 +102,8 @@ coût logistique. Le gain, lui, est mesuré.
   inclut le transport, et 501 vendeurs sur 1 217 dépassent la moyenne. La date
   limite d'expédition, elle, ne dépend que du vendeur. La dépasser multiplie le
   risque de retard par 4, et les vendeurs qui la dépassent sur plus de 20 % de
-  leurs commandes disparaissent 47 % plus souvent. *(O2, O5)*
+  leurs commandes disparaissent plus souvent (28 % contre 19 %, un écart
+  indicatif sur de petits effectifs). *(O2, O5)*
 - **Action.** Suivre le taux de dépassement de chaque vendeur et déclencher un
   accompagnement au-delà de 20 %.
 - **Direction.** Partenariats vendeurs.

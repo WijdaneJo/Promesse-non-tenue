@@ -1,9 +1,9 @@
-# O3 — Constats : le seuil de tolérance
+# O3. Constats : le seuil de tolérance
 
 > Ce document traduit les résultats de `SQL/02_O3_seuil_satisfaction.sql` en
 > **énoncés utilisables**.
 >
-> **Structure de chaque constat** : le fait → ce qu'il signifie → ce qu'il implique.
+> **Structure de chaque constat** : le fait, ce qu'il signifie, ce qu'il implique.
 
 **Périmètre.** Les 646 commandes sans avis (RG-07) sortent de ces analyses.
 Le dénominateur est de **95 801 avis** sur 96 447 commandes.
@@ -37,7 +37,7 @@ pas d'une marge de patience de quelques jours.
 ## Ce que cela implique
 
 **Toute action doit viser le respect de la promesse, pas sa quasi-atteinte.**
-Un retard d'un jour n'est pas un « presque réussi » — c'est déjà un échec pour
+Un retard d'un jour n'est pas un « presque réussi » : c'est déjà un échec pour
 la moitié des clients concernés.
 
 ---
@@ -60,8 +60,8 @@ la moitié des clients concernés.
 
 Trois lectures se superposent.
 
-**Dès le premier jour**, l'insatisfaction augmente de 60 % (12,34 % → 19,76 %).
-Ce n'est pas de la tolérance — c'est une dégradation immédiate, simplement moins
+**Dès le premier jour**, l'insatisfaction augmente de 60 % (de 12,34 % à 19,76 %).
+Ce n'est pas de la tolérance : c'est une dégradation immédiate, simplement moins
 spectaculaire que la suite.
 
 **À trois jours**, deux basculements se produisent simultanément : la note passe
@@ -69,7 +69,7 @@ spectaculaire que la suite.
 **C'est le seuil critique.**
 
 **Après six jours**, l'insatisfaction plafonne. Elle continue de monter, mais
-lentement — 77 % à 6 jours, 83 % à 10 jours. **Le mal est déjà fait.**
+lentement : 77 % à 6 jours, 83 % à 10 jours. **Le mal est déjà fait.**
 
 ## Ce que cela implique
 
@@ -97,7 +97,7 @@ retard est récupérable ; un client à 6 jours est perdu.
 | 0 jour | 4,03 | 12,34 % | 1 280 |
 
 **La note plafonne à ~4,3 quelle que soit l'avance.** L'écart entre 30 jours
-d'avance et 5 jours d'avance est de 0,07 point — du bruit.
+d'avance et 5 jours d'avance est de 0,07 point : du bruit.
 
 ## Ce que cela signifie
 
@@ -117,7 +117,7 @@ Elle capte donc spécifiquement l'effet du délai.
 C'est un argument central pour **O8** : un resserrement des délais annoncés a un
 **coût nul côté satisfaction**, tant que la promesse reste tenue.
 
-La marge de 14 jours ne fabrique pas de clients plus contents — elle ne fait que
+La marge médiane de 13 jours ne fabrique pas de clients plus contents : elle ne fait que
 protéger Olist du risque de retard.
 
 ---
@@ -139,15 +139,15 @@ Taux d'insatisfaction par état et par tranche :
 
 ## Ce que cela signifie
 
-**Dans les six grands états, la bascule se produit au même endroit** — dès le
+**Dans les six grands états, la bascule se produit au même endroit** : dès le
 premier jour de retard. Aucun état ne tolère plus que les autres.
 
 **RJ est plus sévère, mais pas sur le seuil** : 58 % contre 41-53 % ailleurs sur
 la tranche 1-7 jours. C'est l'**intensité** qui diffère, pas le point de bascule.
 
-> ⚠️ **Une hypothèse tombe.** On aurait pu penser qu'une promesse longue rend le
+> **Une hypothèse tombe.** On aurait pu penser qu'une promesse longue rend le
 > client moins tolérant au retard. RJ contredit cela : sa promesse est **courte**
-> (25 jours), comme celle de PR — et pourtant RJ est nettement plus sévère.
+> (25 jours), comme celle de PR : et pourtant RJ est nettement plus sévère.
 >
 > RJ reste un cas particulier, comme l'a déjà montré O1. La réponse est dans O2.
 
@@ -169,14 +169,14 @@ Quatre hypothèses ont été testées.
 
 ---
 
-## Hypothèse 1 — Petit effectif ❌ écartée
+## Hypothèse 1 : Petit effectif écartée
 
 Q5 la fragilise d'abord :
 
 | État | Very late | Insatisfaction |
 |---|---|---|
-| RJ | 131 avis | **83,21 %** — pas de remontée |
-| SP | 64 avis | **48,44 %** — chute de 26 points |
+| RJ | 131 avis | **83,21 %** : pas de remontée |
+| SP | 64 avis | **48,44 %** : chute de 26 points |
 
 L'anomalie est **concentrée sur São Paulo**, pas générale.
 
@@ -198,10 +198,10 @@ La distribution des notes tranche définitivement :
 
 ---
 
-## Hypothèse 2 — Geste commercial ❌ affaiblie
+## Hypothèse 2 : Geste commercial affaiblie
 
 Un remboursement, un coupon ou un suivi expliqueraient une satisfaction
-maintenue. Aucune trace directe dans les données — mais les **verbatims**
+maintenue. Aucune trace directe dans les données : mais les **verbatims**
 pourraient en porter mention.
 
 Les commentaires ayant été écartés de `staging`, ils ont été lus directement
@@ -226,12 +226,12 @@ commercial avait été fait, un client sur quinze en aurait probablement parlé.
 
 ---
 
-## Hypothèse 3 — Produit non urgent ❌ écartée
+## Hypothèse 3 : Produit non urgent écartée
 
 Les commentaires suggèrent des clients simplement non gênés par le délai. Cela
 se vérifierait par une concentration sur des catégories sans contrainte de date.
 
-**Les satisfaits (note ≥ 4)** — 28 commandes :
+**Les satisfaits (note ≥ 4)** : 28 commandes :
 
 | Catégorie | Traduction | Nb |
 |---|---|---|
@@ -241,10 +241,10 @@ se vérifierait par une concentration sur des catégories sans contrainte de dat
 | perfumaria | Parfumerie | 3 |
 | *+ 11 autres catégories* | | 1 à 2 |
 
-**15 catégories pour 28 commandes.** Aucune concentration — on trouve de
+**15 catégories pour 28 commandes.** Aucune concentration : on trouve de
 l'électronique, de l'informatique, de la puériculture.
 
-**Les mécontents (note ≤ 2)** — même profil : `cama_mesa_banho` 6,
+**Les mécontents (note ≤ 2)** : même profil : `cama_mesa_banho` 6,
 `moveis_decoracao` 3, puis dispersion complète. **Huit catégories se retrouvent
 dans les deux groupes.**
 
@@ -252,14 +252,14 @@ dans les deux groupes.**
 
 ---
 
-## Hypothèse 4 — Date de livraison erronée ⬜ non testable
+## Hypothèse 4 : Date de livraison erronée non testable
 
 Si `order_delivered_customer_date` correspondait à un enregistrement tardif
 plutôt qu'à la réception réelle, le client aurait reçu son colis à temps sans le
 savoir. Le commentaire « Recebi certinho » irait dans ce sens.
 
 **Aucune seconde source de date dans le jeu de données.** Hypothèse non
-vérifiable — et donc non écartée.
+vérifiable : et donc non écartée.
 
 ---
 
@@ -267,10 +267,10 @@ vérifiable — et donc non écartée.
 
 | Hypothèse | Statut | Preuve |
 |---|---|---|
-| Petit effectif | ❌ Écartée | Distribution en U, pas de dispersion |
-| Geste commercial | ❌ Affaiblie | Aucune mention dans 15 verbatims |
-| Produit non urgent | ❌ Écartée | Aucune concentration par catégorie |
-| Date de livraison erronée | ⬜ Non testable | Pas de seconde source |
+| Petit effectif | Écartée | Distribution en U, pas de dispersion |
+| Geste commercial | Affaiblie | Aucune mention dans 15 verbatims |
+| Produit non urgent | Écartée | Aucune concentration par catégorie |
+| Date de livraison erronée | Non testable | Pas de seconde source |
 
 **Trois hypothèses écartées par la donnée, une quatrième hors de portée.
 L'anomalie est documentée, non expliquée.**
@@ -280,7 +280,7 @@ L'anomalie est documentée, non expliquée.**
 **Question à remonter au métier** :
 
 > *64 commandes livrées avec plus de 30 jours de retard à São Paulo présentent
-> une distribution en U — 30 notes de 1, mais 28 notes de 4 ou 5. Un dispositif
+> une distribution en U : 30 notes de 1, mais 28 notes de 4 ou 5. Un dispositif
 > de compensation ou de suivi a-t-il été appliqué sur ce périmètre ? Si oui, son
 > efficacité mériterait d'être évaluée et son extension envisagée.*
 
@@ -288,15 +288,15 @@ On montre l'anomalie, on suggère la piste, on laisse le métier confirmer.
 
 ---
 
-# Synthèse — ce que O3 a établi
+# Synthèse : ce que O3 a établi
 
 | # | Constat |
 |---|---|
-| 1 | **Il n'y a pas de seuil de tolérance** — dès 1 jour, l'insatisfaction augmente de 60 % |
+| 1 | **Il n'y a pas de seuil de tolérance** : dès 1 jour, l'insatisfaction augmente de 60 % |
 | 2 | **Le seuil critique est à 3 jours** : note sous 3, insatisfaction au-dessus de 50 % |
-| 3 | **Plateau après 6 jours** — le mal est fait, gagner davantage n'apporte plus grand-chose |
+| 3 | **Plateau après 6 jours** : le mal est fait, gagner davantage n'apporte plus grand-chose |
 | 4 | **L'avance n'apporte rien** : note stable à 4,3 de −30 à −5 jours |
-| 5 | **Le seuil est national** — même bascule dans les six grands états |
+| 5 | **Le seuil est national** : même bascule dans les six grands états |
 | 6 | **RJ est plus sévère** (58 % contre 41-53 %) sans que la promesse l'explique |
 | 7 | **Anomalie São Paulo** : distribution en U, trois hypothèses écartées, une non testable |
 
@@ -304,14 +304,14 @@ On montre l'anomalie, on suggère la piste, on laisse le métier confirmer.
 
 # Ce que O3 apporte aux autres objectifs
 
-**Pour O4 (exposition financière)** — le CA réellement exposé doit se calculer
+**Pour O4 (exposition financière)** : le CA réellement exposé doit se calculer
 sur les commandes à **3 jours de retard ou plus**, seuil au-delà duquel la
 majorité des clients bascule. En deçà, l'exposition existe mais reste partielle.
 
-**Pour O7 (scénarios)** — le simulateur doit viser le passage sous 3 jours, et
+**Pour O7 (scénarios)** : le simulateur doit viser le passage sous 3 jours, et
 non le retour à zéro. C'est le point de rendement maximal.
 
-**Pour O8 (calibrage)** — l'avance n'apporte aucun bénéfice mesurable. Le
+**Pour O8 (calibrage)** : l'avance n'apporte aucun bénéfice mesurable. Le
 resserrement de la promesse a donc un coût nul côté satisfaction, tant qu'elle
 reste tenue. **C'est l'argument central de la recommandation.**
 
@@ -326,7 +326,7 @@ O8) ou l'**anticiper** (O6). Aucun ne traite de la question suivante : lorsque l
 retard est acté, comment en limiter l'effet sur la satisfaction ?
 
 L'anomalie de São Paulo suggère que **certains clients restent satisfaits malgré
-un retard massif**. Comprendre pourquoi — et le reproduire — constituerait un
+un retard massif**. Comprendre pourquoi, et le reproduire, constituerait un
 levier distinct : suivi proactif, information en cours de livraison, geste
 commercial ciblé.
 

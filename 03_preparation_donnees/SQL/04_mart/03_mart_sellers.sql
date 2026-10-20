@@ -1,5 +1,5 @@
 -- ============================================================
--- ÉTAPE 6 — COUCHE MART : mart.sellers
+-- ÉTAPE 6. COUCHE MART : mart.sellers
 -- ============================================================
 -- Table analytique au grain VENDEUR.
 -- Une ligne = un vendeur retenu (1 217), avec son profil de
@@ -20,30 +20,30 @@
 --
 -- DEUX FILTRES, DEUX RÈGLES DISTINCTES :
 --
---   WHERE nb_sellers = 1  — RG-09, filtre des COMMANDES.
+--   WHERE nb_sellers = 1  : RG-09, filtre des COMMANDES.
 --     Les commandes multi-vendeurs (1,3 %) sont écartées :
 --     le retard ne peut être imputé à un vendeur identifié.
 --
---   HAVING COUNT(*) >= 10 — RG-08, filtre des VENDEURS.
+--   HAVING COUNT(*) >= 10 : RG-08, filtre des VENDEURS.
 --     Un vendeur à 2 commandes dont 1 en retard afficherait
 --     50 % de retard, ce qui ne signifie rien.
 --     Le WHERE ne peut pas faire ce travail : au moment où il
 --     s'applique, le comptage par vendeur n'existe pas encore.
 --
--- IMPACT DU SEUIL — mesuré avant de le fixer (contrôle 4) :
+-- IMPACT DU SEUIL : mesuré avant de le fixer (contrôle 4) :
 --   1 217 vendeurs retenus sur 2 948   (41,3 %)
 --   89 250 commandes sur 95 191        (93,8 %)
---   → on écarte 59 % des vendeurs mais seulement 6,2 % de
+--   -> on écarte 59 % des vendeurs mais seulement 6,2 % de
 --     l'activité. Le bruit statistique part, le phénomène reste.
 --
--- late_rate : AVG(is_late::INT). En PostgreSQL, true → 1 et
--- false → 0 ; la moyenne de ces 0/1 EST le taux. C'est pour
+-- late_rate : AVG(is_late::INT). En PostgreSQL, true -> 1 et
+-- false -> 0 ; la moyenne de ces 0/1 EST le taux. C'est pour
 -- cela que is_late a été conçu comme booléen et non comme
 -- libellé texte.
 --
 -- seller_state figure dans le GROUP BY : toute colonne du
 -- SELECT doit être agrégée ou groupée. PostgreSQL ne sait pas
--- qu'un vendeur n'a qu'un seul état — il faut le lui dire.
+-- qu'un vendeur n'a qu'un seul état : il faut le lui dire.
 -- Le résultat est identique, la contrainte est syntaxique.
 
 DROP TABLE IF EXISTS mart.sellers;
@@ -79,7 +79,7 @@ CREATE TABLE mart.sellers AS
     HAVING COUNT(*) >= 10;
 
 
--- ── Contrôles ───────────────────────────────────────────────
+-- -- Contrôles -----------------------------------------------
 -- 1. Nombre de vendeurs retenus (attendu : 1 217)
 SELECT COUNT(*) FROM mart.sellers;
 

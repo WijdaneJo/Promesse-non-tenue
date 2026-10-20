@@ -38,7 +38,7 @@ AP, RO, AM) dépassent 19 jours, avec moins de 240 commandes chacun.
 
 Olist calibre sa promesse sur la distance (O1) : 46 jours à 2 700 km, 19 jours
 à 166 km. Résultat, le coussin restant est le même partout. Le taux de retard
-varie d'un facteur 8 selon l'état, mais la marge ne varie que de 5 jours.
+varie de 1 à 4 entre les grands états, mais la marge ne varie que de 5 jours.
 
 ## Ce que cela implique
 

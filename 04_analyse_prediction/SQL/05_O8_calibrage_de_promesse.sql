@@ -1,5 +1,5 @@
 -- ============================================================
--- O8 — LE CALIBRAGE DE LA PROMESSE
+-- O8. LE CALIBRAGE DE LA PROMESSE
 -- ============================================================
 -- Objectif : évaluer si les délais annoncés sont bien calibrés,
 -- et simuler l'effet d'un resserrement.
@@ -17,18 +17,18 @@
 -- plus attractive, mais mécaniquement génératrice de retards.
 --
 -- ACQUIS DES OBJECTIFS PRÉCÉDENTS
---   O1 — La promesse est bien calibrée sur la distance
+--   O1. La promesse est bien calibrée sur la distance
 --        (46 j à 2 700 km, 19 j à 166 km)
---   O3 — L'AVANCE N'APPORTE RIEN : la note plafonne à 4,3 de
+--   O3. L'AVANCE N'APPORTE RIEN : la note plafonne à 4,3 de
 --        −30 à −5 jours. C'est l'argument central.
---   O1 — L'acheminement s'est amélioré : 7 → 5 jours après
+--   O1. L'acheminement s'est amélioré : 7 à 5 jours après
 --        avril 2018
 --
--- ⚠ TROIS LIMITES À POSER D'EMBLÉE
+-- TROIS LIMITES À POSER D'EMBLÉE
 --   1. LE BÉNÉFICE N'EST PAS MESURABLE. Le dataset ne contient
 --      aucune trace des visiteurs n'ayant PAS commandé. M-17
 --      mesure le COÛT d'un resserrement, jamais son gain.
---   2. La simulation suppose l'EXÉCUTION INCHANGÉE — on décale
+--   2. La simulation suppose l'EXÉCUTION INCHANGÉE : on décale
 --      la promesse, pas la performance.
 --   3. L'effet sur la satisfaction est EXTRAPOLÉ : rien ne
 --      garantit qu'un retard créé par un resserrement soit
@@ -36,14 +36,14 @@
 
 
 -- ============================================================
--- Q1 — QUELLE MARGE OLIST PREND-ELLE AUJOURD'HUI ? (M-16)
+-- Q1. QUELLE MARGE OLIST PREND-ELLE AUJOURD'HUI ? (M-16)
 -- ============================================================
 -- La marge est le temps qu'Olist s'est réservé et qu'elle n'a
 -- PAS consommé.
 --
 -- WHERE gap < 0 OBLIGATOIRE : une commande en retard n'a pas de
 -- marge, elle l'a dépassée. Inclure les retards produirait une
--- moyenne entre marge et dépassement — un chiffre qui ne décrit
+-- moyenne entre marge et dépassement : un chiffre qui ne décrit
 -- ni l'un ni l'autre.
 --
 -- MÉDIANE ET NON MOYENNE : le gap descend jusqu'à −147 jours.
@@ -62,7 +62,7 @@ ORDER BY purchase_year;
 
 -- RÉSULTAT
 --
---   2016      259 commandes    −39 j   ⚠ NON EXPLOITABLE
+--   2016      259 commandes    −39 j   NON EXPLOITABLE
 --   2017   40 529 commandes    −13 j
 --   2018   47 833 commandes    −13 j
 --
@@ -71,11 +71,11 @@ ORDER BY purchase_year;
 -- déc. 2016 : 1). Les −39 jours décrivent une plateforme qui
 -- démarre sans historique, pas une politique commerciale.
 --
--- LA MARGE EST IDENTIQUE EN 2017 ET 2018 — alors que la
+-- LA MARGE EST IDENTIQUE EN 2017 ET 2018 : alors que la
 -- promesse a été raccourcie sur la période (O1).
 
 
--- ── Q1 bis. Rappel — l'évolution de la promesse ─────────────
+-- -- Q1 bis. Rappel : l'évolution de la promesse -------------
 -- Requête reprise de O1 (Q2.e), nécessaire pour interpréter
 -- Q1 : comment la marge peut-elle rester stable si la promesse
 -- se raccourcit ?
@@ -90,14 +90,14 @@ FROM mart.orders
 GROUP BY purchase_year, purchase_month
 ORDER BY purchase_year, purchase_month;
 
--- RÉSULTAT — durée médiane promise
+-- RÉSULTAT : durée médiane promise
 --
---   2017 (année pleine)   23-24 jours
+--   2017 (mars à nov.)    23-26 jours
 --   2018-03               22 jours
 --   2018-05               22 jours
---   2018-06               28 jours   ← remonte
+--   2018-06               28 jours   <- remonte
 --   2018-07               20 jours
---   2018-08               14 jours   ← minimum
+--   2018-08               14 jours   <- minimum
 --
 -- L'EXPLICATION DE Q1 :
 --
@@ -106,13 +106,13 @@ ORDER BY purchase_year, purchase_month;
 --     2018 :  14  −   1  =  13
 --
 -- Olist a raccourci sa promesse EXACTEMENT AUTANT qu'elle a
--- amélioré son exécution (acheminement 7 → 5 jours, O1). Les
+-- amélioré son exécution (acheminement 7 à 5 jours, O1). Les
 -- deux mouvements se compensent, la marge ne bouge pas.
 --
--- → LE RACCOURCISSEMENT N'A PAS ENTAMÉ LE COUSSIN DE SÉCURITÉ.
+-- -> LE RACCOURCISSEMENT N'A PAS ENTAMÉ LE COUSSIN DE SÉCURITÉ.
 --   Les 13 jours de marge sont toujours disponibles.
 --
--- ⚠ PRUDENCE SUR LES 14 JOURS D'AOÛT 2018. Juin était à 28,
+-- PRUDENCE SUR LES 14 JOURS D'AOÛT 2018. Juin était à 28,
 -- juillet à 20. Ce n'est pas une tendance régulière mais un
 -- MOIS ISOLÉ, et c'est le dernier du dataset. Un seul point ne
 -- fait pas une politique.
@@ -188,7 +188,7 @@ ORDER BY purchase_month;
 
 
 -- ============================================================
--- Q2 — LA MARGE EST-ELLE UNIFORME PAR ÉTAT ? (M-16)
+-- Q2. LA MARGE EST-ELLE UNIFORME PAR ÉTAT ? (M-16)
 -- ============================================================
 -- Les états à forte marge seraient les candidats naturels au
 -- resserrement. Ceux à marge faible n'en auraient pas.
@@ -204,11 +204,11 @@ ORDER BY marge_mediane;
 -- RÉSULTAT
 --
 --   État  Commandes   Marge
---   RR         36     −24 j  ⚠ volume faible
---   AC         77     −22 j  ⚠
---   AP         64     −22 j  ⚠
---   RO        236     −21 j  ⚠
---   AM        139     −19 j  ⚠
+--   RR         36     −24 j  volume faible
+--   AC         77     −22 j  
+--   AP         64     −22 j  
+--   RO        236     −21 j  
+--   AM        139     −19 j  
 --   PA        829     −17 j
 --   MT        826     −16 j
 --   PE      1 421     −15 j
@@ -219,14 +219,14 @@ ORDER BY marge_mediane;
 --   BA      2 799     −14 j
 --   SC      3 198     −13 j
 --   DF      1 933     −13 j
---   SP     38 093     −12 j  ← minimum
+--   SP     38 093     −12 j  <- minimum
 --
 -- LA MARGE EST REMARQUABLEMENT UNIFORME : de −12 à −17 jours
 -- pour tous les états à volume significatif. TROIS JOURS
 -- D'ÉCART entre les grands états.
 --
--- À COMPARER AU TAUX DE RETARD, qui va de 2,76 % à 21,41 % —
--- un FACTEUR 8 (O1).
+-- À COMPARER AU TAUX DE RETARD, qui va de 4,04 % à 17,43 % entre
+-- les états de plus de 500 commandes, un RAPPORT DE 1 À 4 (O1).
 --
 -- Les cinq états amazoniens (RR, AC, AP, RO, AM) dépassent
 -- −19 jours mais ont tous moins de 240 commandes. Sous le seuil
@@ -236,32 +236,32 @@ ORDER BY marge_mediane;
 -- distance (établi en O1). Résultat, le coussin de sécurité
 -- restant est le même partout.
 --
--- → UN RESSERREMENT DIFFÉRENCIÉ PAR ÉTAT N'A PAS DE SENS.
+-- -> UN RESSERREMENT DIFFÉRENCIÉ PAR ÉTAT N'A PAS DE SENS.
 --   Une règle uniforme suffit.
 --   Ceci répond par avance à Q5.
 --
--- ⚠ CE QUE Q2 NE DIT PAS : de combien resserrer. La médiane
--- décrit le cas CENTRAL, pas les commandes proches de zéro —
+-- CE QUE Q2 NE DIT PAS : de combien resserrer. La médiane
+-- décrit le cas CENTRAL, pas les commandes proches de zéro :
 -- celles qui basculeraient. C'est l'objet de Q3.
 
 
 -- ============================================================
--- Q3 — QUE SE PASSE-T-IL SI ON RETRANCHE X JOURS ? (M-17)
+-- Q3. QUE SE PASSE-T-IL SI ON RETRANCHE X JOURS ? (M-17)
 -- ============================================================
 -- Le cœur de O8.
 --
 -- PRINCIPE : resserrer la promesse de X jours revient à AJOUTER
 -- X au gap de chaque commande.
 --
---   Exemple — commande promise à 20 j, livrée en 12 j :
+--   Exemple : commande promise à 20 j, livrée en 12 j :
 --     gap actuel        = 12 − 20 = −8  (8 jours d'avance)
 --     si promesse 15 j  = 12 − 15 = −3  (soit gap + 5)
---     si promesse 10 j  = 12 − 10 = +2  → EN RETARD
+--     si promesse 10 j  = 12 − 10 = +2  -> EN RETARD
 --
 -- Plus le gap monte, plus on s'approche du retard. Au-dessus de
 -- zéro, c'est un retard.
 --
--- ⚠ NE PAS FILTRER SUR gap < 0 : les commandes déjà en retard
+-- NE PAS FILTRER SUR gap < 0 : les commandes déjà en retard
 -- le restent après resserrement. Les exclure sous-estimerait le
 -- taux simulé.
 --
@@ -280,30 +280,30 @@ FROM mart.orders;
 --
 --   Scénario     Commandes   Taux
 --   Actuel          6 534    6,77 %
---   −3 jours       10 838   11,24 %   ← presque le double
+--   −3 jours       10 838   11,24 %   <- presque le double
 --   −5 jours       14 486   15,02 %
---   −7 jours       20 330   21,08 %   ← le triple
---   −10 jours      34 620   35,90 %   ← plus d'un tiers
+--   −7 jours       20 330   21,08 %   <- le triple
+--   −10 jours      34 620   35,90 %   <- plus d'un tiers
 --
 -- LA MARGE DE 13 JOURS N'EST PAS UN GISEMENT DISPONIBLE.
 -- C'est une MÉDIANE : la moitié des commandes ont MOINS de
 -- 13 jours d'avance, et ce sont elles qui basculent.
 --
--- POURQUOI LA HAUSSE EST SI BRUTALE — la distribution mesurée
+-- POURQUOI LA HAUSSE EST SI BRUTALE : la distribution mesurée
 -- en O3 l'explique :
---     gap  0  →  1 280 commandes
---     gap −1  →  1 450
---     gap −2  →  1 540
---     gap −3  →  1 715
+--     gap  0  ->  1 280 commandes
+--     gap −1  ->  1 450
+--     gap −2  ->  1 540
+--     gap −3  ->  1 715
 -- Beaucoup de commandes sont AU BORD. Retrancher 3 jours fait
 -- basculer tout ce qui était entre 0 et −2, soit ~4 300.
 
 
 -- ============================================================
--- Q4 — JUSQU'OÙ ALLER SANS FRANCHIR UN SEUIL ACCEPTABLE ?
+-- Q4. JUSQU'OÙ ALLER SANS FRANCHIR UN SEUIL ACCEPTABLE ?
 -- ============================================================
 -- Q3 montre que 3 jours font déjà presque doubler le taux. La
--- zone utile est donc EN DESSOUS — d'où le test de 1 et 2 jours.
+-- zone utile est donc EN DESSOUS : d'où le test de 1 et 2 jours.
 SELECT
     COUNT(*)                            AS total,
     COUNT(*) FILTER (WHERE gap > 0)     AS retard_actuel,
@@ -313,10 +313,10 @@ SELECT
     ROUND(COUNT(*) FILTER (WHERE gap + 2 > 0) * 100.0 / COUNT(*), 2) AS taux_2j
 FROM mart.orders;
 
--- RÉSULTAT — LE TABLEAU COMPLET
+-- RÉSULTAT : LE TABLEAU COMPLET
 --
 --   Resserrement   Commandes   Taux      Coût
---   Actuel            6 534    6,77 %      —
+--   Actuel            6 534    6,77 %      :
 --   −1 jour           7 826    8,11 %   +1,34 pt
 --   −2 jours          9 288    9,63 %   +2,86 pt
 --   −3 jours         10 838   11,24 %   +4,47 pt
@@ -331,20 +331,20 @@ FROM mart.orders;
 -- 9,63 % est un coût mesurable et assumable. Au-delà, on
 -- franchit les 10 %.
 --
--- ⚠ MAIS LE CHIFFRE MANQUANT RESTE LE MÊME. On mesure le COÛT
+-- MAIS LE CHIFFRE MANQUANT RESTE LE MÊME. On mesure le COÛT
 -- (+2 754 commandes en retard à −2 jours), jamais le BÉNÉFICE.
 -- Le dataset ne contient aucune trace des visiteurs ayant
 -- renoncé face à un délai trop long.
 
 
 -- ============================================================
--- Q5 — UN RESSERREMENT DIFFÉRENCIÉ FERAIT-IL MIEUX ?
+-- Q5. UN RESSERREMENT DIFFÉRENCIÉ FERAIT-IL MIEUX ?
 -- ============================================================
 -- RÉPONDU PAR Q2 : la marge est uniforme (−12 à −15 jours dans
 -- tous les grands états). Aucun état ne dispose d'un gisement
 -- supérieur aux autres.
 --
--- → UN RESSERREMENT DIFFÉRENCIÉ N'APPORTERAIT RIEN.
+-- -> UN RESSERREMENT DIFFÉRENCIÉ N'APPORTERAIT RIEN.
 --   Une règle nationale uniforme est suffisante.
 --
 -- Ceci recoupe O3, qui avait établi que le SEUIL DE TOLÉRANCE
@@ -357,7 +357,7 @@ FROM mart.orders;
 -- SYNTHÈSE O8
 -- ============================================================
 --  1. LA MARGE MÉDIANE ANNUELLE EST DE 13 JOURS en 2017 et
---     en 2018 — un chiffre annuel qui masque l'été (cf. 2)
+--     en 2018 : un chiffre annuel qui masque l'été (cf. 2)
 --  2. Sur l'année, le raccourcissement de la promesse a été
 --     compensé par l'amélioration de l'exécution. Mais pas à
 --     l'été 2018 (Q1 ter) : la marge passe de 20 jours en juin
@@ -365,16 +365,16 @@ FROM mart.orders;
 --     Le coussin a été entamé
 --  2 bis. Mars et août 2018 ont deux causes opposées :
 --     l'exécution en mars, la promesse en août
---  3. LA MARGE EST UNIFORME PAR ÉTAT (−12 à −15 j) — un
+--  3. LA MARGE EST UNIFORME PAR ÉTAT (−12 à −15 j) : un
 --     resserrement différencié n'a pas de sens
 --  4. LE COÛT D'UN RESSERREMENT EST NON LINÉAIRE :
 --     1,4 pt par jour jusqu'à 3 jours, puis emballement
 --  5. LA ZONE DÉFENDABLE EST 1 À 2 JOURS (taux porté de
 --     6,77 % à 9,63 %, soit +2 754 commandes en retard)
---  6. LE BÉNÉFICE N'EST PAS MESURABLE — arbitrage à remonter
+--  6. LE BÉNÉFICE N'EST PAS MESURABLE : arbitrage à remonter
 --     au métier
 --
--- L'ARGUMENT CENTRAL — L'ASYMÉTRIE
+-- L'ARGUMENT CENTRAL : L'ASYMÉTRIE
 -- Livrer en avance n'apporte RIEN (note stable à 4,3, O3).
 -- Livrer en retard coûte 1,4 point de note dès le premier jour.
 -- Le gain et la perte ne sont pas symétriques : la marge

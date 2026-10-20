@@ -1,10 +1,10 @@
-# O1 — Constats : la mesure du retard
+# O1. Constats : la mesure du retard
 
 > Ce document traduit les résultats de `SQL/01_O1_mesure_du_retard.sql` en
 > **énoncés utilisables**. Le SQL produit des chiffres ; ce fichier produit des
 > phrases. C'est lui qui alimentera le dashboard et l'executive summary.
 >
-> **Structure de chaque constat** : le fait → ce qu'il signifie → ce qu'il implique.
+> **Structure de chaque constat** : le fait, ce qu'il signifie, ce qu'il implique.
 
 ---
 
@@ -21,18 +21,20 @@ destination. São Paulo, qui représente **42 % du périmètre**, affiche 4,50 %
 d'une concentration géographique, pas d'une tendance. Communiquer sur ce chiffre
 revient à décrire la situation de São Paulo, pas celle du Brésil.
 
-Un écart de 1 à 8 entre le meilleur et le pire état signale que le problème n'est
+Les deux extrêmes reposent sur de petits effectifs (AM : 145 commandes, AL :
+397). En ne gardant que les états de plus de 500 commandes, le taux va encore
+de **4,04 % (PR) à 17,43 % (MA)**, soit un rapport de 1 à 4. Le problème n'est
 pas uniforme : il a une géographie.
 
 > **Le cas São Paulo illustre le piège.** Il concentre le plus grand **volume**
-> de retards du pays — 1 820 commandes — tout en affichant le 4ᵉ meilleur
-> **taux**. Volume et taux racontent deux histoires différentes.
+> de retards du pays, 1 820 commandes, tout en affichant le 2ᵉ meilleur
+> **taux** des états de plus de 500 commandes, derrière PR. Volume et taux racontent deux histoires différentes.
 
 ## Ce que cela implique
 
 **Toute métrique du projet doit être déclinée par état.** Cela vaut pour M-04
 (segments), M-06 (CA exposé) et M-17 (calibrage). Un chiffre national masque un
-facteur 8.
+écart de 1 à 4 entre les grands états.
 
 ---
 
@@ -42,8 +44,8 @@ Deux lectures du même tableau désignent deux cibles différentes.
 
 | Critère | État | Volume concerné |
 |---|---|---|
-| Taux le plus élevé | AL — 21,41 % | 85 commandes |
-| Volume le plus élevé (hors SP) | **RJ — 12,11 %** | **1 495 commandes** |
+| Taux le plus élevé | AL : 21,41 % | 85 commandes |
+| Volume le plus élevé (hors SP) | **RJ : 12,11 %** | **1 495 commandes** |
 
 **RJ est retenu.** Son taux est presque le double du taux national, *et* il
 concerne dix-huit fois plus de clients qu'AL.
@@ -52,7 +54,7 @@ concerne dix-huit fois plus de clients qu'AL.
 > est le plus fort.** Prioriser sur le seul taux conduirait à traiter 85 clients
 > plutôt que 1 495.
 
-> ⚠️ **Nuance à lever par O4.** Cet arbitrage repose sur le volume de commandes.
+> **Nuance à lever par O4.** Cet arbitrage repose sur le volume de commandes.
 > Si les commandes d'AL sont significativement plus chères, l'exposition
 > financière pourrait rééquilibrer la priorité.
 
@@ -67,7 +69,7 @@ concerne dix-huit fois plus de clients qu'AL.
 | AC | 80 | 3,75 % |
 | AM | 145 | 2,76 % |
 
-Un taux calculé sur 41 commandes n'a pas de valeur statistique — cinq retards de
+Un taux calculé sur 41 commandes n'a pas de valeur statistique : cinq retards de
 plus ou de moins le feraient varier de dix points.
 
 **Ces états restent dans les totaux nationaux ; seules les conclusions
@@ -85,12 +87,12 @@ Nov. 2017   12,40 %
 Déc. 2017    7,46 %
 Jan. 2018    5,70 %
 Fév. 2018   14,13 %
-Mars 2018   18,96 %   ← maximum de la période
+Mars 2018   18,96 %   <- maximum de la période
 Avr. 2018    4,50 %
 ```
 
 Mars 2018 : **1 328 commandes en retard sur 7 003**. Un an plus tôt, mars 2017
-était à 4,56 % — quatre fois moins.
+était à 4,56 % : quatre fois moins.
 
 ## Ce que cela signifie
 
@@ -105,7 +107,7 @@ Trois pistes ont été testées.
 
 ---
 
-## Piste 1 — Le volume : écartée
+## Piste 1 : Le volume : écartée
 
 | Mois | Commandes | Retard |
 |---|---|---|
@@ -116,13 +118,13 @@ Trois pistes ont été testées.
 **Janvier 2018 a plus de commandes que mars et trois fois moins de retard.**
 La saturation logistique n'explique pas le pic.
 
-> *À noter au passage : la plateforme a triplé son activité en un an — 2 545
+> *À noter au passage : la plateforme a triplé son activité en un an, 2 545
 > commandes en mars 2017 contre 7 003 en mars 2018. Ce n'est pas une
 > saisonnalité, c'est une croissance.*
 
 ---
 
-## Piste 2 — Une défaillance régionale : écartée
+## Piste 2 : Une défaillance régionale : écartée
 
 | État | Toute période | Mars 2018 | Facteur |
 |---|---|---|---|
@@ -132,7 +134,7 @@ La saturation logistique n'explique pas le pic.
 | RJ | 12,11 % | **34,49 %** | ×2,8 |
 | SC | 8,21 % | 19,43 % | ×2,4 |
 
-**Les 27 états dégradent, sans exception** — y compris MG, habituellement l'un
+**Les 27 états dégradent, sans exception** : y compris MG, habituellement l'un
 des mieux servis, multiplié par 4,5.
 
 Ce n'est donc ni un transporteur régional, ni une route bloquée, ni un événement
@@ -141,11 +143,11 @@ local. **La cause est centrale.**
 > RJ atteint 34,49 % avec 298 commandes en retard : l'état déjà le plus fragile
 > encaisse le choc le plus fort.
 >
-> SP résiste le mieux (×2,1) — la proximité des vendeurs amortit probablement.
+> SP résiste le mieux (×2,1) : la proximité des vendeurs amortit probablement.
 
 ---
 
-## Piste 3 — Le segment défaillant : l'ACHEMINEMENT
+## Piste 3 : Le segment défaillant : l'ACHEMINEMENT
 
 | Mois | Validation | Préparation | **Acheminement** | Retard |
 |---|---|---|---|---|
@@ -157,7 +159,7 @@ local. **La cause est centrale.**
 
 ## Ce que cela signifie
 
-**La préparation vendeur ne bouge pas** — 2 jours, stable depuis 2017. Les
+**La préparation vendeur ne bouge pas** : 2 jours, stable depuis 2017. Les
 vendeurs ne sont pas en cause.
 
 **L'acheminement passe de 7 à 11 jours**, puis redescend. Le transport a lâché
@@ -178,7 +180,7 @@ possibles, une seule retenue, donc une seule direction concernée.
 
 ## Une seconde dégradation, de nature différente : le Black Friday
 
-Novembre 2017 présente la même signature à moindre échelle — acheminement à
+Novembre 2017 présente la même signature à moindre échelle : acheminement à
 9 jours, retard à 12,40 %, isolé entre octobre (4,18 %) et décembre (7,46 %).
 
 **Vérification effectuée** sur le volume quotidien :
@@ -206,7 +208,7 @@ Deux natures de dégradation, deux traitements :
 
 **Olist connaît la date du Black Friday un an à l'avance.** Renforcer la capacité
 d'acheminement sur cette période, ou allonger temporairement les délais annoncés,
-sont deux leviers concrets — contrairement à l'incident de mars, dont la cause
+sont deux leviers concrets : contrairement à l'incident de mars, dont la cause
 reste à établir.
 
 ---
@@ -253,7 +255,7 @@ exposerait à un contresens.
 
 ---
 
-# 4. L'ampleur du retard est faible partout — sauf à Rio
+# 4. L'ampleur du retard est faible partout : sauf à Rio
 
 ## Le fait
 
@@ -273,14 +275,14 @@ Retard médian, sur les commandes en retard uniquement :
 
 ## Ce que cela signifie
 
-**L'amplitude est faible : 5 à 10 jours partout**, contre un facteur 8 sur les
-taux. **Le problème est la fréquence, pas la gravité.**
+**L'amplitude est faible : 5 à 10 jours partout**, contre un rapport de 1 à 4 sur
+les taux des grands états. **Le problème est la fréquence, pas la gravité.**
 
 Et deux profils opposés apparaissent :
 
-- **AL** — pire taux du pays (21,41 %) mais retard le plus court (7 j).
+- **AL** : pire taux du pays (21,41 %) mais retard le plus court (7 j).
   Rate souvent, de peu.
-- **CE** — rate moins souvent (13,76 %) mais plus largement (10 j).
+- **CE** : rate moins souvent (13,76 %) mais plus largement (10 j).
 
 ## La distribution nuance ce constat
 
@@ -299,7 +301,7 @@ de retards en volume, mais 70 % sont courts et seulement 65 dépassent 30 jours.
 ## Ce que cela implique
 
 **Le simulateur (M-13) sera efficace partout sauf à RJ.** Un gain de 7 jours
-ramènerait la majorité des retards dans les délais dans la plupart des états —
+ramènerait la majorité des retards dans les délais dans la plupart des états :
 mais laisserait 58 % des cas de RJ non résolus.
 
 **RJ appelle un traitement différent des autres** : pas un ajustement, une
@@ -330,7 +332,7 @@ correction de fond.
 **Mais la distance n'explique pas le retard.** Trois observations le montrent :
 
 - **RJ est l'état le plus proche après SP.** Il a la même promesse que PR et MG,
-  qui sont à distance comparable. PR fait 4,04 %, MG 4,57 %, **RJ 12,11 %** —
+  qui sont à distance comparable. PR fait 4,04 %, MG 4,57 %, **RJ 12,11 %** :
   trois fois plus, à conditions égales.
 - **AL est plus proche que CE et RR**, avec une promesse comparable, et affiche
   le pire taux du pays.
@@ -346,7 +348,7 @@ Deux profils d'états, deux leviers différents :
 | Promesse large, retard élevé | AL, MA, RR | L'ajustement a été fait et ne suffit pas | **Opérationnel** |
 | Promesse serrée, retard élevé | **RJ** | Calibré comme un état facile alors qu'il ne l'est pas | **Recalibrage** |
 
-> 🔁 **Précisé par O2.** La cause du retard de RJ est l'**acheminement** : 8 jours
+> **Précisé par O2.** La cause du retard de RJ est l'**acheminement** : 8 jours
 > en régime normal, contre 7 pour PR et MG, pourtant plus éloignés. Le levier
 > principal est donc la chaîne de transport ; le recalibrage de la promesse n'est
 > qu'une mesure d'attente. Voir `03_O2_constats.md`, constat 3.
@@ -359,13 +361,13 @@ Deux profils d'états, deux leviers différents :
 
 ```
 2017 (norme)      préparation 2    acheminement 7
-Fév-mars 2018     préparation 2    acheminement 10-11   ← crise
+Fév-mars 2018     préparation 2    acheminement 10-11   <- crise
 Avr. 2018         préparation 1    acheminement 7
 Juin 2018         préparation 1    acheminement 6
 Août 2018         préparation 1    acheminement 5
 ```
 
-**Après avril 2018, la performance ne revient pas au niveau d'avant — elle le
+**Après avril 2018, la performance ne revient pas au niveau d'avant : elle le
 dépasse.** L'acheminement passe de 7 à 5 jours, la préparation de 2 à 1.
 
 Ce n'est pas un retour à la normale, c'est **une amélioration structurelle**.
@@ -378,16 +380,18 @@ Ce n'est pas un retour à la normale, c'est **une amélioration structurelle**.
 ## Le resserrement de la promesse a déjà commencé
 
 ```
-2017 (toute l'année)   23-24 jours
+Janvier 2017           39 jours
+Février 2017           31 jours
+Mars-nov. 2017         23-26 jours
 Mars 2018              22 jours
 Juillet 2018           20 jours
-Août 2018              14 jours   ← −40 % par rapport à 2017
+Août 2018              14 jours   <- −40 % par rapport à 2017
 ```
 
-**Olist annonçait 23 jours en 2017. En août 2018, elle n'en annonce plus que
-14.** Et le taux de retard d'août reste bas.
+**Olist annonçait 23 à 26 jours de mars à novembre 2017. En août 2018, elle
+n'en annonce plus que 14.** Et le taux de retard d'août reste bas.
 
-### Contrôle de validité — effectué
+### Contrôle de validité : effectué
 
 Ce constat étant le plus fort de O1, il a été challengé.
 
@@ -400,7 +404,7 @@ pas, et le taux de retard serait artificiellement bas.
 | Dernier achat | 2018-08-29 |
 | Dernière livraison | **2018-10-17** |
 | Écart | **7 semaines** |
-| Volume d'août | 6 351 — supérieur à juillet (6 156) et juin (6 096) |
+| Volume d'août | 6 351 : supérieur à juillet (6 156) et juin (6 096) |
 
 **Pas de troncature.** Le constat est validé sur deux critères.
 
@@ -416,29 +420,29 @@ simuler mais une décision observable, dont on peut mesurer le résultat.
 > resserrer »*, on peut écrire : *« le resserrement a été engagé, il a été
 > absorbé par l'amélioration de l'acheminement, voici jusqu'où il peut aller »*.
 
-> 🔁 **Révisé par O6.** Ce constat vaut **jusqu'au printemps 2018**. À l'été, le
+> **Révisé par O6.** Ce constat vaut **jusqu'au printemps 2018**. À l'été, le
 > resserrement n'est plus absorbé : de juin à août, le taux de retard passe de
 > 1,2 % à 6,2 %, et de 0,7 % à 9,0 % vers São Paulo. Depuis 2017, la promesse a
-> perdu environ 9 jours (23 → 14) quand l'exécution n'en gagnait qu'environ 3
-> (acheminement 7 → 5, préparation 2 → 1). La limite du resserrement est donc
+> perdu environ 9 jours (de 23 à 14) quand l'exécution n'en gagnait qu'environ 3
+> (acheminement 7 à 5, préparation 2 à 1). La limite du resserrement est donc
 > atteinte, et même dépassée en août. Voir `08_O6_constats.md`.
 
 ---
 
-# Synthèse — ce que O1 a établi
+# Synthèse : ce que O1 a établi
 
 | # | Constat |
 |---|---|
-| 1 | Le retard varie de 1 à 8 selon l'état ; la moyenne nationale ne décrit personne |
-| 2 | RJ est la cible prioritaire — 1 495 commandes en retard |
+| 1 | Le retard varie de 1 à 4 entre les états de plus de 500 commandes ; la moyenne nationale ne décrit personne |
+| 2 | RJ est la cible prioritaire : 1 495 commandes en retard |
 | 3 | Un incident national en février-mars 2018, non expliqué par le volume ni par une défaillance régionale |
-| 4 | L'acheminement a lâché (7 → 11 jours), pas la préparation vendeur |
-| 5 | Novembre 2017 = Black Friday — dégradation **anticipable** car récurrente |
+| 4 | L'acheminement a lâché (de 7 à 11 jours), pas la préparation vendeur |
+| 5 | Novembre 2017 = Black Friday : dégradation **anticipable** car récurrente |
 | 6 | Le retard dépend autant de la promesse que de l'exécution |
-| 7 | L'ampleur est faible partout (5 à 10 j) — sauf à RJ, 58 % de retards graves |
+| 7 | L'ampleur est faible partout (5 à 10 j) : sauf à RJ, 58 % de retards graves |
 | 8 | La distance explique la promesse, pas le retard : RJ et AL sortent du modèle |
 | 9 | La performance s'est améliorée après la crise : acheminement à 5 jours |
-| 10 | Olist a déjà resserré sa promesse de 40 % (23 → 14 jours) — absorbé jusqu'au printemps 2018, **plus à l'été** *(révisé par O6)* |
+| 10 | Olist a déjà resserré sa promesse de 40 % (de 23 à 14 jours) : absorbé jusqu'au printemps 2018, **plus à l'été** *(révisé par O6)* |
 
 ## Le cas Rio de Janeiro
 
@@ -469,8 +473,8 @@ RJ cumule **quatre** signaux défavorables, ce qui en fait le point noir du rés
 
 | Contrôle | Résultat |
 |---|---|
-| Troncature de fin de période | ✅ 7 semaines d'écart, pas de biais |
-| Volume d'août 2018 | ✅ normal (6 351) |
-| Mois incomplets identifiés | ✅ sept. 2016 (1), oct. 2016 (261), déc. 2016 (1) |
-| États sous seuil de fiabilité | ✅ RR, AP, AC, AM — écartés des conclusions individuelles |
-| Hypothèse Black Friday | ✅ vérifiée — 24 nov. 2017, ×4,3 en une journée |
+| Troncature de fin de période | 7 semaines d'écart, pas de biais |
+| Volume d'août 2018 | normal (6 351) |
+| Mois incomplets identifiés | sept. 2016 (1), oct. 2016 (261), déc. 2016 (1) |
+| États sous seuil de fiabilité | RR, AP, AC, AM : écartés des conclusions individuelles |
+| Hypothèse Black Friday | vérifiée : 24 nov. 2017, ×4,3 en une journée |

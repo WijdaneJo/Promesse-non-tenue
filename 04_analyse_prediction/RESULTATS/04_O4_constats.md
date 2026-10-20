@@ -1,14 +1,14 @@
-# O4 — Constats : l'exposition financière
+# O4. Constats : l'exposition financière
 
 > Ce document traduit les résultats de `04_O4_exposition_financiere.sql` en
 > **énoncés utilisables**.
 >
-> **Structure de chaque constat** : le fait → ce qu'il signifie → ce qu'il implique.
+> **Structure de chaque constat** : le fait, ce qu'il signifie, ce qu'il implique.
 
 **Ancrage.** 15 416 546 R$ de chiffre d'affaires sur le périmètre de
 96 447 commandes.
 
-> ⚠️ **Exposition ≠ perte.** Ces métriques mesurent l'argent qui **transite** par
+> **Exposition ≠ perte.** Ces métriques mesurent l'argent qui **transite** par
 > des commandes dont la promesse a été rompue. Avec un réachat de 3,12 % (H1),
 > aucune perte future n'est observable. La distinction est maintenue partout.
 
@@ -30,8 +30,8 @@
 **7,47 % du CA pour 6,77 % des commandes.** L'écart est petit mais il a un sens :
 les commandes en retard sont plus chères que la moyenne.
 
-La question posée en O1 — *« 6,77 % des commandes ne veut pas dire 6,77 % du
-CA »* — trouve ici sa réponse.
+La question posée en O1, *« 6,77 % des commandes ne veut pas dire 6,77 % du
+CA »*, trouve ici sa réponse.
 
 ## Ce que cela implique
 
@@ -67,19 +67,19 @@ proportionnellement plus élevés.
 
 > **La piste.** La quasi-proportionnalité entre le surcoût produit (+11 %) et le
 > surcoût de transport (+12 %) suggère des articles plus **volumineux** ou plus
-> **lourds** — donc un acheminement plus contraignant.
+> **lourds** : donc un acheminement plus contraignant.
 >
-> ⚠️ **Piste, pas preuve.** Trancher demanderait le poids et le volume des
+> **Piste, pas preuve.** Trancher demanderait le poids et le volume des
 > produits (`staging.products`). Non testé.
 
 ## Ce que cela implique
 
 Si la piste se confirme, l'encombrement deviendrait une **variable prédictive**
-pour O6 — et un critère de segmentation logistique.
+pour O6 : et un critère de segmentation logistique.
 
 > **Précaution méthodologique.** La comparaison oppose bien deux populations
 > **disjointes** (`is_late` / `NOT is_late`). Comparer les commandes en retard à
-> l'ensemble — qui les contient — aurait atténué l'écart.
+> l'ensemble, qui les contient, aurait atténué l'écart.
 
 ---
 
@@ -97,15 +97,15 @@ pour O6 — et un critère de segmentation logistique.
 
 **La distinction entre les deux métriques est essentielle :**
 
-- **M-06** mesure un **risque** — l'argent associé à une promesse rompue
-- **M-07** mesure une **réaction client constatée** — un mécontentement exprimé
+- **M-06** mesure un **risque** : l'argent associé à une promesse rompue
+- **M-07** mesure une **réaction client constatée** : un mécontentement exprimé
 
 Le second est plus difficile à contester.
 
 Ce niveau est cohérent avec O3, qui mesurait 80 % d'insatisfaction dès 8 jours
 de retard.
 
-> ⚠️ **Ce montant est un plancher.** Les 646 commandes sans avis (RG-07) sont
+> **Ce montant est un plancher.** Les 646 commandes sans avis (RG-07) sont
 > exclues du numérateur. Certaines étaient probablement des clients mécontents
 > qui n'ont pas répondu.
 
@@ -119,7 +119,7 @@ l'insatisfaction dépasse 50 %.
 | Retard ≥ 1 jour | 1 150 866 R$ | 7,47 % |
 | **Retard ≥ 3 jours** | **932 499 R$** | **6,05 %** |
 
-**81 % du CA exposé concerne des retards de 3 jours ou plus** — au-delà du seuil
+**81 % du CA exposé concerne des retards de 3 jours ou plus** : au-delà du seuil
 où la majorité des clients bascule.
 
 ## Ce que cela implique
@@ -155,11 +155,11 @@ client explicitement mécontent.*
 
 ## Ce que cela signifie
 
-**Deux lectures désignent deux cibles différentes** — c'est le même arbitrage
+**Deux lectures désignent deux cibles différentes** : c'est le même arbitrage
 qu'en O1.
 
 **Par intensité** : AL (22,26 %), MA, SE. Plus d'un cinquième du CA d'Alagoas
-transite par des commandes en retard. **Mais les montants sont faibles** —
+transite par des commandes en retard. **Mais les montants sont faibles** :
 21 K, 29 K, 13 K R$.
 
 **Par montant** : SP (303 157 R$) et RJ (251 556 R$).
@@ -190,7 +190,7 @@ exposé**. Deux états sur vingt-sept concentrent la moitié de l'enjeu.
 ## Le fait
 
 Le plus gros vendeur pèse 497 775 R$ de CA total, mais seulement **40 065 R$
-exposés** — soit 3,5 % du CA exposé national.
+exposés** : soit 3,5 % du CA exposé national.
 
 **Aucun vendeur ne dépasse 4 % de l'enjeu.**
 
@@ -216,7 +216,7 @@ Cohérent avec O2 : le retard vient du transport, et le transport dépend de la
 | 2709af95… | 5 796 | 4 206 | 72,57 % |
 | 0d85bbda… | 11 374 | 6 211 | 54,61 % |
 
-**`b1b39487` réapparaît pour la troisième fois** — déjà identifié en O2 sur la
+**`b1b39487` réapparaît pour la troisième fois** : déjà identifié en O2 sur la
 préparation (64 %) et sur le dépassement contractuel. Trois angles indépendants
 convergent.
 
@@ -224,8 +224,8 @@ convergent.
 >
 > | Niveau | Constat |
 > |---|---|
-> | Vendeur individuel | L'impact est **massif** — 83 % de son CA exposé |
-> | National | **Négligeable** — 18 308 R$, soit 1,6 % de l'enjeu |
+> | Vendeur individuel | L'impact est **massif** : 83 % de son CA exposé |
+> | National | **Négligeable** : 18 308 R$, soit 1,6 % de l'enjeu |
 >
 > Régler totalement son cas ne ferait pas bouger le chiffre global.
 
@@ -234,7 +234,7 @@ convergent.
 **L'action prioritaire ne peut pas être une liste de vendeurs.** Elle doit porter
 sur la chaîne d'acheminement, en ciblant RJ.
 
-Le suivi des vendeurs défaillants reste légitime — mais comme chantier
+Le suivi des vendeurs défaillants reste légitime : mais comme chantier
 secondaire, pas comme levier principal.
 
 ---
@@ -259,12 +259,13 @@ secondaire, pas comme levier principal.
 
 **L'écart entre la meilleure et la pire des grandes catégories est de 3 points.**
 
-À comparer aux états : de 2,13 % à 22,26 %, soit un **facteur 10**.
+À comparer aux états de plus de 500 commandes : de 4,38 % (PR) à 19,64 % (MA),
+soit **plus de 15 points**.
 
 > **La catégorie n'explique pas le retard.** Cela confirme O2 : le problème est
 > le transport, qui dépend de la destination, pas du produit.
 
-> ⚠️ Les taux extrêmes — 0,00 % ou 34 % — concernent tous des catégories à moins
+> Les taux extrêmes, 0,00 % ou 34 %, concernent tous des catégories à moins
 > de 20 000 R$ de CA. Trop peu de commandes pour être fiables.
 
 ## L'exception démasquée : les articles de Noël
@@ -285,7 +286,7 @@ Friday et le pic de décembre identifiés en O1.
 
 **Décembre 2017 : zéro retard.** La période de Noël est parfaitement servie.
 
-**Les retards se concentrent en février-mars 2018** — c'est l'**incident national
+**Les retards se concentrent en février-mars 2018** : c'est l'**incident national
 d'O1**, pas un effet de la catégorie.
 
 > **Et surtout : 7 commandes en retard sur 125 au total.** Le taux de 34,57 % en
@@ -296,25 +297,25 @@ d'O1**, pas un effet de la catégorie.
 
 **Aucun levier logistique par catégorie.** L'action reste géographique.
 
-> ⚠️ **Une nuance à garder.** Cette conclusion porte sur la **catégorie**, pas sur
-> l'**encombrement**. La piste ouverte au constat 2 — produits plus lourds ou
-> volumineux — reste ouverte : le poids ne se confond pas avec la catégorie.
+> **Une nuance à garder.** Cette conclusion porte sur la **catégorie**, pas sur
+> l'**encombrement**. La piste ouverte au constat 2, produits plus lourds ou
+> volumineux, reste ouverte : le poids ne se confond pas avec la catégorie.
 
 ---
 
-# Synthèse — ce que O4 a établi
+# Synthèse : ce que O4 a établi
 
 | # | Constat |
 |---|---|
 | 1 | **CA exposé : 1 150 866 R$**, soit 7,47 % du CA total |
 | 2 | L'exposition financière **dépasse** l'exposition en volume (7,47 % vs 6,77 %) |
 | 3 | Le surcoût vient du **produit** (+11 %) et du **transport** (+12 %), pas du nombre d'articles (−3 %) |
-| 4 | **CA à risque avéré : 721 160 R$** (62,66 % du CA exposé) — un plancher |
+| 4 | **CA à risque avéré : 721 160 R$** (62,66 % du CA exposé), un plancher |
 | 5 | **Au seuil critique de 3 jours : 932 499 R$**, soit 81 % du CA exposé |
 | 6 | **RJ est la cible prioritaire en montant** : 251 556 R$, taux 2,5× celui de SP |
-| 7 | **SP + RJ = 48 % du CA exposé** — deux états, la moitié de l'enjeu |
-| 8 | **Aucune concentration par vendeur** — aucun ne dépasse 4 % |
-| 9 | **Aucun effet de catégorie** — 3 points d'écart contre un facteur 10 entre états |
+| 7 | **SP + RJ = 48 % du CA exposé** : deux états, la moitié de l'enjeu |
+| 8 | **Aucune concentration par vendeur** : aucun ne dépasse 4 % |
+| 9 | **Aucun effet de catégorie** : 3 points d'écart contre plus de 15 entre les grands états |
 
 ## La conclusion transversale
 
@@ -329,19 +330,19 @@ montant (O4).
 
 # Ce que O4 apporte aux autres objectifs
 
-**Pour O6 (prédiction)** — la piste de l'encombrement (constat 2) désigne le
+**Pour O6 (prédiction)** : la piste de l'encombrement (constat 2) désigne le
 poids et le volume comme variables candidates. Elles sont disponibles dans
 `staging.products` et connues au moment de la commande.
 
-**Pour O7 (scénarios)** — le CA exposé est le dénominateur du gain. Un scénario
+**Pour O7 (scénarios)** : le CA exposé est le dénominateur du gain. Un scénario
 d'amélioration doit se chiffrer en part des **1,15 M R$** récupérables, ou des
 **932 K R$** si l'on retient le seuil critique de 3 jours.
 
-**Pour O5 (trajectoire vendeur)** — l'absence de concentration par vendeur
+**Pour O5 (trajectoire vendeur)** : l'absence de concentration par vendeur
 relativise l'enjeu de cet objectif. Il reste utile pour comprendre le mécanisme,
 moins pour l'action.
 
-**Pour la restitution** — trois chiffres à mettre en avant :
+**Pour la restitution** : trois chiffres à mettre en avant :
 - **1,15 M R$** de CA exposé (7,47 %)
 - **721 K R$** de CA à risque avéré
 - **48 %** de l'enjeu concentré sur deux états

@@ -13,7 +13,10 @@ connexion = psycopg2.connect(
 )
 cur = connexion.cursor()
 
-dossier = r"C:\Users\dell\Documents\GitHub\Promesse-non-tenue\02_qualification_donnees\dataset"
+# Dossier des CSV, retrouvé à partir de l'emplacement de ce script :
+# le projet fonctionne quel que soit l'ordinateur où il est cloné.
+racine = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+dossier = os.path.join(racine, "02_qualification_donnees", "dataset")
 
 fichiers = {
     "olist_customers_dataset.csv": "raw.customers",

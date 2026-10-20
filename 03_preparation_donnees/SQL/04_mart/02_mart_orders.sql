@@ -1,5 +1,5 @@
 -- ============================================================
--- ÉTAPE 6 — COUCHE MART : mart.orders
+-- ÉTAPE 6. COUCHE MART : mart.orders
 -- ============================================================
 -- Table analytique finale au grain COMMANDE.
 -- Une ligne = une commande du périmètre (96 447), avec toutes
@@ -11,9 +11,9 @@
 -- TOUS les JOIN sont des LEFT JOIN. intermediate.orders porte
 -- le périmètre ; aucune table satellite ne doit pouvoir en
 -- retirer une commande :
---   • 646 commandes n'ont aucun avis (RG-07)
---   • 476 n'ont pas de distance calculable
---   • 1 commande n'a aucune ligne de paiement
+--   - 646 commandes n'ont aucun avis (RG-07)
+--   - 476 n'ont pas de distance calculable
+--   - 1 commande n'a aucune ligne de paiement
 -- Un seul INNER JOIN les ferait disparaître silencieusement.
 --
 -- Aucune duplication possible : le contrôle de grain de
@@ -29,7 +29,7 @@ DROP TABLE IF EXISTS mart.orders;
 
 CREATE TABLE mart.orders AS
 WITH limits AS (
-    -- ── Date limite d'expédition (découverte 4, V11) ────────
+    -- -- Date limite d'expédition (découverte 4, V11) --------
     -- Fixée par Olist pour CHAQUE ARTICLE : une commande peut
     -- en avoir plusieurs (336 commandes ont des dates
     -- différentes). On garde la PLUS TÔT (MIN) : si un seul
@@ -43,11 +43,11 @@ WITH limits AS (
 ),
 base AS (
     SELECT
-        -- ── Identifiants ────────────────────────────────────
+        -- -- Identifiants ------------------------------------
         io.order_id,
         io.customer_id,
 		c.customer_state,
-        -- ── Dates du parcours ───────────────────────────────
+        -- -- Dates du parcours -------------------------------
         -- Les 5 sont conservées : mart doit être AUTOSUFFISANT.
         -- Elles permettent de recalculer n'importe quoi sans
         -- revenir à intermediate, servent d'axe chronologique
@@ -59,17 +59,17 @@ base AS (
         io.order_estimated_delivery_date,
         lim.shipping_limit_date,
 
-        -- ── Écart à la promesse ─────────────────────────────
+        -- -- Écart à la promesse -----------------------------
         -- Sens : RÉELLE − ESTIMÉE. Positif = retard.
         -- ::DATE car la promesse porte sur une DATE, pas un
         -- horaire : livré le jour promis à 23h = 0 jour.
         io.order_delivered_customer_date::DATE
             - io.order_estimated_delivery_date::DATE AS gap,
 
-        -- ── Segments du parcours (O2) ───────────────────────
+        -- -- Segments du parcours (O2) -----------------------
         -- RG-04 : les 1 350 commandes remises au transporteur
         -- avant validation du paiement donneraient une
-        -- préparation négative → neutralisées en NULL.
+        -- préparation négative -> neutralisées en NULL.
         -- Elles restent au périmètre : exclusion ciblée.
         io.order_approved_at::DATE
             - io.order_purchase_timestamp::DATE AS gap_validation,
@@ -82,7 +82,7 @@ base AS (
         io.order_delivered_customer_date::DATE
             - io.order_delivered_carrier_date::DATE AS gap_shipping,
 
-        -- ── Variables temporelles (O6) ──────────────────────
+        -- -- Variables temporelles (O6) ----------------------
         -- Connues AU MOMENT DE LA COMMANDE : éligibles au
         -- modèle prédictif.
         -- month : saisonnalité | dow : 0=dimanche à 6=samedi
@@ -91,7 +91,7 @@ base AS (
         EXTRACT(MONTH FROM io.order_purchase_timestamp)::INT AS purchase_month,
         EXTRACT(DOW   FROM io.order_purchase_timestamp)::INT AS purchase_dow,
 
-        -- ── Montants (RG-11, O4) ────────────────────────────
+        -- -- Montants (RG-11, O4) ----------------------------
         -- MONTANT DE RÉFÉRENCE : payment_total, l'encaissement
         -- RÉEL du client (somme des payment_value). Le chiffre
         -- d'affaires est l'argent qui entre, pas la valeur
@@ -99,7 +99,7 @@ base AS (
         -- total_price et total_freight sont conservés pour
         -- décomposer la part du transport dans le CA exposé.
         -- Concordance vérifiée avec order_items : 299 écarts
-        -- sur 96 447 (0,31 %), maximum 0,02 R$ — arrondis.
+        -- sur 96 447 (0,31 %), maximum 0,02 R$ : arrondis.
         -- H9 revalidé sur le périmètre.
         ii.nb_items,
         ii.nb_sellers,
@@ -107,7 +107,7 @@ base AS (
         ii.total_freight,
         ip.payment_total,
 
-        -- ── Satisfaction (M-01, M-02) ───────────────────────
+        -- -- Satisfaction (M-01, M-02) -----------------------
         -- avg_score : moyenne tronquée des avis (RG-06)
         -- is_unsatisfied : note ≤ 2 (RG-05). Booléen et non
         -- libellé : AVG(is_unsatisfied::INT) donne le TAUX
@@ -116,7 +116,7 @@ base AS (
         ir.nb_reviews,
         (ir.avg_score <= 2) AS is_unsatisfied,
 
-        -- ── Distance (O6) ───────────────────────────────────
+        -- -- Distance (O6) -----------------------------------
         -- Haversine, calculée en Python. Pour les commandes
         -- multi-vendeurs : la distance la PLUS LONGUE.
         -- Le dataset ne fournit qu'une date de livraison, qui
@@ -136,23 +136,23 @@ base AS (
 SELECT
     base.*,
 
-    -- ── Indicateur de retard (M-00) ─────────────────────────
+    -- -- Indicateur de retard (M-00) -------------------------
     -- Une comparaison EST un booléen : pas de CASE nécessaire.
     -- Seuil > 0 et non >= 0 : livré le jour exact de la
     -- promesse, l'engagement est TENU.
     (gap > 0) AS is_late,
 
-    -- ── Dépassement de la date limite d'expédition (V11) ────
+    -- -- Dépassement de la date limite d'expédition (V11) ----
     -- Vrai si le vendeur a remis le colis au transporteur
     -- APRÈS la date limite. Timestamps complets, pas ::DATE :
     -- la date limite porte une heure précise.
     -- NULL si la date de remise au transporteur manque (1 cas).
     (order_delivered_carrier_date > shipping_limit_date) AS is_limit_exceeded,
 
-    -- ── Tranches de gravité (M-14) ──────────────────────────
+    -- -- Tranches de gravité (M-14) --------------------------
     -- Bornes issues de la DISTRIBUTION OBSERVÉE, pas de
     -- chiffres ronds : ruptures nettes après 1 jour
-    -- (825 → 545) et après 7-8 jours (483 → 336).
+    -- (de 825 à 545) et après 7-8 jours (de 483 à 336).
     -- Les commandes à l'heure reçoivent aussi une modalité :
     -- elles sont le GROUPE DE RÉFÉRENCE de M-01.
     -- Frontière à −4 : au-delà de 3 jours d'avance, la
@@ -169,7 +169,7 @@ SELECT
 FROM base;
 
 
--- ── Contrôles ───────────────────────────────────────────────
+-- -- Contrôles -----------------------------------------------
 SELECT COUNT(*) FROM mart.orders;   -- attendu : 96 447
 
 SELECT order_id FROM mart.orders

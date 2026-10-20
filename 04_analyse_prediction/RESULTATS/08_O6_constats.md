@@ -1,4 +1,4 @@
-# O6 — Constats : peut-on anticiper le retard au moment de la commande ?
+# O6. Constats : peut-on anticiper le retard au moment de la commande ?
 
 **Périmètre :** `mart.orders`, 96 447 commandes livrées, 6,77 % de retard.
 **Métriques :** M-11 (part des retards détectés) · M-12 (part des alertes fausses).
@@ -21,11 +21,11 @@ Sources : `SQL/O6_requetes.sql` (Q1 à Q3) · `PYTHON/O6_modele_predictif.ipynb`
 | La promesse est la variable n° 1 | Poids −0,58 |
 | Raccourcir la promesse crée du retard | Août 2018 : 10,5 % (promesse courte) contre 1,5 % (longue) |
 | Le modèle rate la majorité des retards du test | SP : 61 % des retards, 0,7 % détectés |
-| La marge promesse / distance améliore le modèle | Top 20 % : 32,8 % → 42,0 % de détection |
+| La marge promesse / distance améliore le modèle | Top 20 % : de 32,8 % à 42,0 % de détection |
 
 ---
 
-## Q1 — Les variables utilisables
+## Q1. Les variables utilisables
 
 **Le fait.** Dix variables sont connues au moment de l'achat. Deux pièges ont été identifiés : la date promise **est** connue à l'achat (classée par erreur en non éligible au départ), et le `late_rate` des vendeurs **est** une fuite (calculé sur toute la période, commande à prédire incluse). Le délai promis (`promised_days`), créé à partir de la date promise, ne distingue pas les retards à lui seul : ≈ 23 jours pour les commandes en retard, ≈ 24 pour les autres.
 
@@ -35,7 +35,7 @@ Sources : `SQL/O6_requetes.sql` (Q1 à Q3) · `PYTHON/O6_modele_predictif.ipynb`
 
 ---
 
-## Q2 — La règle à battre
+## Q2. La règle à battre
 
 **Le fait.** Alerter les commandes vers les 16 états au-dessus de la moyenne nationale (6,77 %) détecte **51,4 %** des retards avec **88,4 %** de fausses alertes, en alertant 30 % des commandes. Monter le seuil à 10 % fait perdre 9 points de détection (42,4 %) pour gagner moins d'un point sur les fausses alertes (87,6 %).
 
@@ -45,7 +45,7 @@ Sources : `SQL/O6_requetes.sql` (Q1 à Q3) · `PYTHON/O6_modele_predictif.ipynb`
 
 ---
 
-## Q3 — Le découpage dans le temps
+## Q3. Le découpage dans le temps
 
 **Le fait.** Le test (juin-août 2018) a **deux fois moins de retards** que l'entraînement (3,6 % contre 7,53 %). La liste des 16 états, recalculée sur l'entraînement seul, est identique. Notée sur le test, la règle ne détecte plus que **28,1 %** des retards, avec **96,3 %** de fausses alertes : dans ses alertes, le taux de retard est de 3,7 %, contre 3,6 % pour l'ensemble du test.
 
@@ -55,7 +55,7 @@ Sources : `SQL/O6_requetes.sql` (Q1 à Q3) · `PYTHON/O6_modele_predictif.ipynb`
 
 ---
 
-## Q4 — Le premier modèle et le piège du seuil par défaut
+## Q4. Le premier modèle et le piège du seuil par défaut
 
 **Le fait.** Avec le seuil par défaut (0,5), la régression logistique alerte sur **77 % des commandes** (14 338). Elle détecte 96,2 % des retards, avec 95,5 % de fausses alertes.
 
@@ -65,7 +65,7 @@ Sources : `SQL/O6_requetes.sql` (Q1 à Q3) · `PYTHON/O6_modele_predictif.ipynb`
 
 ---
 
-## Q5 — Le seuil d'alerte
+## Q5. Le seuil d'alerte
 
 ### Le modèle bat la règle
 
@@ -97,11 +97,11 @@ Sources : `SQL/O6_requetes.sql` (Q1 à Q3) · `PYTHON/O6_modele_predictif.ipynb`
 
 **Ce qu'il implique.** Un retard n'est pas seulement une livraison lente : c'est un **écart entre la promesse et la réalité**. Olist dispose de deux leviers, accélérer le transport **ou** promettre de façon réaliste.
 
-Ce résultat **confirme O8 par l'observation** : retrancher des jours à la promesse coûte des retards. Et il **corrige O1 (constat 10)**, qui jugeait le resserrement « absorbé par l'amélioration de l'acheminement » : c'était vrai jusqu'au printemps, plus à l'été. Entre 2017 et août 2018, la promesse a perdu environ 9 jours (23 → 14) quand l'exécution n'en gagnait qu'environ 3 (acheminement 7 → 5, préparation 2 → 1). La marge s'est réduite d'environ 6 jours, et les retards sont repartis.
+Ce résultat **confirme O8 par l'observation** : retrancher des jours à la promesse coûte des retards. Et il **corrige O1 (constat 10)**, qui jugeait le resserrement « absorbé par l'amélioration de l'acheminement » : c'était vrai jusqu'au printemps, plus à l'été. Entre 2017 et août 2018, la promesse a perdu environ 9 jours (de 23 à 14) quand l'exécution n'en gagnait qu'environ 3 (acheminement 7 à 5, préparation 2 à 1). La marge s'est réduite d'environ 6 jours, et les retards sont repartis.
 
 ---
 
-## Q6 — Un modèle plus puissant
+## Q6. Un modèle plus puissant
 
 **Le fait.** La forêt aléatoire fait moins bien que la régression logistique à **tous** les paliers : 37,1 % de détection au top 30 %, contre 54,9 %.
 
@@ -111,7 +111,7 @@ Ce résultat **confirme O8 par l'observation** : retrancher des jours à la prom
 
 ---
 
-## Q7 — Ce que le modèle a appris
+## Q7. Ce que le modèle a appris
 
 **Le fait.** Les variables les plus influentes sont le délai promis (−0,58), l'année (+0,48), la distance (+0,35), RJ (+0,32), SP (−0,27) et les frais de port (+0,14). Le prix (0,01) et le montant payé (0,02) n'apportent rien. AL, pire état en O1, ne pèse que +0,08.
 
@@ -124,7 +124,7 @@ Ce résultat **confirme O8 par l'observation** : retrancher des jours à la prom
 
 ---
 
-## Q8 — Où le modèle se trompe
+## Q8. Où le modèle se trompe
 
 **Le fait.** Au palier top 10 %, **SP concentre 404 des 665 retards du test (61 %)**, mais le modèle n'en détecte que **3** : il ne place que 14 alertes sur 8 602 commandes. À l'inverse, il met 733 alertes sur RJ (40 % de ses alertes), dont le taux est tombé à 3,2 %. Sur SP, le délai promis médian passe de **22 à 10 jours** entre juin et août 2018, et le taux de retard de **0,7 % à 9,0 %**.
 
@@ -136,7 +136,7 @@ Ce résultat **confirme O8 par l'observation** : retrancher des jours à la prom
 
 ---
 
-## Bonus — Découpage au hasard
+## Bonus : Découpage au hasard
 
 **Le fait.** Un découpage au hasard donne une détection un peu meilleure (25,2 % contre 20,5 % au top 10 %). Même dans ce cas favorable, au mieux 23 % des alertes sont justes.
 
@@ -146,7 +146,7 @@ Ce résultat **confirme O8 par l'observation** : retrancher des jours à la prom
 
 ---
 
-## Amélioration — La variable de marge
+## Amélioration : La variable de marge
 
 **Le fait.** Une nouvelle variable, les **jours promis par 100 km** (distance ramenée à un minimum de 100 km), sépare nettement les commandes : **10,4 %** de retard pour les marges très faibles, **3,3 %** pour les très fortes. Ajoutée au modèle, elle fait passer la détection de **32,8 % à 42,0 %** au top 20 %, et de **54,9 % à 60,2 %** au top 30 %. Aux paliers 1 à 10 %, rien ne change.
 
@@ -156,7 +156,7 @@ Ce résultat **confirme O8 par l'observation** : retrancher des jours à la prom
 
 ---
 
-## Visualisation — Où tombent les retards ratés
+## Visualisation : Où tombent les retards ratés
 
 ![Nuage de points : retards détectés, ratés, fausses alertes](O6_nuage_seuil.png)
 

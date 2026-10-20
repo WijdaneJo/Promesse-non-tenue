@@ -1,11 +1,11 @@
 -- ============================================================
--- O5 — LA TRAJECTOIRE VENDEUR
+-- O5. LA TRAJECTOIRE VENDEUR
 -- ============================================================
 -- Objectif : tester l'existence d'un lien entre la performance
 -- de livraison d'un vendeur et l'évolution de son activité.
 --
 -- Source     : mart.orders + staging.order_items
--- Métriques  : M-09 (taux de retard P1), M-10 (évolution P1→P2)
+-- Métriques  : M-09 (taux de retard P1), M-10 (évolution P1->P2)
 -- Règles     : RG-08 (seuil), RG-09 (mono-vendeur), RG-10 (fenêtres)
 -- Constats   : 06_O5_constats.md
 --
@@ -19,19 +19,19 @@
 -- POURQUOI CET OBJECTIF EXISTE : le projet a perdu son objectif
 -- initial en qualification. Avec 3,12 % de réachat (H1), on ne
 -- peut pas mesurer si un client déçu revient. O5 est le
--- remplacement — faute d'observer le CLIENT, on observe le
+-- remplacement : faute d'observer le CLIENT, on observe le
 -- VENDEUR, qui lui a un historique.
 --
--- ENJEU — deux réponses, deux recommandations opposées :
---   Si l'activité recule  → le marché sanctionne seul, Olist
+-- ENJEU : deux réponses, deux recommandations opposées :
+--   Si l'activité recule  -> le marché sanctionne seul, Olist
 --                           peut se contenter d'alerter
---   Si elle ne bouge pas  → le marché ne sanctionne pas, Olist
+--   Si elle ne bouge pas  -> le marché ne sanctionne pas, Olist
 --                           doit intervenir activement
 -- UN RÉSULTAT NÉGATIF EST DONC UN RÉSULTAT.
 
 
 -- ============================================================
--- Q1 — OÙ COUPER LES DEUX FENÊTRES ? (RG-10)
+-- Q1. OÙ COUPER LES DEUX FENÊTRES ? (RG-10)
 -- ============================================================
 SELECT
     purchase_year,
@@ -41,13 +41,13 @@ FROM mart.orders
 GROUP BY purchase_year, purchase_month
 ORDER BY purchase_year, purchase_month;
 
--- RÉSULTAT — la plateforme a TRIPLÉ son activité en un an.
+-- RÉSULTAT : la plateforme a TRIPLÉ son activité en un an.
 --
 -- Cela complique le découpage : si on coupe au milieu, la
 -- période 2 aura mécaniquement plus de commandes, et TOUS les
--- vendeurs sembleront progresser — même les mauvais.
+-- vendeurs sembleront progresser : même les mauvais.
 --
--- DÉCOUPAGE RETENU — février-août 2017 vs février-août 2018.
+-- DÉCOUPAGE RETENU : février-août 2017 vs février-août 2018.
 -- Mêmes mois d'une année sur l'autre : la SAISONNALITÉ est
 -- neutralisée (Black Friday de novembre identifié en O1).
 --
@@ -55,7 +55,7 @@ ORDER BY purchase_year, purchase_month;
 -- performance RELATIVE AU MARCHÉ.
 
 
--- ── Q1 bis. La référence du marché ──────────────────────────
+-- -- Q1 bis. La référence du marché --------------------------
 -- Sans ce repère, toute croissance positive serait lue comme un
 -- succès. Même filtre RG-09 que pour les vendeurs, sinon la
 -- référence ne serait pas comparable.
@@ -72,24 +72,24 @@ SELECT
 FROM mart.orders
 WHERE nb_sellers = 1;
 
--- RÉSULTAT : 21 033 → 45 016 commandes, soit +114,03 %
+-- RÉSULTAT : 21 033 à 45 016 commandes, soit +114,03 %
 --
 -- LE MARCHÉ A PLUS QUE DOUBLÉ. Un vendeur à +50 % a donc PERDU
 -- DES PARTS. C'est le repère de lecture de tout O5.
 
 
 -- ============================================================
--- Q2 à Q4 — LES VENDEURS PRÉSENTS DANS LES DEUX FENÊTRES
+-- Q2 à Q4 : LES VENDEURS PRÉSENTS DANS LES DEUX FENÊTRES
 -- ============================================================
 -- TROIS RÈGLES SE CUMULENT :
---   RG-09 — WHERE nb_sellers = 1
---   RG-08 — au moins 10 commandes DANS CHAQUE fenêtre
---   RG-10 — présent dans les deux
+--   RG-09, WHERE nb_sellers = 1
+--   RG-08, au moins 10 commandes DANS CHAQUE fenêtre
+--   RG-10 : présent dans les deux
 --
 -- LE TAUX DE RETARD EST MESURÉ EN P1 SEULEMENT : c'est la CAUSE
 -- présumée. Mesurer P2 aussi mélangerait cause et conséquence.
 --
--- ⚠ order_p1 et order_p2 sont des ENTIERS : sans le * 100.0,
+-- order_p1 et order_p2 sont des ENTIERS : sans le * 100.0,
 -- la division entière donnerait 0 partout.
 WITH order_seller AS (
     -- Une ligne par commande mono-vendeur (voir en-tête)
@@ -128,34 +128,34 @@ SELECT
 FROM calcul
 ORDER BY evolution_pct;
 
--- RÉSULTAT — 241 VENDEURS survivent au filtre
+-- RÉSULTAT : 241 VENDEURS survivent au filtre
 --
 -- Sur 1 217 vendeurs retenus par RG-08 sur l'ensemble de la
 -- période, exiger 10 commandes DANS CHACUNE des deux fenêtres
 -- en élimine 80 %. Ces 241 sont les vendeurs ÉTABLIS ET
--- DURABLES — c'est le biais de survie annoncé par RG-10,
+-- DURABLES : c'est le biais de survie annoncé par RG-10,
 -- mesuré en Q6.
 --
 -- LES PLUS GROS RECULS
---   cca3071e…   363 →  45   −87,60 %   retard P1 : 3,58 %
---   6cd68b3e…    67 →  11   −83,58 %   retard P1 : 0,00 %  ←
---   44073f8b…    66 →  11   −83,33 %   retard P1 : 0,00 %  ←
+--   cca3071e…   363 ->  45   −87,60 %   retard P1 : 3,58 %
+--   6cd68b3e…    67 ->  11   −83,58 %   retard P1 : 0,00 %  <-
+--   44073f8b…    66 ->  11   −83,33 %   retard P1 : 0,00 %  <-
 --
 -- LES PLUS FORTES CROISSANCES
---   ea8482cd…    12 → 618  +5 050 %    retard P1 : 0,00 %
---   955fee92…    27 → 845  +3 030 %    retard P1 : 0,00 %
---   1025f0e2…    30 → 602  +1 907 %    retard P1 : 3,33 %
+--   ea8482cd…    12 à 618  +5 050 %    retard P1 : 0,00 %
+--   955fee92…    27 à 845  +3 030 %    retard P1 : 0,00 %
+--   1025f0e2…    30 à 602  +1 907 %    retard P1 : 3,33 %
 --
 -- LES TAUX DE RETARD SONT FAIBLES DES DEUX CÔTÉS. Des vendeurs
 -- à 0 % de retard perdent 84 % de leur activité ; d'autres à
 -- 0 % en gagnent 5 000 %.
 --
--- ⚠ LIRE UN TABLEAU À L'ŒIL N'EST PAS UNE PREUVE. Quantifié
+-- LIRE UN TABLEAU À L'ŒIL N'EST PAS UNE PREUVE. Quantifié
 -- en Q5.
 
 
 -- ============================================================
--- Q5 — EXISTE-T-IL UN LIEN ENTRE RETARD ET TRAJECTOIRE ?
+-- Q5. EXISTE-T-IL UN LIEN ENTRE RETARD ET TRAJECTOIRE ?
 -- ============================================================
 -- Deux moyennes donnent un chiffre OPPOSABLE, là où la lecture
 -- d'un tableau ne donne qu'une impression.
@@ -215,9 +215,9 @@ GROUP BY groupe;
 --   Surperforme               60       2,99 %   +413,78 %
 --
 -- LES DEUX GROUPES ONT UN TAUX DE RETARD IDENTIQUE.
--- 0,12 point d'écart — du bruit, sans portée.
+-- 0,12 point d'écart : du bruit, sans portée.
 --
--- → LE RETARD N'A AUCUN EFFET MESURABLE SUR LA TRAJECTOIRE
+-- -> LE RETARD N'A AUCUN EFFET MESURABLE SUR LA TRAJECTOIRE
 --   D'UN VENDEUR.
 --
 -- À NOTER : 181 vendeurs sur 241, soit 75 %, PERDENT DES PARTS
@@ -225,18 +225,18 @@ GROUP BY groupe;
 -- des vendeurs établis reculent relativement.
 --
 -- CONCLUSION PROVISOIRE : le marché ne sanctionne pas.
--- ⚠ CORRIGÉE PAR Q6.
+-- CORRIGÉE PAR Q6.
 
 
 -- ============================================================
--- Q6 — LE BIAIS DE SURVIE
+-- Q6. LE BIAIS DE SURVIE
 -- ============================================================
 -- Q5 ne porte que sur les vendeurs PRÉSENTS DANS LES DEUX
--- PÉRIODES. Ceux qui ont cessé leur activité en sont absents —
+-- PÉRIODES. Ceux qui ont cessé leur activité en sont absents :
 -- et ce sont peut-être les plus affectés.
 --
--- ⚠ LE HAVING NE PORTE PLUS QUE SUR P1. Filtrer aussi sur P2
--- éliminerait d'office les disparus — exactement ce qu'on
+-- LE HAVING NE PORTE PLUS QUE SUR P1. Filtrer aussi sur P2
+-- éliminerait d'office les disparus : exactement ce qu'on
 -- cherche à mesurer.
 --
 -- DÉFINITION : « disparu » = ZÉRO commande en P2. Un vendeur
@@ -277,38 +277,38 @@ GROUP BY etat;
 -- RÉSULTAT
 --
 --   Groupe        Vendeurs   Retard P1
---   Disparus          81       4,76 %   ←
+--   Disparus          81       4,76 %   <-
 --   Survivants       316       3,38 %
 --
 -- LES DISPARUS AVAIENT 41 % DE RETARD EN PLUS.
--- L'écart est NET — contrairement aux 0,12 point de Q5.
+-- L'écart est NET : contrairement aux 0,12 point de Q5.
 --
--- → LA SANCTION EXISTE, MAIS ELLE EST BINAIRE :
---     Parmi les survivants    → aucun effet (3,11 % vs 2,99 %)
---     Survivants vs disparus  → écart net (3,38 % vs 4,76 %)
+-- -> LA SANCTION EXISTE, MAIS ELLE EST BINAIRE :
+--     Parmi les survivants    -> aucun effet (3,11 % vs 2,99 %)
+--     Survivants vs disparus  -> écart net (3,38 % vs 4,76 %)
 --
 --   Un vendeur qui livre mal NE RECULE PAS PROGRESSIVEMENT.
 --   IL DISPARAÎT.
 --
 -- LE BIAIS ANNONCÉ AU CADRAGE ÉTAIT RÉEL. Q5 concluait à
--- l'absence de lien alors que le lien existe — il était
+-- l'absence de lien alors que le lien existe : il était
 -- invisible parce que les plus touchés avaient déjà quitté
 -- l'échantillon.
 
 
 -- ============================================================
--- Q7 — RECOUPEMENT AVEC O2 : L'ENGAGEMENT CONTRACTUEL
+-- Q7. RECOUPEMENT AVEC O2 : L'ENGAGEMENT CONTRACTUEL
 -- ============================================================
--- O2 a identifié les vendeurs dépassant leur shipping_limit_date
--- — la date limite d'expédition imposée par Olist.
+-- O2 a identifié les vendeurs dépassant leur shipping_limit_date,
+-- c'est-à-dire la date limite d'expédition imposée par Olist.
 --
 -- POURQUOI CET INDICATEUR PLUTÔT QUE LE TAUX DE RETARD :
---   • il isole la PART DU VENDEUR (segment préparation), sans
+--   - il isole la PART DU VENDEUR (segment préparation), sans
 --     mélange avec le transport
---   • il est OPPOSABLE : un vendeur peut contester un retard
+--   - il est OPPOSABLE : un vendeur peut contester un retard
 --     (« c'est le transporteur »), pas un dépassement de sa
 --     propre date limite
---   • il est connu DÈS L'EXPÉDITION, pas à la livraison
+--   - il est connu DÈS L'EXPÉDITION, pas à la livraison
 --
 -- QUESTION : ces vendeurs disparaissent-ils davantage ?
 --
@@ -354,27 +354,28 @@ GROUP BY profil;
 --
 --   Profil                Vendeurs  Disparus  Taux disparition  Dépassement moyen
 --   Dépassement ≤ 20 %      340        65         19,12 %            4,13 %
---   Dépassement > 20 %       57        16         28,07 %           36,93 %  ←
+--   Dépassement > 20 %       57        16         28,07 %           36,93 %  <-
 --
 -- LES VENDEURS QUI NE TIENNENT PAS LEUR ENGAGEMENT
--- CONTRACTUEL DISPARAISSENT 47 % PLUS SOUVENT.
--- Prudence : petits effectifs (57 vendeurs, 16 disparus).
+-- CONTRACTUEL DISPARAISSENT PLUS SOUVENT : 28,07 % contre 19,12 %.
+-- Prudence : petits effectifs (57 vendeurs, 16 disparus). Écart
+-- indicatif, non significatif au seuil de 5 % (Fisher, p ≈ 0,09).
 --
 -- ET LES DEUX GROUPES NE SE RESSEMBLENT PAS : 36,93 % de
 -- dépassement moyen contre 4,13 %. Ce sont deux comportements
 -- distincts, pas deux nuances d'un même profil.
 --
--- → LE DÉPASSEMENT DE LA DATE LIMITE EST UN SIGNAL D'ALERTE
+-- -> LE DÉPASSEMENT DE LA DATE LIMITE EST UN SIGNAL D'ALERTE
 --   EXPLOITABLE, et meilleur que le taux de retard :
 --
---     Taux de retard    → connu à la LIVRAISON, des semaines
+--     Taux de retard    -> connu à la LIVRAISON, des semaines
 --                         plus tard, et mélange les causes
---     Dépassement       → connu DÈS L'EXPÉDITION, et impute
+--     Dépassement       -> connu DÈS L'EXPÉDITION, et impute
 --                         sans ambiguïté
 
 
 -- ============================================================
--- Q8 — LA DÉGRADATION EST-ELLE PROGRESSIVE OU BRUTALE ?
+-- Q8. LA DÉGRADATION EST-ELLE PROGRESSIVE OU BRUTALE ?
 -- ============================================================
 -- Si le taux de dépassement se dégrade AVANT le départ, Olist
 -- dispose d'une fenêtre d'intervention.
@@ -383,7 +384,7 @@ GROUP BY profil;
 -- P1 est découpée en deux moitiés : février-avril et
 -- juin-août. Mai est écarté pour séparer nettement les blocs.
 --
--- ⚠ SEUIL ABAISSÉ À 5 COMMANDES par demi-période — sinon trop
+-- SEUIL ABAISSÉ À 5 COMMANDES par demi-période : sinon trop
 -- peu de vendeurs survivraient au découpage.
 WITH order_seller AS (
     -- Une ligne par commande mono-vendeur (voir en-tête)
@@ -425,7 +426,7 @@ GROUP BY etat;
 -- RÉSULTAT
 --
 --   Groupe      Vendeurs  Fév-avr  Juin-août  Évolution
---   Disparus       27      15,53 %   12,79 %   −2,74 pts  ←
+--   Disparus       27      15,53 %   12,79 %   −2,74 pts  <-
 --   Survivants    183       7,29 %    7,08 %   −0,20 pt
 --
 -- AUCUNE DÉGRADATION N'ANNONCE LE DÉPART. Les deux groupes
@@ -440,17 +441,17 @@ GROUP BY etat;
 -- commandes par demi-période. Ceux partis brutalement, sans
 -- commandes en fin de P1, sont exclus de ce test.
 --
--- → LA RECOMMANDATION CHANGE DE FORME :
+-- -> LA RECOMMANDATION CHANGE DE FORME :
 --   ce n'est pas « surveillez la PENTE », c'est
 --   « surveillez le NIVEAU ».
---   C'est même préférable pour Olist — un niveau se lit
+--   C'est même préférable pour Olist : un niveau se lit
 --   immédiatement, une tendance demande des mois d'observation.
 
 
 -- ============================================================
 -- SYNTHÈSE O5
 -- ============================================================
---  1. LE MARCHÉ A DOUBLÉ (+114 %) entre les deux fenêtres —
+--  1. LE MARCHÉ A DOUBLÉ (+114 %) entre les deux fenêtres :
 --     tout vendeur sous ce seuil perd des parts
 --  2. 241 VENDEURS seulement sont présents dans les deux
 --     périodes avec au moins 10 commandes (sur 1 217)
@@ -458,17 +459,17 @@ GROUP BY etat;
 --     qui reculent, 2,99 % chez ceux qui progressent
 --  4. 75 % DES VENDEURS ÉTABLIS PERDENT DES PARTS DE MARCHÉ
 --  5. MAIS LES DISPARUS AVAIENT 4,76 % DE RETARD contre 3,38 %
---     pour les survivants — 41 % de plus
+--     pour les survivants : 41 % de plus
 --  6. LA SANCTION EST BINAIRE : un vendeur qui livre mal ne
 --     recule pas, IL DISPARAÎT
 --  7. LES VENDEURS DÉPASSANT LEUR DATE LIMITE D'EXPÉDITION
---     DISPARAISSENT 47 % PLUS SOUVENT (28,07 % contre 19,12 %)
+--     DISPARAISSENT PLUS SOUVENT (28,07 % contre 19,12 %, indicatif)
 --  8. LE SIGNAL EST DANS LE NIVEAU, PAS DANS LA PENTE :
 --     15,53 % de dépassement six mois avant le départ, contre
 --     7,29 % pour les survivants
 --
 -- CONSÉQUENCE POUR LA RECOMMANDATION
--- Le marché sanctionne, mais tardivement et brutalement —
+-- Le marché sanctionne, mais tardivement et brutalement :
 -- quand le vendeur est déjà perdu. Olist ne peut pas compter
 -- sur cette autorégulation : elle doit INTERVENIR EN AMONT.
 -- Le dépassement de shipping_limit_date fournit l'indicateur :
