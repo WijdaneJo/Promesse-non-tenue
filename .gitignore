@@ -183,3 +183,6 @@ cython_debug/
 *.csv
 *.pbix
 *.xlsx
+# Notes personnelles
+note_ML/
+note_sql/
